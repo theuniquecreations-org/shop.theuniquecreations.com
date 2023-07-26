@@ -14,12 +14,7 @@ function MobileNavigator() {
   };
   return (
     <div className="menu-mobile">
-      <Menu
-        className="menu-mobile-navigator"
-        onClick={handleClick}
-        selectedKeys={[current]}
-        mode="inline"
-      >
+      <Menu className="menu-mobile-navigator" onClick={handleClick} selectedKeys={[current]} mode="inline">
         <SubMenu key="homepage" title={navigatorData.HOME.title}>
           {navigatorData.HOME.subMenu.map((item) => (
             <Menu.Item key={item.title}>
@@ -69,11 +64,7 @@ function MobileNavigator() {
         </SubMenu>
         <Menu.Item key="alipay">
           <Link href={process.env.PUBLIC_URL + navigatorData.ABOUT.href}>
-            <a
-              href="https://ant.design"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
               {navigatorData.ABOUT.title}
             </a>
           </Link>
