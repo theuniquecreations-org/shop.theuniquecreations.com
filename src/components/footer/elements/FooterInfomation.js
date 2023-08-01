@@ -8,16 +8,18 @@ export default function FooterInfomation() {
     <div className="footer-info">
       <Link href={process.env.PUBLIC_URL + "/"}>
         <a className="footer-info__logo">
-          <img
-            src={process.env.PUBLIC_URL + "/assets/images/logo.png"}
-            alt="Ogami Logo"
-          />
+          <img className="logo" src={process.env.PUBLIC_URL + "/assets/images/logo.png"} alt="talesofsuba logo" />
         </a>
       </Link>
       <ul>
-        <li>Address: 60-49 Road 11378 New York</li>
-        <li>Phone: +65 11.188.888</li>
-        <li>Email: info.deercreative@gmail.com</li>
+        <li>
+          Instagram:{" "}
+          <a href="https://www.instagram.com/talesofsuba" target="blank">
+            @talesofsuba
+          </a>
+        </li>
+
+        <li>Email: talesofsuba@gmail.com</li>
       </ul>
       <SocialIcons type="primary" shape="circle" className="-btn-light" />
     </div>
