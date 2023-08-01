@@ -15,10 +15,7 @@ export default function MenuTwo({ containerFluid }) {
           <MobileMenuOpener />
           <Link href={process.env.PUBLIC_URL + "/"}>
             <a className="menu-logo">
-              <img
-                src={process.env.PUBLIC_URL + "/assets/images/logo.png"}
-                alt="Ogami logo"
-              />
+              <img src={process.env.PUBLIC_URL + "/assets/images/logo.png"} alt="talesofsuba logo" />
             </a>
           </Link>
           <SearchForm enterButton={<i className="icon_search" />} />

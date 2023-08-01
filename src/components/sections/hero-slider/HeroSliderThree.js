@@ -13,48 +13,25 @@ function HeroSliderThree({ data }) {
           <Col xs={24} md={16} lg={18}>
             <div className="hero-slider-wrapper">
               <div className="hero-slider-background">
-                <img
-                  src={
-                    process.env.PUBLIC_URL +
-                    "/assets/images/hero-slider/three/bg.png"
-                  }
-                  alt="Hero slider background image"
-                />
+                <img src={process.env.PUBLIC_URL + "/assets/images/hero-slider/three/bg.png"} alt="Hero slider background image" />
               </div>
               <div className="hero-slider-content-wrapper">
                 <Row justify="center" align="middle" gutter={30}>
                   <Col sm={12}>
                     <div className="hero-slider-content">
-                      <h5>BUTTER & EGGS</h5>
-                      <h1>Spice 100% Organnic</h1>
-                      <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit, sed do
-                      </p>
+                      <h5>Read Review and Recomend</h5>
+                      <h1>R R R</h1>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do</p>
                       <Button type="primary" shape="round">
-                        <Link
-                          href={process.env.PUBLIC_URL + "/shop/shop-3-column"}
-                        >
-                          <a
-                            href={
-                              process.env.PUBLIC_URL + "/shop/shop-3-column"
-                            }
-                          >
-                            Shop now
-                          </a>
+                        <Link href={process.env.PUBLIC_URL + "/shop/shop-3-column"}>
+                          <a href={process.env.PUBLIC_URL + "/shop/shop-3-column"}>View Latest Blog</a>
                         </Link>
                       </Button>
                     </div>
                   </Col>
                   <Col sm={10}>
                     <div className="hero-slider-image up-down-anim">
-                      <img
-                        src={
-                          process.env.PUBLIC_URL +
-                          "/assets/images/hero-slider/three/1.png"
-                        }
-                        alt="Hero slider image"
-                      />
+                      <img src={process.env.PUBLIC_URL + "/assets/images/hero-slider/three/1.png"} alt="Hero slider image" />
                     </div>
                   </Col>
                 </Row>
