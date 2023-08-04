@@ -1,47 +1,43 @@
-import AboutSection from "@/components/AboutSection/AboutSection";
-import AgencySection from "@/components/AgencySection/AgencySection";
-import BannerOne from "@/components/BannerSection/BannerOne";
-import CallToSection from "@/components/CallToSection/CallToSection";
-import FunFactsOne from "@/components/FunFacts/FunFactsOne";
-import GallerySectionOne from "@/components/GallerySection/GallerySectionOne";
+import BannerSection from "@/components/BannerSection/BannerSection";
+import FeaturedSection from "@/components/FeaturedSection/FeaturedSection";
+import FeaturesSection from "@/components/FeaturesSection/FeaturesSection";
+import FluidSection from "@/components/FluidSection/FluidSection";
+import FunFacts from "@/components/FunFacts/FunFacts";
+import GallerySection from "@/components/GallerySection/GallerySection";
+import GetQuote from "@/components/GetQuote/GetQuote";
 import HeaderOne from "@/components/Header/HeaderOne";
 import MobileMenu from "@/components/Header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
-import LiveSection from "@/components/LiveSection/LiveSection";
 import MainFooter from "@/components/MainFooter/MainFooter";
 import NewsSection from "@/components/NewsSection/NewsSection";
-import ParallaxSection from "@/components/ParallaxSection/ParallaxSection";
 import Style from "@/components/Reuseable/Style";
 import SearchPopup from "@/components/SearchPopup/SearchPopup";
-import ServicesSectionOne from "@/components/ServicesSection/ServicesSectionOne";
+import ServicesSection from "@/components/ServicesSection/ServicesSection";
 import SponsorsSection from "@/components/SponsorsSection/SponsorsSection";
-import TeamSection from "@/components/TeamSection/TeamSection";
-import TrustedSection from "@/components/TrustedSection/TrustedSection";
-import WeDOSection from "@/components/WeDOSection/WeDOSection";
+import TestimonialsSection from "@/components/TestimonialsSection/TestimonialsSection";
+import WhyUs from "@/components/WhyUs/WhyUs";
 import React from "react";
 
 const HomeMain = () => {
   return (
-    <Layout pageTitle="Home 01">
+    <Layout pageTitle="Home 02">
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <BannerOne />
-      <ServicesSectionOne />
-      <AboutSection />
-      <LiveSection />
-      <WeDOSection />
-      <GallerySectionOne />
-      <FunFactsOne />
-      <TrustedSection />
-      <TeamSection />
-      <ParallaxSection />
+      <BannerSection />
+      <FunFacts />
+      <ServicesSection />
+      <FeaturedSection />
+      <GallerySection />
+      <WhyUs />
+      <TestimonialsSection />
+      <FeaturesSection />
+      <GetQuote />
       <SponsorsSection />
-      <AgencySection />
-      <NewsSection />
-      <CallToSection />
-      <MainFooter normalPadding={false} />
+      <NewsSection className="alt-bg" />
+      <FluidSection />
+      <MainFooter />
     </Layout>
   );
 };

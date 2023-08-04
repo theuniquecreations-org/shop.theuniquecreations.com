@@ -1,4 +1,4 @@
-import logo from "@/images/logo.png";
+import logo from "@/images/talesofsubalogo.png";
 import bg from "@/images/update-26-01-2021/background/coming-soon-bg-1.jpg";
 
 export const comingSoonSection = {

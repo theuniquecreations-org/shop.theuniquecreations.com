@@ -2,7 +2,7 @@ import icon from "@/images/icons/close-1-1.png";
 import logo4 from "@/images/logo-2.png";
 import logo3 from "@/images/logo-3.png";
 import logo2 from "@/images/logo-dark.png";
-import logo1 from "@/images/logo.png";
+import logo1 from "@/images/talesofsubalogo.png";
 import logo6 from "@/images/update-01-10-2021/logo-6-dark.png";
 import logo7 from "@/images/update-01-10-2021/logo-7-dark.png";
 import logo8 from "@/images/update-01-10-2021/logo-8-light.png";
@@ -13,7 +13,12 @@ import logo9 from "@/images/update-26-02-2021/logo-horizontal-portfolio.png";
 const home = {
   id: 1,
   name: "Home",
-  href: "/index-main",
+  href: "/",
+};
+const homeold = {
+  id: 1,
+  name: "Home",
+  href: "/",
   subNavItems: [
     {
       id: 1,
@@ -95,7 +100,6 @@ const home = {
     },
   ],
 };
-
 const navItemsTwo = [
   { ...home, href: "#home" },
   {
@@ -136,6 +140,41 @@ const navItemsTwo = [
 ];
 
 const navItems = [
+  home,
+  {
+    id: 2,
+    name: "About Us",
+    href: "/about-2",
+  },
+
+  {
+    id: 6,
+    name: "Shop",
+    href: "/shop",
+    subNavItems: [
+      { id: 1, name: "Shop Page", href: "/shop" },
+      { id: 2, name: "Product Details", href: "/product-details" },
+      { id: 3, name: "Cart Page", href: "/cart" },
+      { id: 4, name: "Checkout Page", href: "/checkout" },
+    ],
+  },
+  {
+    id: 7,
+    name: "Blog",
+    href: "/blog-grid",
+    subNavItems: [
+      { id: 1, name: "Blog Sidebar", href: "/blog" },
+      { id: 2, name: "Blog Grid View", href: "/blog-grid" },
+      { id: 3, name: "Blog Single", href: "/blog-single" },
+    ],
+  },
+  {
+    id: 8,
+    name: "Contact",
+    href: "/contact",
+  },
+];
+const navItemsold = [
   home,
   {
     id: 2,

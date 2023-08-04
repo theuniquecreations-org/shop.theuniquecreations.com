@@ -3,21 +3,21 @@ import bg from "@/images/main-slider/banner-bg-shape-3.png";
 export const bannerTwo = [
   {
     id: 1,
-    bg: "2.jpg",
-    subtitle: "welcome to Linoor agency",
-    title: "Smart Web\nDesign Agency",
+    bg: "1.jpg",
+    subtitle: "welcome to Tales of Suba",
+    title: "Read Review\nRecomend",
   },
   {
     id: 2,
-    bg: "1.jpg",
-    subtitle: "welcome to Linoor agency",
-    title: "Smart Web\nDesign Agency",
+    bg: "2.jpg",
+    subtitle: "welcome to Tales of Suba",
+    title: "Read Review\nRecomend",
   },
   {
     id: 3,
     bg: "2.jpg",
-    subtitle: "welcome to Linoor agency",
-    title: "Smart Web\nDesign Agency",
+    subtitle: "welcome to Tales of Suba",
+    title: "Read Review\nRecomend",
   },
 ];
 

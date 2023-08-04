@@ -1,5 +1,5 @@
 import demoBg from "@/images/background/footer-bg-2.jpg";
-import logo from "@/images/footer-logo.png";
+import logo from "@/images/talesofsubalogo.png";
 import logo3 from "@/images/logo-3.png";
 import logo6 from "@/images/update-01-10-2021/logo-6-light.png";
 import logo7 from "@/images/update-01-10-2021/logo-7-light.png";
@@ -25,23 +25,18 @@ export const mainFooter = {
   logo8,
   bg: demoBg,
   title: "Let’s Start Working Together",
-  about:
-    "There are many variation of passages of lorem ipsum available, but the majority suffered.",
+  about: "There are many variation of passages of lorem ipsum available, but the majority suffered.",
   about2: "The new corporate agency theme",
-  about3:
-    "We’ve grown our business on a set of \n three building blocks. Enjoy the \n people you work.",
+  about3: "We’ve grown our business on a set of \n three building blocks. Enjoy the \n people you work.",
   text: "Welcome to our web design agency. Lorem ipsum simply free text dolor sited amet cons cing elit.",
   address: "66 Broklyn Street, New York \n United States of America",
   address3: "66 Mark Street, New Town DC 5752, Lo New York",
-  address2:
-    "214 Gold Street Round Road. 66 \n Code New York, United States \n of America",
+  address2: "214 Gold Street Round Road. 66 \n Code New York, United States \n of America",
   phone: "666 888 000",
   phone2: "+92 3333 222 000",
   email: "needhelp@linoor.com",
-  textBottom:
-    "Sign up for our latest news & articles. We won’t give you spam mails.",
-  subscribeText:
-    "Register and get notified about the news & updates before it gets too late.",
+  textBottom: "Sign up for our latest news & articles. We won’t give you spam mails.",
+  subscribeText: "Register and get notified about the news & updates before it gets too late.",
   socials: [
     {
       id: 1,
