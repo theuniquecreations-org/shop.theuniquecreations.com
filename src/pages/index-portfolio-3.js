@@ -1,5 +1,5 @@
 import HeaderThree from "@/components/Header/HeaderThree";
-import MobileMenu from "@/components/Header/MobileMenu";
+import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
 import PortfolioHorizontalTwo from "@/components/PortfolioHorizontal/PortfolioHorizontalTwo";
 import Style from "@/components/Reuseable/Style";

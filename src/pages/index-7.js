@@ -2,7 +2,7 @@ import AboutEight from "@/components/AboutSection/AboutEight";
 import AboutNine from "@/components/AboutSection/AboutNine";
 import FunFactSeven from "@/components/FunFacts/FunFactSeven";
 import HeaderTwo from "@/components/Header/HeaderTwo";
-import MobileMenu from "@/components/Header/MobileMenu";
+import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
 import FooterSeven from "@/components/MainFooter/FooterSeven";
 import BlogSeven from "@/components/NewsSection/BlogSeven";

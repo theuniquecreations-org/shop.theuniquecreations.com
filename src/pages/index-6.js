@@ -3,7 +3,7 @@ import AboutSix from "@/components/AboutSection/AboutSix";
 import FunFactSix from "@/components/FunFacts/FunFactSix";
 import HeaderSix from "@/components/Header/HeaderSix";
 import HeaderTwo from "@/components/Header/HeaderTwo";
-import MobileMenu from "@/components/Header/MobileMenu";
+import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
 import FooterSix from "@/components/MainFooter/FooterSix";
 import MapSix from "@/components/MapSection/MapSix";

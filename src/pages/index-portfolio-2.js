@@ -1,5 +1,5 @@
-import HeaderOne from "@/components/Header/HeaderOne";
-import MobileMenu from "@/components/Header/MobileMenu";
+import HeaderOne from "@/components/header/HeaderOne";
+import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
 import PortfolioHorizontal from "@/components/PortfolioHorizontal/PortfolioHorizontal";
 import Style from "@/components/Reuseable/Style";

@@ -1,5 +1,5 @@
-import HeaderOne from "@/components/Header/HeaderOne";
-import MobileMenu from "@/components/Header/MobileMenu";
+import HeaderOne from "@/components/header/HeaderOne";
+import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
 import MainFooterThree from "@/components/MainFooter/MainFooterThree";
 import PortfolioMasonary from "@/components/PortfolioMasonary/PortfolioMasonary";
