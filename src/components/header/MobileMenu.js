@@ -1,4 +1,4 @@
-import NavItem from "@/components/Header/NavItem";
+import NavItem from "@/components/header/NavItem";
 import { useRootContext } from "@/context/context";
 import headerData from "@/data/header";
 import React from "react";
