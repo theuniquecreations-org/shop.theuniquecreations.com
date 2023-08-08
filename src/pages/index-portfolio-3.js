@@ -1,4 +1,4 @@
-import HeaderThree from "@/components/Header/HeaderThree";
+import HeaderThree from "@/components/header/HeaderThree";
 import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
 import PortfolioHorizontalTwo from "@/components/PortfolioHorizontal/PortfolioHorizontalTwo";
