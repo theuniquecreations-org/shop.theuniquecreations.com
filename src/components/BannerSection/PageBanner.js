@@ -2,18 +2,10 @@ import bg from "@/images/background/image-7.jpg";
 import Link from "next/link";
 import React from "react";
 
-const PageBanner = ({
-  title = "",
-  page = "",
-  parent = "",
-  parentHref = "/",
-}) => {
+const PageBanner = ({ title = "", page = "", parent = "", parentHref = "/" }) => {
   return (
     <section className="page-banner">
-      <div
-        className="image-layer"
-        style={{ backgroundImage: `url(${bg.src})` }}
-      ></div>
+      <div className="image-layer" style={{ backgroundImage: `url(${bg.src})` }}></div>
       <div className="shape-1"></div>
       <div className="shape-2"></div>
       <div className="banner-inner">
