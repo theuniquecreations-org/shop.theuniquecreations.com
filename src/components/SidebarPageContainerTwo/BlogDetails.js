@@ -1,24 +1,15 @@
+import { useEffect, useState } from "react";
 import { blogDetails } from "@/data/sidebarPageContainerTwo";
 import Link from "next/link";
 import React, { Fragment } from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import CommentBox from "./CommentBox";
+import axios from "axios";
 
-const {
-  image,
-  date,
-  admin,
-  title,
-  text1,
-  text2,
-  comments,
-  tags,
-  category,
-  posts,
-  inputs,
-} = blogDetails;
+const { id, image, date, author, title, text1, text2, text3, text4, text5, comments, tags, category, posts, inputs } = blogDetails;
 
 const BlogDetails = () => {
+  const [blog, setBlog] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -27,14 +18,29 @@ const BlogDetails = () => {
     console.log(data);
   };
 
+  useEffect(() => {
+    console.log("ssnbloginisde");
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    console.log("ssnid", id);
+    const fetchData = async () => {
+      console.log("ssnbloginisdefetch");
+      const response = await axios.get("https://fi1gz5cu55.execute-api.ap-south-1.amazonaws.com/blog/" + id);
+      setBlog(response.data);
+      console.log("ssnbloginisde", response.data);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="blog-details">
       <div className="post-details">
         <div className="inner-box">
           <div className="image-box">
-            <Link href="/blog-single">
+            <Link href="/#">
               <a>
-                <Image src={image.src} alt="" />
+                <Image src={blog.image} alt="" />
               </a>
             </Link>
           </div>
@@ -42,24 +48,27 @@ const BlogDetails = () => {
             <div className="post-meta">
               <ul className="clearfix">
                 <li>
-                  <span className="far fa-clock"></span> {date}
+                  <span className="far fa-clock"></span> {blog.date}
                 </li>
                 <li>
-                  <span className="far fa-user-circle"></span> {admin}
+                  <span className="far fa-user-circle"></span> {blog.author}
                 </li>
-                <li>
-                  <span className="far fa-comments"></span> {comments.length}{" "}
-                  Comments
+                <li className="d-none">
+                  <span className="far fa-comments"></span> {comments.length} Comments
                 </li>
               </ul>
             </div>
-            <h4>{title}</h4>
+            <h4>{blog.title}</h4>
             <div className="text">
-              <p>{text1}</p>
-              <p>{text2}</p>
+              <p>{blog.text1}</p>
+              <p>{blog.text2}</p>
+              <p>{blog.text3}</p>
+              <p>{blog.text4}</p>
+              <p>{blog.text5}</p>
             </div>
           </div>
         </div>
+
         <div className="info-row clearfix">
           <div className="tags-info">
             <strong>Tags:</strong>{" "}
@@ -95,7 +104,7 @@ const BlogDetails = () => {
           ))}
         </Row>
       </div>
-      <div className="comments-area">
+      <div className="comments-area d-none">
         <div className="comments-title">
           <h3>{comments.length} Comments</h3>
         </div>
@@ -103,7 +112,7 @@ const BlogDetails = () => {
           <CommentBox key={comment.id} comment={comment} />
         ))}
       </div>
-      <div className="leave-comments">
+      <div className="leave-comments d-none">
         <div className="comments-title">
           <h3>Leave a comment</h3>
         </div>
@@ -111,26 +120,8 @@ const BlogDetails = () => {
           <form onSubmit={handleSubmit}>
             <Row className="clearfix">
               {inputs.map(({ name, type, placeholder, required }) => (
-                <Col
-                  key={name}
-                  md={type ? 6 : 12}
-                  sm={12}
-                  className="form-group"
-                >
-                  {type ? (
-                    <input
-                      type={type}
-                      name={name}
-                      placeholder={placeholder}
-                      required={required}
-                    />
-                  ) : (
-                    <textarea
-                      name={name}
-                      placeholder={placeholder}
-                      required={required}
-                    ></textarea>
-                  )}
+                <Col key={name} md={type ? 6 : 12} sm={12} className="form-group">
+                  {type ? <input type={type} name={name} placeholder={placeholder} required={required} /> : <textarea name={name} placeholder={placeholder} required={required}></textarea>}
                 </Col>
               ))}
               <Col md={12} sm={12} className="form-group">

@@ -3,13 +3,14 @@ import React from "react";
 import { Col, Image } from "react-bootstrap";
 
 const SingleNews = ({ news = {} }) => {
-  const { image, date, author, title, text } = news;
+  const { id, image, date, author, title, text } = news;
 
   return (
     <Col lg={4} md={6} sm={12} className="news-block animated fadeInUp">
       <div className="inner-box">
         <div className="image-box">
-          <Link href="/blog-single">
+          {id}
+          <Link href={"/blog-single?id=" + id}>
             <a>
               <Image src={image} alt="" />
             </a>
@@ -30,11 +31,11 @@ const SingleNews = ({ news = {} }) => {
             </ul>
           </div>
           <h5>
-            <Link href="/blog-single">{title}</Link>
+            <Link href={"/blog-single?id=" + id}>{title}</Link>
           </h5>
           <div className="text">{text}</div>
           <div className="link-box">
-            <Link href="/blog-single">
+            <Link href={"/blog-single?id=" + id}>
               <a className="theme-btn">
                 <span className="flaticon-next-1"></span>
               </a>
