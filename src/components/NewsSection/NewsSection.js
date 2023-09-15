@@ -1,14 +1,30 @@
+import React, { useEffect, useState } from "react";
 import newsSection from "@/data/newsSection";
 import useActive from "@/hooks/useActive";
 import Link from "next/link";
-import React from "react";
 import { Row } from "react-bootstrap";
 import SingleNews from "./SingleNews";
-
+import axios from "axios";
+//import config from "../../../config.json";
 const { title, newsData } = newsSection;
 
 const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
   const ref = useActive("#blog");
+  // call service to get blog data
+
+  const [blog, setBlog] = useState([]);
+  console.log("ssnblog", blog);
+  useEffect(() => {
+    console.log("ssnbloginisde");
+    const fetchData = async () => {
+      console.log("ssnbloginisdefetch");
+      const response = await axios.get("https://fi1gz5cu55.execute-api.ap-south-1.amazonaws.com/blog");
+      setBlog(response.data);
+      console.log("ssnbloginisde", response.data);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <section ref={ref} className={`news-section ${className}`} id="blog">
@@ -23,7 +39,10 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
         )}
 
         <Row className="clearfix">
-          {newsData.slice(0, showTitle ? 3 : undefined).map((news) => (
+          {/* {blog.slice(0, showTitle ? 3 : undefined).map((news) => (
+            <SingleNews key={news.id} news={news} />
+          ))} */}
+          {blog?.map((news) => (
             <SingleNews key={news.id} news={news} />
           ))}
         </Row>
@@ -32,7 +51,7 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
             <Link href="/blog">
               <a className="theme-btn btn-style-one">
                 <i className="btn-curve"></i>
-                <span className="btn-title">Load more posts</span>
+                <span className="btn-title">Load more posts ssn</span>
               </a>
             </Link>
           </div>

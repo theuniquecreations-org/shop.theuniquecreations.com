@@ -15,7 +15,7 @@ const BlogGrid = () => {
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Blog Posts" />
+      <PageBanner title="Blog Posts grid" />
       <NewsSection showTitle={false} isMore />
       <MainFooter />
     </Layout>
