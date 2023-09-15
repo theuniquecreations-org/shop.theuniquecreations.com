@@ -3,7 +3,7 @@ import React from "react";
 import { Col, Image } from "react-bootstrap";
 
 const SingleNews = ({ news = {} }) => {
-  const { image, date, admin, comments, title, text } = news;
+  const { image, date, author, title, text } = news;
 
   return (
     <Col lg={4} md={6} sm={12} className="news-block animated fadeInUp">
@@ -11,10 +11,7 @@ const SingleNews = ({ news = {} }) => {
         <div className="image-box">
           <Link href="/blog-single">
             <a>
-              <Image
-                src={require(`@/images/resource/${image}`).default.src}
-                alt=""
-              />
+              <Image src={image} alt="" />
             </a>
           </Link>
         </div>
@@ -25,10 +22,10 @@ const SingleNews = ({ news = {} }) => {
                 <span className="far fa-clock"></span> {date}
               </li>
               <li>
-                <span className="far fa-user-circle"></span> {admin}
+                <span className="far fa-user-circle"></span> {author}
               </li>
-              <li>
-                <span className="far fa-comments"></span> {comments} Comments
+              <li className="d-none">
+                <span className="far fa-comments"></span> Comments
               </li>
             </ul>
           </div>
