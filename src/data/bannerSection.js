@@ -3,21 +3,21 @@ import bg from "@/images/main-slider/banner-bg-shape-3.png";
 export const bannerTwo = [
   {
     id: 1,
-    bg: "1.jpg",
+    bg: "https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/websiteimages/slide1.jpg",
     subtitle: "welcome to Tales of Suba",
     title: "Read Review\nRecomend",
   },
   {
     id: 2,
-    bg: "2.jpg",
+    bg: "https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/websiteimages/slide2.jpg",
     subtitle: "welcome to Tales of Suba",
-    title: "Read Review\nRecomend",
+    title: "Travel Review\nRecomend",
   },
   {
     id: 3,
-    bg: "2.jpg",
+    bg: "https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/websiteimages/slide3.jpg",
     subtitle: "welcome to Tales of Suba",
-    title: "Read Review\nRecomend",
+    title: "Food Review\nRecomend",
   },
 ];
 

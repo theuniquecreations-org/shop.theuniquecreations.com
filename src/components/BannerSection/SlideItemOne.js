@@ -10,9 +10,7 @@ const SlideItemOne = ({ slide = {} }, ref) => {
       <div
         className="image-layer"
         style={{
-          backgroundImage: `url(${
-            require(`@/images/main-slider/${bg}`).default.src
-          })`,
+          backgroundImage: "url(" + bg + ")",
         }}
       ></div>
       <div className="left-top-line"></div>
