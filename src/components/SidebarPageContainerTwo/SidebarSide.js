@@ -19,12 +19,7 @@ const SidebarSide = () => {
         <div className="widget-inner">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <input
-                type="search"
-                name="search"
-                placeholder="Search"
-                required
-              />
+              <input type="search" name="search" placeholder="Search" required />
               <button type="submit">
                 <span className="icon flaticon-magnifying-glass-1"></span>
               </button>
@@ -42,10 +37,7 @@ const SidebarSide = () => {
           {posts.map(({ id, title, image }) => (
             <div key={id} className="post">
               <figure className="post-thumb">
-                <Image
-                  src={require(`@/images/resource/${image}`).default.src}
-                  alt=""
-                />
+                <Image src={require(`@/images/resource/${image}`).default.src} alt="" />
               </figure>
               <h5 className="text">
                 <a href="#">{title}</a>
@@ -86,7 +78,7 @@ const SidebarSide = () => {
         </div>
       </div>
 
-      <div className="sidebar-widget recent-comments">
+      <div className="sidebar-widget recent-comments d-none">
         <div className="widget-inner">
           <div className="sidebar-title">
             <h4>Comments</h4>
