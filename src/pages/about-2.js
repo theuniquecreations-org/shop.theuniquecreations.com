@@ -19,7 +19,7 @@ const About2 = () => {
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="About Two" page="About" />
+      <PageBanner title="About US" page="About" />
       <FeaturedSection className="featured-section__about-two" />
       <TeamThree className="team-three__about-two" />
       <ParallaxSection />
