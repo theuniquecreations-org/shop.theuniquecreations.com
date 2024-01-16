@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Row } from "react-bootstrap";
 import SingleNews from "./SingleNews";
 import axios from "axios";
-//import config from "../../../config.json";
+import config from "../../config.json";
 const { title, newsData } = newsSection;
 
 const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
@@ -18,7 +18,7 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
     console.log("ssnbloginisde");
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
-      const response = await axios.get("https://fi1gz5cu55.execute-api.ap-south-1.amazonaws.com/blog");
+      const response = await axios.get(config.service_url + "/blog");
       setBlog(response.data);
       console.log("ssnbloginisde", response.data);
     };

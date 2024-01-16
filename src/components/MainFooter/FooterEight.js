@@ -4,8 +4,7 @@ import React from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import TextSplit from "../Reuseable/TextSplit";
 
-const { year, author, socials, address2, phone2, email, about3, logo8 } =
-  mainFooter;
+const { year, author, socials, address2, phone2, email, about3, logo8 } = mainFooter;
 
 const FooterEight = () => {
   return (
@@ -21,14 +20,14 @@ const FooterEight = () => {
                 </p>
               </div>
             </Col>
-            <Col md={6} lg={3}>
+            {/* <Col md={6} lg={3}>
               <div className="footer-eight__widget">
                 <h3 className="footer-eight__title">Address</h3>
                 <p>
                   <TextSplit text={address2} />
                 </p>
               </div>
-            </Col>
+            </Col> */}
             <Col md={6} lg={3}>
               <div className="footer-eight__widget">
                 <h3 className="footer-eight__title">Contact</h3>

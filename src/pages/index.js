@@ -31,15 +31,16 @@ const Home = () => {
       <ServicesSectionOne />
       <AboutSection />
       {/* <LiveSection /> */}
-      <WeDOSection />
-      <GallerySectionOne />
+      {/* <WeDOSection /> */}
+      {/* <GallerySectionOne /> */}
       {/* <FunFactsOne /> */}
       {/* <TrustedSection /> */}
       {/* <TeamSection /> */}
       <ParallaxSection />
       {/* <SponsorsSection /> */}
       {/* <AgencySection /> */}
-      <NewsSection />
+      {/* <NewsSection /> */}
+      <br />
       <CallToSection />
       <MainFooter normalPadding={false} />
     </Layout>

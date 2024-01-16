@@ -1587,7 +1587,7 @@
   "resolved" "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   "version" "1.4.0"
 
-"next@12.1.5":
+"next@^12.1.5":
   "integrity" "sha512-YGHDpyfgCfnT5GZObsKepmRnne7Kzp7nGrac07dikhutWQug7hHg85/+sPJ4ZW5Q2pDkb+n0FnmLkmd44htIJQ=="
   "resolved" "https://registry.npmjs.org/next/-/next-12.1.5.tgz"
   "version" "12.1.5"
@@ -1916,18 +1916,19 @@
   dependencies:
     "countup.js" "^2.1.0"
 
-"react-dom@18.1.0":
-  "integrity" "sha512-fU1Txz7Budmvamp7bshe4Zi32d0ll7ect+ccxNu9FlObT605GOEB8BfO4tmRJ39R5Zj831VCpvQ05QPBW5yb+w=="
-  "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-18.1.0.tgz"
-  "version" "18.1.0"
+"react-dom@17.0.2":
+  "integrity" "sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA=="
+  "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-17.0.2.tgz"
+  "version" "17.0.2"
   dependencies:
     "loose-envify" "^1.1.0"
-    "scheduler" "^0.22.0"
+    "object-assign" "^4.1.1"
+    "scheduler" "^0.20.2"
 
-"react-hook-form@^7.30.0":
-  "integrity" "sha512-DzjiM6o2vtDGNMB9I4yCqW8J21P314SboNG1O0obROkbg7KVS0I7bMtwSdKyapnCPjHgnxc3L7E5PEdISeEUcQ=="
-  "resolved" "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.30.0.tgz"
-  "version" "7.30.0"
+"react-hook-form@^7.49.3":
+  "integrity" "sha512-foD6r3juidAT1cOZzpmD/gOKt7fRsDhXXZ0y28+Al1CHgX+AY1qIN9VSIIItXRq1dN68QrRwl1ORFlwjBaAqeQ=="
+  "resolved" "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.49.3.tgz"
+  "version" "7.49.3"
 
 "react-is@^16.12.0", "react-is@^16.13.1", "react-is@^16.3.2", "react-is@^16.7.0":
   "integrity" "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="
@@ -2004,6 +2005,11 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
+"react-uuid@^2.0.0":
+  "integrity" "sha512-FNUH/8WR/FEtx0Bu6gmt1eONfc413hhvrEXFWUSFGvznUhI4dYoVZA09p7JHoTpnM4WC2D/bG2YSxGKXF4oVLg=="
+  "resolved" "https://registry.npmjs.org/react-uuid/-/react-uuid-2.0.0.tgz"
+  "version" "2.0.0"
+
 "react-visibility-sensor@^5.1.1":
   "integrity" "sha512-cTUHqIK+zDYpeK19rzW6zF9YfT4486TIgizZW53wEZ+/GPBbK7cNS0EHyJVyHYacwFEvvHLEKfgJndbemWhB/w=="
   "resolved" "https://registry.npmjs.org/react-visibility-sensor/-/react-visibility-sensor-5.1.1.tgz"
@@ -2011,12 +2017,13 @@
   dependencies:
     "prop-types" "^15.7.2"
 
-"react@18.1.0":
-  "integrity" "sha512-4oL8ivCz5ZEPyclFQXaNksK3adutVS8l2xzZU0cqEFrE9Sb7fC0EFK5uEk74wIreL1DERyjvsU915j1pcT2uEQ=="
-  "resolved" "https://registry.npmjs.org/react/-/react-18.1.0.tgz"
-  "version" "18.1.0"
+"react@17.0.2":
+  "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
+  "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
+  "version" "17.0.2"
   dependencies:
     "loose-envify" "^1.1.0"
+    "object-assign" "^4.1.1"
 
 "regenerator-runtime@^0.13.4":
   "integrity" "sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA=="
@@ -2088,12 +2095,13 @@
   "resolved" "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
   "version" "5.1.2"
 
-"scheduler@^0.22.0":
-  "integrity" "sha512-6QAm1BgQI88NPYymgGQLCZgvep4FyePDWFpXVK+zNSUgHwlqpJy8VEh8Et0KxTACS4VWwMousBElAZOH9nkkoQ=="
-  "resolved" "https://registry.npmjs.org/scheduler/-/scheduler-0.22.0.tgz"
-  "version" "0.22.0"
+"scheduler@^0.20.2":
+  "integrity" "sha512-2eWfGgAqqWFGqtdMmcL5zCMK1U8KlXv8SQFGglL3CEtd0aDVDWgeF/YoCmvln55m5zSk3J/20hTaSBeSObsQDQ=="
+  "resolved" "https://registry.npmjs.org/scheduler/-/scheduler-0.20.2.tgz"
+  "version" "0.20.2"
   dependencies:
     "loose-envify" "^1.1.0"
+    "object-assign" "^4.1.1"
 
 "semver@^6.3.0":
   "integrity" "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="

@@ -22,6 +22,7 @@ const HomeMain = () => {
   return (
     <Layout pageTitle="Home 02">
       <Style />
+
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />

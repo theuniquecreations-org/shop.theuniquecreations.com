@@ -42,44 +42,44 @@ export const serviceSectionThree = [
   {
     id: 1,
     icon: "flaticon-responsive",
-    href: "/web-development",
-    title: "Website\nDevelopment",
+    href: "/#",
+    title: "Life\nStyle",
   },
   {
     id: 2,
     icon: "flaticon-computer",
-    href: "/graphic-designing",
+    href: "/#",
     title: "Photography\n",
   },
   {
     id: 3,
     icon: "flaticon-digital-marketing",
-    href: "/digital-marketing",
-    title: "Portfolio\nCreation",
+    href: "/#",
+    title: "Travel &\nExplore",
   },
   {
     id: 4,
     icon: "flaticon-development",
-    href: "/seo",
+    href: "/#",
     title: "Book\nReview",
   },
   {
     id: 5,
     icon: "flaticon-app-development",
-    href: "/app-development",
-    title: "E-Commerce\n",
+    href: "/#",
+    title: "Blogging",
   },
   {
     id: 6,
     icon: "flaticon-ui",
-    href: "/ui-designing",
-    title: "Ui/UX\ndesigning",
+    href: "/#",
+    title: "Food\nReview",
   },
 ];
 
 export const servicesSectionOne = {
-  title: "We Shape the Perfect\nSolutions",
-  text: "We are committed to providing our customers with exceptional service while offering our employees the best training.",
+  title: "We Explore all these\nTogether",
+  text: "Life's symphony plays love's melody; cherish each note, dance with joy, embrace every moment.",
   services: serviceSectionThree,
 };
 

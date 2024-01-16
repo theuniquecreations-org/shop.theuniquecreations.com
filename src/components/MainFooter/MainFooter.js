@@ -4,18 +4,7 @@ import React from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import TextSplit from "../Reuseable/TextSplit";
 
-const {
-  year,
-  author,
-  logo,
-  text,
-  socials,
-  links,
-  address,
-  phone,
-  email,
-  textBottom,
-} = mainFooter;
+const { year, author, logo, text, socials, links, address, phone, email, textBottom } = mainFooter;
 
 const MainFooter = ({ normalPadding = true }) => {
   const handleSubmit = (e) => {
@@ -84,14 +73,14 @@ const MainFooter = ({ normalPadding = true }) => {
                 <div className="widget-content">
                   <h6>Contact</h6>
                   <ul className="contact-info">
-                    <li className="address">
+                    {/* <li className="address">
                       <span className="icon flaticon-pin-1"></span>{" "}
                       <TextSplit text={address} />
                     </li>
                     <li>
                       <span className="icon flaticon-call"></span>
                       <a href={`tel:${phone.split(" ").join("")}`}>{phone}</a>
-                    </li>
+                    </li> */}
                     <li>
                       <span className="icon flaticon-email-2"></span>
                       <a href={`mailto:${email}`}>{email}</a>
@@ -107,12 +96,7 @@ const MainFooter = ({ normalPadding = true }) => {
                   <div className="newsletter-form">
                     <form onSubmit={handleSubmit}>
                       <div className="form-group clearfix">
-                        <input
-                          type="email"
-                          name="email"
-                          placeholder="Email Address"
-                          required
-                        />
+                        <input type="email" name="email" placeholder="Email Address" required />
                         <button type="submit" className="theme-btn">
                           <span className="fa fa-envelope"></span>
                         </button>

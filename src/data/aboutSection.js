@@ -15,16 +15,10 @@ import image13 from "@/images/update-26-02-2021/resources/about-me-1.jpg";
 export const aboutSectionOne = {
   image1,
   image2,
-  title: "We’re the best agency\nin downtown",
-  text1:
-    "We are committed to providing our customers with exceptional service while offering our employees the best training.",
-  text2:
-    "Lorem Ipsum is simply dummy text of free available in market the printing and typesetting industry has been the industry's standard dummy text ever.",
-  textList: [
-    "Suspe ndisse suscipit sagittis leo.",
-    "Entum estibulum dignissim posuere.",
-    "If you are going to use a passage.",
-  ],
+  title: "Love, Life, Time have chosen us to be together",
+  text1: "We are committed to providing our customers with exceptional service while offering our employees the best training.",
+  text2: "Lorem Ipsum is simply dummy text of free available in market the printing and typesetting industry has been the industry's standard dummy text ever.",
+  textList: ["Suspe ndisse suscipit sagittis leo.", "Entum estibulum dignissim posuere.", "If you are going to use a passage."],
   since: "2008",
 };
 
@@ -44,11 +38,7 @@ export const aboutSectionThree = {
   title: "The Right People for your Business",
   subtitle: "welcome to business agency",
   text: "There are many variations of passages of available but the majority have suffered alteration in some form, by injected humou or randomised words which don look even slightly believable.",
-  lists: [
-    "If you are going to use a passage",
-    "Lorem Ipsum is not simply random text",
-    "Making this the first true generator on the Internet",
-  ],
+  lists: ["If you are going to use a passage", "Lorem Ipsum is not simply random text", "Making this the first true generator on the Internet"],
   barTitle: "Bussiness Success",
   barPercent: 70,
   aboutPerson: { name: "William Smith", tagline: "Co Founder", image: image5 },
@@ -60,11 +50,7 @@ export const aboutSeven = {
   title: "We provide the best business services",
   text: "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, simply free text by injected humour, or randomised.",
   title2: "Linoor is the largest digital marketing agency.",
-  lists: [
-    "We’re professional and certified designers",
-    "We use quality material to make your walls awesome",
-    "We care about our customers satisfaction",
-  ],
+  lists: ["We’re professional and certified designers", "We use quality material to make your walls awesome", "We care about our customers satisfaction"],
 };
 
 export const aboutSix = {
@@ -97,11 +83,7 @@ export const aboutNine = {
   title: "Powerful Tools for Your Customers",
   titleHighlight: "Tools",
   text: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-  lists: [
-    "Refresing to get such a personal touch.",
-    "Duis aute irure dolor in reprehenderit in voluptate.",
-    "Velit esse cillum dolore eu fugiat nulla pariatur.",
-  ],
+  lists: ["Refresing to get such a personal touch.", "Duis aute irure dolor in reprehenderit in voluptate.", "Velit esse cillum dolore eu fugiat nulla pariatur."],
 };
 
 export const aboutEight = {
@@ -171,8 +153,7 @@ export const aboutMeOne = {
   image: image13,
   title: "Jessica brown",
   text: "Lorem ipsum dolor sit amet, con adipiscing elit tiam convallis elit id impedie. Quisq commodo simply free ornare tortor. Excepteur sint occaecat sunt in culpa qui officia deserunt mollit.",
-  text2:
-    "If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.",
+  text2: "If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.",
   text3: "I help my clients stand out and they help me grow.",
   socials: [
     {
