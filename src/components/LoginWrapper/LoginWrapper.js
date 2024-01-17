@@ -3,14 +3,12 @@ import Link from "next/link";
 import React from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import TextSplit from "../Reuseable/TextSplit";
+import config from "../../config.json";
 
 const { bg, logo, logoTitle, year, author, inputs, forgotText } = loginWrapper;
 
 const LoginWrapper = ({ register = false, forgot = false }) => {
-  const newInputs = inputs.slice(
-    register ? 0 : 1,
-    register ? undefined : forgot ? 2 : 3
-  );
+  const newInputs = inputs.slice(register ? 0 : 1, register ? undefined : forgot ? 2 : 3);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,24 +20,14 @@ const LoginWrapper = ({ register = false, forgot = false }) => {
 
   return (
     <section className="login-wrapper">
-      <div
-        className="login-bg"
-        style={{ backgroundImage: `url(${bg.src})` }}
-      ></div>
+      <div className="login-bg" style={{ backgroundImage: `url(${bg.src})` }}></div>
       <div className="login-content">
         <div className="login-content__inner">
           <div className="logo-box">
             <div className="logo text-center">
               <Link href="/">
                 <a title={logoTitle}>
-                  <Image
-                    src={logo.src}
-                    width={134}
-                    id="dLogo"
-                    className="main-logo"
-                    alt={logoTitle}
-                    title={logoTitle}
-                  />
+                  <Image src={config.logo1} width={134} id="dLogo" className="main-logo" alt={logoTitle} title={logoTitle} />
                 </a>
               </Link>
             </div>
@@ -48,41 +36,19 @@ const LoginWrapper = ({ register = false, forgot = false }) => {
             <Row>
               {newInputs.map(({ name, type, placeholder, required }) => (
                 <Col key={name} md={12}>
-                  <input
-                    type={type}
-                    name={name}
-                    placeholder={placeholder}
-                    required={required}
-                  />
+                  <input type={type} name={name} placeholder={placeholder} required={required} />
                 </Col>
               ))}
             </Row>
-            {!register && (
-              <p className="text-right">
-                {forgot ? (
-                  <TextSplit text={forgotText} />
-                ) : (
-                  <Link href="/forgot-password">Forgot your password?</Link>
-                )}
-              </p>
-            )}
+            {/* {!register && <p className="text-right">{forgot ? <TextSplit text={forgotText} /> : <Link href="/forgot-password">Forgot your password?</Link>}</p>} */}
             <button type="submit" className="theme-btn btn-style-one">
               <i className="btn-curve"></i>
-              <span className="btn-title">
-                {register
-                  ? "Register Now"
-                  : forgot
-                  ? "Reset Password"
-                  : "Sign in"}
-              </span>
+              <span className="btn-title">{register ? "Register Now" : forgot ? "Reset Password" : "Sign in"}</span>
             </button>
           </form>
-          <p className="signup-link">
-            {register ? "Already have an Account?" : "New to linoor?"}{" "}
-            <Link href={register ? "/login" : "/register"}>
-              {register ? "Login Here" : "Signup"}
-            </Link>
-          </p>
+          {/* <p className="signup-link">
+            {register ? "Already have an Account?" : "New to linoor?"} <Link href={register ? "/login" : "/register"}>{register ? "Login Here" : "Signup"}</Link>
+          </p> */}
           <p className="copyright-text">
             © copyright {year} by {author}
           </p>

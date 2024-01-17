@@ -1,7 +1,6 @@
 import image from "@/images/update-26-01-2021/shops/paypal-1.jpg";
 
-const text =
-  "Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order wont be shipped until the funds have cleared.";
+const text = "Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order wont be shipped until the funds have cleared.";
 
 export const checkoutPage = {
   checkoutMethods: [

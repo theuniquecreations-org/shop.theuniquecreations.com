@@ -5,44 +5,15 @@ import Link from "next/link";
 import React from "react";
 import { Image } from "react-bootstrap";
 import NavItem from "./NavItem";
+import config from "../../config.json";
 
-const {
-  title,
-  logo1,
-  logo2,
-  logo3,
-  logo4,
-  logo5,
-  logo9,
-  title2,
-  navItems,
-  navItemsTwo,
-  phone,
-  socials,
-} = headerData;
+const { title, logo1, logo2, logo3, logo4, logo5, logo9, title2, navItems, navItemsTwo, phone, socials } = headerData;
 
-const HeaderOne = ({
-  headerStyle = "header-style-one",
-  logo = 1,
-  onePage = false,
-  topBar = false,
-  autoContainer = false,
-  links = true,
-  rightMenu = false,
-}) => {
+const HeaderOne = ({ headerStyle = "header-style-one", logo = 1, onePage = false, topBar = false, autoContainer = false, links = true, rightMenu = false }) => {
   const { scrollTop } = useScroll(120);
   const { toggleMenu, toggleSearch } = useRootContext();
   const newNavItems = onePage ? navItemsTwo : navItems;
-  let Logo =
-    logo === 2
-      ? logo2
-      : logo === 3
-      ? logo3
-      : logo === 5
-      ? logo5
-      : logo === 9
-      ? logo9
-      : logo1;
+  let Logo = logo === 2 ? logo2 : logo === 3 ? logo3 : logo === 5 ? logo5 : logo === 9 ? logo9 : logo1;
 
   if (logo === 4) {
     if (scrollTop) {
@@ -53,11 +24,7 @@ const HeaderOne = ({
   }
 
   return (
-    <header
-      className={`main-header${
-        scrollTop ? " fixed-header" : ""
-      } ${headerStyle}`}
-    >
+    <header className={`main-header${scrollTop ? " fixed-header" : ""} ${headerStyle}`}>
       {topBar && (
         <div className="topbar-four">
           <div className="auto-container">
@@ -82,21 +49,12 @@ const HeaderOne = ({
       )}
       <div className="header-upper">
         <div className={autoContainer ? "inner-container clearfix" : ""}>
-          <div
-            className={
-              autoContainer ? "auto-container" : "inner-container clearfix"
-            }
-          >
+          <div className={autoContainer ? "auto-container" : "inner-container clearfix"}>
             <div className="logo-box">
               <div className="logo">
                 <Link href="/">
                   <a title={title}>
-                    <Image
-                      id="thm-logo"
-                      src={Logo.src}
-                      alt={title}
-                      title={title}
-                    />
+                    <Image id="thm-logo" src={Logo.src} alt={title} title={title} />
                   </a>
                 </Link>
               </div>
@@ -108,21 +66,10 @@ const HeaderOne = ({
               </div>
 
               <nav className="main-menu navbar-expand-md navbar-light">
-                <div
-                  className={
-                    autoContainer
-                      ? ""
-                      : "collapse navbar-collapse show clearfix"
-                  }
-                  id={autoContainer ? "" : "navbarSupportedContent"}
-                >
+                <div className={autoContainer ? "" : "collapse navbar-collapse show clearfix"} id={autoContainer ? "" : "navbarSupportedContent"}>
                   <ul className="navigation clearfix">
                     {newNavItems.map((navItem) => (
-                      <NavItem
-                        navItem={navItem}
-                        key={navItem.id}
-                        onePage={onePage}
-                      />
+                      <NavItem navItem={navItem} key={navItem.id} onePage={onePage} />
                     ))}
                   </ul>
                 </div>
@@ -139,23 +86,16 @@ const HeaderOne = ({
                   </Link>
                 </div>
                 <div className="search-btn">
-                  <button
-                    onClick={toggleSearch}
-                    type="button"
-                    className="theme-btn search-toggler"
-                  >
+                  <button onClick={toggleSearch} type="button" className="theme-btn search-toggler">
                     <span className="flaticon-loupe"></span>
                   </button>
                 </div>
                 <div className="link-box">
                   <div className="call-us">
-                    <a
-                      className="link"
-                      href={`tel:${phone.split(" ").join("")}`}
-                    >
+                    <a className="link" target="blank" href={config.instagram}>
                       <span className="icon"></span>
-                      <span className="sub-text">Call Anytime</span>
-                      <span className="number">{phone}</span>
+                      <span className="sub-text">Instagram</span>
+                      <span className="number">@talesofSuBa</span>
                     </a>
                   </div>
                 </div>
@@ -164,11 +104,7 @@ const HeaderOne = ({
             {rightMenu && (
               <div className="right-menu">
                 <div className="search-btn">
-                  <button
-                    onClick={toggleSearch}
-                    type="button"
-                    className="theme-btn search-toggler"
-                  >
+                  <button onClick={toggleSearch} type="button" className="theme-btn search-toggler">
                     <span className="flaticon-loupe"></span>
                   </button>
                 </div>

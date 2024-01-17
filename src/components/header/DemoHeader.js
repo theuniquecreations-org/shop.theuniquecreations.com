@@ -14,8 +14,8 @@ const DemoHeader = () => {
           <div className="logo-box">
             <div className="logo">
               <Link href="/index-main">
-                <a title="Linoor - DIgital Agency HTML Template">
-                  <Image src={logo.src} width={133} height={34} id="dLogo" className="main-logo" alt="Linoor - DIgital Agency HTML Template" title="Linoor - DIgital Agency HTML Template" />
+                <a title="Tale Of SuBa">
+                  <Image src={logo.src} width={133} height={34} id="dLogo" className="main-logo" alt="Tale Of SuBa" title="Tale Of SuBa" />
                 </a>
               </Link>
             </div>
