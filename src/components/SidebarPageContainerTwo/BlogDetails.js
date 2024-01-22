@@ -40,7 +40,7 @@ const BlogDetails = () => {
           <div className="image-box">
             <Link href="/#">
               <a>
-                <Image src={blog.image} alt="" />
+                <Image src={blog.thumbnail} alt="" />
               </a>
             </Link>
           </div>
@@ -51,7 +51,7 @@ const BlogDetails = () => {
                   <span className="far fa-clock"></span> {blog.date}
                 </li>
                 <li>
-                  <span className="far fa-user-circle"></span> {blog.author}
+                  <span className="far fa-user-circle"></span> talesofSuBa
                 </li>
                 <li className="d-none">
                   <span className="far fa-comments"></span> {comments.length} Comments
@@ -60,7 +60,7 @@ const BlogDetails = () => {
             </div>
             <h4>{blog.title}</h4>
             <div className="text">
-              <p>{blog.text1}</p>
+              <div dangerouslySetInnerHTML={{ __html: blog.description }} />
               <p>{blog.text2}</p>
               <p>{blog.text3}</p>
               <p>{blog.text4}</p>
@@ -69,7 +69,7 @@ const BlogDetails = () => {
           </div>
         </div>
 
-        <div className="info-row clearfix">
+        <div className="info-row clearfix d-none">
           <div className="tags-info">
             <strong>Tags:</strong>{" "}
             {tags.map((tag, i) => (
@@ -79,7 +79,7 @@ const BlogDetails = () => {
               </Fragment>
             ))}
           </div>
-          <div className="cat-info">
+          <div className="cat-info d-none">
             <strong>Category:</strong>{" "}
             {category.map((cate, i) => (
               <Fragment key={i}>
@@ -90,7 +90,7 @@ const BlogDetails = () => {
           </div>
         </div>
       </div>
-      <div className="post-control-two">
+      <div className="post-control-two d-none">
         <Row className="clearfix">
           {posts.map((post, i) => (
             <Col key={i} md={6} sm={12} className="control-col">

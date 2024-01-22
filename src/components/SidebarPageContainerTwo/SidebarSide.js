@@ -47,7 +47,7 @@ const SidebarSide = () => {
         </div>
       </div>
 
-      <div className="sidebar-widget archives">
+      <div className="sidebar-widget archives d-none">
         <div className="widget-inner">
           <div className="sidebar-title">
             <h4>Categories</h4>
@@ -62,7 +62,7 @@ const SidebarSide = () => {
         </div>
       </div>
 
-      <div className="sidebar-widget popular-tags">
+      <div className="sidebar-widget popular-tags d-none">
         <div className="widget-inner">
           <div className="sidebar-title">
             <h4>Tags</h4>
