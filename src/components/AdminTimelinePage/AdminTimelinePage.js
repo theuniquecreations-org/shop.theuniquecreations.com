@@ -22,10 +22,6 @@ const options = [
     value: "blog",
     label: "blog",
   },
-  {
-    value: "timeline",
-    label: "timeline",
-  },
 ];
 const catoptions = [
   {
@@ -88,7 +84,7 @@ const CheckoutPage = () => {
       title: data.title,
       category: cat,
       description: content,
-      thumbnail: "s3url",
+      thumbnail: country === "timeline" ? config.timelinethumbnail : cat === "bookreview" ? config.blogthumbnail : config.bookreviewthumbnail,
       createddate: data.date,
       isactive: 1,
       website: "talesofsuba.com",

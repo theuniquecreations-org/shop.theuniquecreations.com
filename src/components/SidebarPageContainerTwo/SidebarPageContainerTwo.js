@@ -21,11 +21,7 @@ const SidebarPageContainerTwo = ({ isDetails = false }) => {
         <div className="auto-container">
           <Row className="clearfix">
             <Col lg={8} md={12} sm={12} className="content-side">
-              {isDetails ? (
-                <BlogDetails />
-              ) : (
-                <ContentSide handleOpen={handleOpen} />
-              )}
+              {isDetails ? <BlogDetails /> : <ContentSide handleOpen={handleOpen} />}
             </Col>
             <Col lg={4} md={12} sm={12} className="sidebar-side">
               <SidebarSide />
@@ -33,9 +29,7 @@ const SidebarPageContainerTwo = ({ isDetails = false }) => {
           </Row>
         </div>
       </div>
-      {!isDetails && (
-        <VideoModal isOpen={isOpen} setOpen={setOpen} id={videoId} />
-      )}
+      {!isDetails && <VideoModal isOpen={isOpen} setOpen={setOpen} id={videoId} />}
     </>
   );
 };
