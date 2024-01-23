@@ -34,7 +34,7 @@ const SingleNews = ({ news = {} }) => {
           </h5>
           <div className="text">
             {/* <div style={{ color: "#2ecc71", fontSize: "12px" }} dangerouslySetInnerHTML={{ __html: description }} /> */}
-            <div dangerouslySetInnerHTML={{ __html: description }} />
+            <div style={{ fontSize: "Normal" }} dangerouslySetInnerHTML={{ __html: description.substring(0, 100) }} />
           </div>
           <div className="link-box">
             <Link href={"/blog-single?id=" + id}>

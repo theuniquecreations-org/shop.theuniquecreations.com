@@ -84,12 +84,16 @@ const CheckoutPage = () => {
       title: data.title,
       category: cat,
       description: content,
-      thumbnail: country === "timeline" ? config.timelinethumbnail : cat === "bookreview" ? config.blogthumbnail : config.bookreviewthumbnail,
+      thumbnail: country === "timeline" ? config.timelinethumbnail : cat === "bookreview" ? config.bookreviewthumbnail : config.blogthumbnail,
       createddate: data.date,
       isactive: 1,
       website: "talesofsuba.com",
     };
-    if (cat === "" || country === "" || content === "") {
+    if (country === "") {
+      setMessage("Please select Type");
+      return;
+    }
+    if (country === "blog" && (cat === "" || content === "")) {
       setMessage("Please select Type/Caetegory/Content");
       return;
     }
@@ -105,6 +109,7 @@ const CheckoutPage = () => {
           setCat("");
           setCountry("");
           setMessage("Sucessfully Submitted");
+          window.location.reload();
         } else {
         }
       })

@@ -1,40 +1,46 @@
 import { processOne } from "@/data/processSection";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Col, Image, Row } from "react-bootstrap";
+import axios from "axios";
+import config from "../../config.json";
 
 const ProcessOne = () => {
+  // subhabala
+
+  const [timeline, setTimeline] = useState([]);
+
+  useEffect(() => {
+    console.log("ssnbloginisde");
+    const fetchData = async () => {
+      console.log("ssntimleineinisdefetch");
+      const response = await axios.get(config.service_url + "/timeline");
+      setTimeline(response.data);
+      console.log("ssntimleineinisde", response.data);
+    };
+
+    fetchData();
+  }, []);
   return (
     <section className="process-one">
       <div className="auto-container">
-        {processOne.map(({ id, image, title, text, lists }) => (
-          <Row key={id}>
+        {timeline?.map((tim) => (
+          <Row key={1}>
             <Col md={12} lg={6} className="process-one__image__column">
               <div className="process-one__image animated fadeInLeft">
-                <Image
-                  src={
-                    require(`@/images/update-01-10-2021/resources/${image}`)
-                      .default.src
-                  }
-                  alt=""
-                />
+                <Image src={tim.thumbnail} alt="talesofsuba" />
               </div>
             </Col>
             <Col md={12} lg={6}>
               <div className="process-one__content">
                 <div className="sec-title">
                   <h2>
-                    {title} <span className="dot">.</span>
+                    {tim.title} <span className="dot">.</span>
                   </h2>
                 </div>
-                <p className="process-one__summery">{text}</p>
-                <ul className="list-unstyled process-one__list">
-                  {lists.map((text, i) => (
-                    <li key={i}>
-                      <i className="flaticon-check"></i>
-                      {text}
-                    </li>
-                  ))}
-                </ul>
+                <p className="process-one__summery">
+                  {" "}
+                  <div dangerouslySetInnerHTML={{ __html: tim.description }} />
+                </p>
               </div>
             </Col>
           </Row>
