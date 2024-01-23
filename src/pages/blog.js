@@ -17,6 +17,10 @@ const Blog = () => {
       <SearchPopup />
       <PageBanner title="Blog Posts" />
       <SidebarPageContainerTwo />
+      <div className="sponsors-section__about-two">
+        <br />
+        <br />
+      </div>
       <MainFooter />
     </Layout>
   );

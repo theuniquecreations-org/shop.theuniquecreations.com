@@ -149,7 +149,7 @@ const navItems = [
   {
     id: 2,
     name: "About Us",
-    href: "https://wedding.talesofsuba.com",
+    href: "/about-2",
     href_old: "/about-2",
   },
 

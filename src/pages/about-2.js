@@ -21,10 +21,14 @@ const About2 = () => {
       <SearchPopup />
       <PageBanner title="About US" page="About" />
       <FeaturedSection className="featured-section__about-two" />
-      <TeamThree className="team-three__about-two" />
-      <ParallaxSection />
-      <TestimonialsFour />
-      <SponsorsSection className="sponsors-section__about-two" />
+      {/* <TeamThree className="team-three__about-two" /> */}
+      {/* <ParallaxSection /> */}
+      {/* <TestimonialsFour /> */}
+      {/* <SponsorsSection className="sponsors-section__about-two" /> */}
+      <div className="sponsors-section__about-two">
+        <br />
+        <br />
+      </div>
       <MainFooter />
     </Layout>
   );

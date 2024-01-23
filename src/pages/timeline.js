@@ -19,6 +19,10 @@ const Process = () => {
       <PageBanner title="our timeline" page="timeline" parent="Page" />
       <ProcessOne />
       <CallToSection />
+      <div className="sponsors-section__about-two">
+        <br />
+        <br />
+      </div>
       <MainFooter normalPadding={false} />
     </Layout>
   );
