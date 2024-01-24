@@ -205,8 +205,8 @@ const CheckoutPage = () => {
 
     // S3 Credentials
     AWS.config.update({
-      accessKeyId: "AKIA52CURCVVCDA6MJGC",
-      secretAccessKey: "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",
+      accessKeyId: "",
+      secretAccessKey: "",
     });
     const s3 = new AWS.S3({
       params: { Bucket: S3_BUCKET },
