@@ -32,7 +32,7 @@ const Home = () => {
       <AboutSection />
       {/* <LiveSection /> */}
       {/* <WeDOSection /> */}
-      {/* <GallerySectionOne /> */}
+      <GallerySectionOne />
       {/* <FunFactsOne /> */}
       {/* <TrustedSection /> */}
       {/* <TeamSection /> */}
