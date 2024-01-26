@@ -5,8 +5,9 @@ import React, { Fragment } from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import CommentBox from "./CommentBox";
 import axios from "axios";
+import config from "../../config.json";
 
-const { id, image, date, author, title, text1, text2, text3, text4, text5, comments, tags, category, posts, inputs } = blogDetails;
+const { id, slug, image, date, author, title, text1, text2, text3, text4, text5, comments, tags, category, posts, inputs } = blogDetails;
 
 const BlogDetails = () => {
   const [blog, setBlog] = useState([]);
@@ -25,8 +26,9 @@ const BlogDetails = () => {
     console.log("ssnid", id);
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
-      const response = await axios.get("https://fi1gz5cu55.execute-api.ap-south-1.amazonaws.com/blog/" + id);
-      setBlog(response.data);
+      id === "undefined" ? "a" : id;
+      const response = await axios.get(config.service_url + "/blog/" + id);
+      setBlog(response.data[0]);
       console.log("ssnbloginisde", response.data);
     };
 
@@ -40,7 +42,7 @@ const BlogDetails = () => {
           <div className="image-box">
             <Link href="/#">
               <a>
-                <Image src={blog.thumbnail} alt="" />
+                <Image src={blog?.thumbnail} alt="" />
               </a>
             </Link>
           </div>
@@ -48,7 +50,7 @@ const BlogDetails = () => {
             <div className="post-meta">
               <ul className="clearfix">
                 <li>
-                  <span className="far fa-clock"></span> {blog.date}
+                  <span className="far fa-clock"></span> {blog?.date}
                 </li>
                 <li>
                   <span className="far fa-user-circle"></span> talesofSuBa
@@ -58,13 +60,13 @@ const BlogDetails = () => {
                 </li>
               </ul>
             </div>
-            <h4>{blog.title}</h4>
+            <h4>{blog?.title}</h4>
             <div className="text">
-              <div dangerouslySetInnerHTML={{ __html: blog.description }} />
-              <p>{blog.text2}</p>
-              <p>{blog.text3}</p>
-              <p>{blog.text4}</p>
-              <p>{blog.text5}</p>
+              <div dangerouslySetInnerHTML={{ __html: blog?.description }} />
+              <p>{blog?.text2}</p>
+              <p>{blog?.text3}</p>
+              <p>{blog?.text4}</p>
+              <p>{blog?.text5}</p>
             </div>
           </div>
         </div>

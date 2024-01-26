@@ -10,12 +10,12 @@ import React from "react";
 
 const BlogSingle = () => {
   return (
-    <Layout pageTitle="Blog Single">
+    <Layout pageTitle="Blog Details">
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Blog Posts" page="Blog Single" />
+      <PageBanner title="Blog Posts" page="Blog Details" />
       <SidebarPageContainerTwo isDetails />
       <div className="sponsors-section__about-two">
         <br />

@@ -9,7 +9,9 @@ import config from "../../config.json";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import AWS from "aws-sdk";
-
+import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
+const S3KEY = process.env.REACT_APP_S3KEY;
+const S3SECRET = process.env.REACT_APP_S3SECRET;
 const options = [
   {
     value: "",
@@ -75,6 +77,7 @@ const QuillEditor = dynamic(() => import("react-quill"), { ssr: false });
 const { inputs, checkoutMethods } = timelinePage;
 
 const CheckoutPage = () => {
+  const [currentDate, setCurrentDate] = useState(getDate());
   const editorRef = useRef(null);
   const [currentCheckout, setCurrentCheckout] = useState(1);
   const [country, setCountry] = useState("");
@@ -87,25 +90,45 @@ const CheckoutPage = () => {
   const [progress, setProgress] = useState("");
   const [url, seturl] = useState("");
   const [imagetype, setimagetype] = useState("");
+  const [imagedescription, setimagedescription] = useState("");
   seturl;
   const quillModules = {
     toolbar: [[{ header: [1, 2, 3, false] }], ["bold", "italic", "underline", "strike", "blockquote"], [{ list: "ordered" }, { list: "bullet" }], ["link", "image"], [{ align: [] }], [{ color: [] }], ["code-block"], ["clean"]],
   };
   const quillFormats = ["header", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "link", "image", "align", "color", "code-block"];
+  function getDate() {
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const date = today.getDate();
+    return `${month}/${date}/${year}`;
+  }
   const handleEditorChange = (newContent) => {
     setContent(newContent);
+    setMessage("");
+  };
+  const handleImgDesc = (value) => {
+    setimagedescription(value.target.value);
+    console.log("imagedescription", value.target.value);
+    setMessage("");
   };
   const handleSelecttype = ({ value }) => {
     setCountry(value);
     setType(value);
+    setMessage("");
     if (value == "blog") setBlog(true);
     else setBlog(false);
+    if (value == "gallery") {
+    }
   };
   const handleSelectcategory = ({ value }) => {
     setCat(value);
+    setMessage("");
   };
   const handleImageSelecttype = ({ value }) => {
     setimagetype(value);
+    console.log(value);
+    setMessage("");
   };
   useEffect(() => {}, []);
   const {
@@ -116,70 +139,46 @@ const CheckoutPage = () => {
   const onSubmit = (data, e) => {
     e.preventDefault();
     console.log("test");
-    if (type === "gallery") {
-      let datas = {
-        id: uuid(),
-        type: "gallery",
-        title: data.title,
-        thumbnail: url,
-        isactive: 1,
-        website: "talesofsuba.com",
-      };
-
-      fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
-        .then((response) => response)
-        .then((data) => {
-          console.log("submit", data.status);
-          if (data.status == 200) {
-            e.target.reset();
-            setMessage("Sucessfully Submitted");
-          }
-        })
-        .catch((err) => {
-          console.log("timelinerrror", err);
-          //setMessage(err.Message);
-        });
-    } else {
-      let datas = {
-        id: uuid(),
-        type: country,
-        date: data.date,
-        title: data.title,
-        category: cat,
-        description: content,
-        thumbnail: country === "timeline" ? config.timelinethumbnail : cat === "bookreview" ? config.bookreviewthumbnail : config.blogthumbnail,
-        createddate: data.date,
-        isactive: 1,
-        website: "talesofsuba.com",
-      };
-      if (country === "") {
-        setMessage("Please select Type");
-        return;
-      }
-      if (country === "blog" && (cat === "" || content === "")) {
-        setMessage("Please select Type/Caetegory/Content");
-        return;
-      }
-      console.log("timeline data", datas);
-
-      fetch(config.service_url + "/timeline", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("submit", data);
-          if (data === "200") {
-            e.target.reset();
-            setContent("");
-            setCat("");
-            setCountry("");
-            setType("");
-            setMessage("Sucessfully Submitted");
-          } else {
-          }
-        })
-        .catch((err) => {
-          console.log("timelinerrror", err);
-        });
+    let datas = {
+      id: uuid(),
+      type: country,
+      slug: data.title.replace(/\s/g, "-").toLowerCase(),
+      date: data.date,
+      title: data.title,
+      category: cat,
+      description: content,
+      thumbnail: country === "timeline" ? config.timelinethumbnail : cat === "bookreview" ? config.bookreviewthumbnail : config.blogthumbnail,
+      createddate: currentDate,
+      isactive: 1,
+      website: "talesofsuba.com",
+    };
+    if (country === "") {
+      setMessage("Please select Type");
+      return;
     }
+    if (country === "blog" && (cat === "" || content === "")) {
+      setMessage("Please select Type/Caetegory/Content");
+      return;
+    }
+    console.log("timeline data", datas);
+
+    fetch(config.service_url + "/timeline", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("submit", data);
+        if (data === "200") {
+          e.target.reset();
+          setContent("");
+          setCat("");
+          setCountry("");
+          setType("");
+          setMessage("Sucessfully Submitted");
+        } else {
+        }
+      })
+      .catch((err) => {
+        console.log("timelinerrror", err);
+      });
   };
   const validate_image = async (e) => {
     const file = e.target.files[0];
@@ -195,6 +194,7 @@ const CheckoutPage = () => {
     const file = e.target.files[0];
     // Changing file state
     setFile(file);
+    setMessage("");
   };
   const uploadFile = async () => {
     // S3 Bucket Name
@@ -205,25 +205,34 @@ const CheckoutPage = () => {
 
     // S3 Credentials
     AWS.config.update({
-      accessKeyId: "",
-      secretAccessKey: "",
+      accessKeyId: S3KEY,
+      secretAccessKey: S3SECRET,
     });
+    console.log("S3SECRET", S3SECRET);
     const s3 = new AWS.S3({
       params: { Bucket: S3_BUCKET },
       region: REGION,
     });
 
     // Files Parameters
-
+    if (file === undefined || file === null) {
+      setMessage("Please select file");
+      return;
+    }
+    if (file?.size > 400000) {
+      setMessage("Please upload file less than 400 kb");
+      return;
+    }
+    if (imagedescription === "") {
+      setMessage("Please add image description");
+      return;
+    }
     const params = {
       Bucket: S3_BUCKET,
       Key: file.name,
       Body: file,
     };
-    if (file.size > 400000) {
-      setMessage("Please upload file less than 400 kb");
-      return;
-    }
+
     console.log("s3parms", params);
     // Uploading file to s3
 
@@ -247,6 +256,7 @@ const CheckoutPage = () => {
         id: uuid(),
         type: "gallery",
         title: imagetype,
+        description: imagedescription,
         thumbnail: url,
         isactive: 1,
         website: "talesofsuba.com",
@@ -293,7 +303,7 @@ const CheckoutPage = () => {
                     </Col>
                     <Col md={12} className="form-group">
                       <div className="field-inner">
-                        Select Date: <input type="date" placeholder="Date" name="date" {...register("date", { required: true })} id="date" />
+                        Select Date: <input type="date" placeholder="Date" defaultValue={currentDate} name="date" {...register("date", { required: true })} id="date" />
                       </div>
                     </Col>
                     <Col md={12} className="form-group" className={blog ? "" : "d-none"}>
@@ -333,10 +343,17 @@ const CheckoutPage = () => {
                       </div>
                       <br />
                     </Col>
+
                     <Col md={6} className="form-group">
                       <div className="field-inner">
                         Upload File
-                        <input type="file" onChange={handleFileChange} />
+                        <input type="file" name="file" onChange={handleFileChange} />
+                      </div>
+                    </Col>
+                    <Col md={6} className="form-group">
+                      Description
+                      <div className="field-inner">
+                        <textarea type="text" onChange={handleImgDesc} required placeholder="Description" name="imagedes" id="imagedes" />
                       </div>
                     </Col>
                   </Row>
@@ -344,7 +361,9 @@ const CheckoutPage = () => {
               </Col>
               <Col lg={12} md={12} sm={12} className="form-group">
                 <div>
-                  {msg} {progress}
+                  <p>
+                    {msg} {progress}
+                  </p>
                 </div>
                 <button type="button" className="theme-btn btn-style-one" onClick={(validate_image, uploadFile)}>
                   <i className="btn-curve"></i>

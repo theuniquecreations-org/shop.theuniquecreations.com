@@ -272,7 +272,7 @@ const navItemsold = [
     subNavItems: [
       { id: 1, name: "Blog Sidebar", href: "/blog" },
       { id: 2, name: "Blog Grid View", href: "/blog-grid" },
-      { id: 3, name: "Blog Single", href: "/blog-single" },
+      { id: 3, name: "Blog Single", href: "/blog-details" },
     ],
   },
   {

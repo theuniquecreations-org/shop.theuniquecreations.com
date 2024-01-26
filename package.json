@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.499.0",
     "@tinymce/tinymce-react": "^4.3.2",
     "aws-sdk": "^2.1542.0",
     "axios": "^1.5.0",
