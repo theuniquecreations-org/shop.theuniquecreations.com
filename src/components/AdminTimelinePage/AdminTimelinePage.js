@@ -10,8 +10,10 @@ import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css"; // Import Quill styles
 import AWS from "aws-sdk";
 import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
-const S3KEY = process.env.REACT_APP_S3KEY;
-const S3SECRET = process.env.REACT_APP_S3SECRET;
+import { uploadData } from "aws-amplify/storage";
+import * as CryptoJS from "crypto-js";
+const S3KEY = "U2FsdGVkX1/byrsNTjlIFav5CwCAMI3ZuetGafp+EoIw+3LAyAraVj6f4DtP3C8P";
+const S3SECRET = "U2FsdGVkX19xsHGsr8Oql3DQONQSL68pVdWHUkfuFKGnWZU5068E7HzOxfaG0cJFa8Kl+0NPiycyqPA5n9FrWQ==";
 const options = [
   {
     value: "",
@@ -112,6 +114,7 @@ const CheckoutPage = () => {
     console.log("imagedescription", value.target.value);
     setMessage("");
   };
+
   const handleSelecttype = ({ value }) => {
     setCountry(value);
     setType(value);
@@ -120,6 +123,15 @@ const CheckoutPage = () => {
     else setBlog(false);
     if (value == "gallery") {
     }
+    // console.log("cipherText");
+    // const secretKey = "b@l@kuMarsUb@";
+    // const Text = "";
+    // console.log("Text", Text);
+    // const cipherText = CryptoJS.AES.encrypt(Text, secretKey).toString();
+    // console.log("cipherText", cipherText);
+
+    // const plainText = CryptoJS.AES.decrypt(cipherText, secretKey).toString(CryptoJS.enc.Utf8);
+    // console.log("plainText", plainText);
   };
   const handleSelectcategory = ({ value }) => {
     setCat(value);
@@ -205,8 +217,8 @@ const CheckoutPage = () => {
 
     // S3 Credentials
     AWS.config.update({
-      accessKeyId: S3KEY,
-      secretAccessKey: S3SECRET,
+      accessKeyId: CryptoJS.AES.decrypt(S3KEY, config.namename).toString(CryptoJS.enc.Utf8),
+      secretAccessKey: CryptoJS.AES.decrypt(S3SECRET, config.namename).toString(CryptoJS.enc.Utf8),
     });
     console.log("S3SECRET", S3SECRET);
     const s3 = new AWS.S3({
@@ -250,8 +262,7 @@ const CheckoutPage = () => {
       console.log("s3", data);
       // Fille successfully uploaded
       setMessage("File uploaded s3.");
-      seturl("https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/gallery/" + file.name);
-
+      seturl(config.s3bucket + file.name);
       let datas = {
         id: uuid(),
         type: "gallery",
@@ -278,6 +289,53 @@ const CheckoutPage = () => {
         });
     });
   };
+  const uploadFileAPI = async () => {
+    // S3 Bucket Name
+    let datas;
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+      console.log(reader.result);
+
+      datas = {
+        id: uuid(),
+        type: "image",
+        filename: file.name,
+        file: reader.result,
+        isactive: 1,
+        website: "talesofsuba.com",
+        createddate: currentDate,
+      };
+
+      console.log("image api request", datas);
+      fetch(config.service_url + "/imageuploadtos3", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
+        .then((response) => response)
+        .then((data) => {
+          console.log("submit", data.status);
+          if (data.status == 200) {
+            setMessage("Image saved Sucessfully");
+            alert("Image saved Sucessfully");
+            window.location.reload();
+          }
+        })
+        .catch((err) => {
+          console.log("timelinerrror", err);
+          //setMessage(err.Message);
+        });
+    };
+  };
+  const uploadDataInBrowser = async () => {
+    if (event?.target?.files) {
+      console.log(event);
+      const file = event.target.files[0];
+      console.log("uploadDataInBrowser", file);
+      uploadData({
+        key: "filename",
+        data: file,
+      });
+    }
+  };
+
   return (
     <section className="checkout-page">
       <div className="auto-container">
@@ -368,6 +426,10 @@ const CheckoutPage = () => {
                 <button type="button" className="theme-btn btn-style-one" onClick={(validate_image, uploadFile)}>
                   <i className="btn-curve"></i>
                   <span className="btn-title">Upload</span>
+                </button>
+                <button type="button" className="theme-btn btn-style-one d-none" onClick={(validate_image, uploadFileAPI)}>
+                  <i className="btn-curve"></i>
+                  <span className="btn-title">Upload Via API</span>
                 </button>
               </Col>
             </Row>
