@@ -9,12 +9,9 @@ const NewsBlockTwo = ({ news = {}, handleOpen }) => {
     <div className="news-block-two">
       <div className="inner-box">
         <div className="image-box">
-          <Link href="/blog-single">
+          <Link href="/blog-details">
             <a>
-              <Image
-                src={require(`@/images/resource/${image}`).default.src}
-                alt=""
-              />
+              <Image src={require(`@/images/resource/${image}`).default.src} alt="" />
             </a>
           </Link>
           {showVideo && (
@@ -40,11 +37,11 @@ const NewsBlockTwo = ({ news = {}, handleOpen }) => {
             </ul>
           </div>
           <h4>
-            <Link href="/blog-single">{title}</Link>
+            <Link href="/blog-details">{title}</Link>
           </h4>
           <div className="text">{text}</div>
           <div className="link-box">
-            <Link href="/blog-single">
+            <Link href="/blog-details">
               <a className="theme-btn">Read More</a>
             </Link>
           </div>

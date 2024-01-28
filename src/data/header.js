@@ -153,17 +153,17 @@ const navItems = [
     href_old: "/about-2",
   },
 
-  {
-    id: 6,
-    name: "Shop",
-    href: "/shop",
-    subNavItems: [
-      { id: 1, name: "Shop Page", href: "/shop" },
-      { id: 2, name: "Product Details", href: "/product-details" },
-      { id: 3, name: "Cart Page", href: "/cart" },
-      { id: 4, name: "Checkout Page", href: "/checkout" },
-    ],
-  },
+  // {
+  //   id: 6,
+  //   name: "Shop",
+  //   href: "/shop",
+  //   subNavItems: [
+  //     { id: 1, name: "Shop Page", href: "/shop" },
+  //     { id: 2, name: "Product Details", href: "/product-details" },
+  //     { id: 3, name: "Cart Page", href: "/cart" },
+  //     { id: 4, name: "Checkout Page", href: "/checkout" },
+  //   ],
+  // },
   {
     id: 7,
     name: "Blog",
@@ -272,7 +272,7 @@ const navItemsold = [
     subNavItems: [
       { id: 1, name: "Blog Sidebar", href: "/blog" },
       { id: 2, name: "Blog Grid View", href: "/blog-grid" },
-      { id: 3, name: "Blog Single", href: "/blog-single" },
+      { id: 3, name: "Blog Single", href: "/blog-details" },
     ],
   },
   {

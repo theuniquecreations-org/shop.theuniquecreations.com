@@ -23892,7 +23892,7 @@ img.lazy-image.loaded {
   max-width: 100%;
   border-radius: 8px;
   position: relative;
-  mix-blend-mode: luminosity;
+  /* mix-blend-mode: luminosity; subabala */
 }
 
 .process-one .sec-title {
