@@ -151,6 +151,8 @@ const CheckoutPage = () => {
   const onSubmit = (data, e) => {
     e.preventDefault();
     console.log("test");
+    if (country === "timeline") {
+    }
     let datas = {
       id: uuid(),
       type: country,
@@ -164,6 +166,10 @@ const CheckoutPage = () => {
       isactive: 1,
       website: "talesofsuba.com",
     };
+    if (country === "timeline") {
+      uploadFile(datas, "timeline");
+      return;
+    }
     if (country === "") {
       setMessage("Please select Type");
       return;
@@ -208,7 +214,7 @@ const CheckoutPage = () => {
     setFile(file);
     setMessage("");
   };
-  const uploadFile = async () => {
+  const uploadFile = async (dataarray, type) => {
     // S3 Bucket Name
     const S3_BUCKET = "ssndigitalmedia/talesofsuba/gallery";
 
@@ -235,7 +241,7 @@ const CheckoutPage = () => {
       setMessage("Please upload file less than 400 kb");
       return;
     }
-    if (imagedescription === "") {
+    if (imagedescription === "" && type != "timeline") {
       setMessage("Please add image description");
       return;
     }
@@ -263,23 +269,31 @@ const CheckoutPage = () => {
       // Fille successfully uploaded
       setMessage("File uploaded s3.");
       seturl(config.s3bucket + file.name);
-      let datas = {
-        id: uuid(),
-        type: "gallery",
-        title: imagetype,
-        description: imagedescription,
-        thumbnail: url,
-        isactive: 1,
-        website: "talesofsuba.com",
-      };
+      let datas;
+      if (type == "timeline") {
+        const { thumbnail } = {};
+        datas = dataarray;
+        console.log("timeline", datas);
+        datas.thumbnail = url;
+      } else {
+        datas = {
+          id: uuid(),
+          type: "gallery",
+          title: imagetype,
+          description: imagedescription,
+          thumbnail: url,
+          isactive: 1,
+          website: "talesofsuba.com",
+        };
+      }
 
       fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
         .then((response) => response)
         .then((data) => {
           console.log("submit", data.status);
           if (data.status == 200) {
-            setMessage("Image saved Sucessfully");
-            alert("Image saved Sucessfully");
+            setMessage("Saved Sucessfully");
+            alert("Saved Sucessfully");
             window.location.reload();
           }
         })
@@ -359,6 +373,12 @@ const CheckoutPage = () => {
                         <input type="text" placeholder="Title" name="title" {...register("title", { required: true })} id="title" />
                       </div>
                     </Col>
+                    <Col md={6} className="form-group">
+                      <div className="field-inner">
+                        Select Thumbnail
+                        <input type="file" name="file" onChange={handleFileChange} />
+                      </div>
+                    </Col>
                     <Col md={12} className="form-group">
                       <div className="field-inner">
                         Select Date: <input type="date" placeholder="Date" defaultValue={currentDate} name="date" {...register("date", { required: true })} id="date" />
@@ -423,7 +443,7 @@ const CheckoutPage = () => {
                     {msg} {progress}
                   </p>
                 </div>
-                <button type="button" className="theme-btn btn-style-one" onClick={(validate_image, uploadFile)}>
+                <button type="button" className="theme-btn btn-style-one" onClick={(validate_image, uploadFile(null, null))}>
                   <i className="btn-curve"></i>
                   <span className="btn-title">Upload</span>
                 </button>
