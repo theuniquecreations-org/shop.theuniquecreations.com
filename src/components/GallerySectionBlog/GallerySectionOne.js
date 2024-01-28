@@ -1,4 +1,4 @@
-import { gallerySectionOne } from "@/data/gallerySection";
+import { gallerySectionOne } from "@/data/gallerySectionBlog";
 import useActive from "@/hooks/useActive";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -29,7 +29,7 @@ const GallerySectionOne = ({ portfolio = false, similar = false }) => {
               <div className={`sec-title${similar ? " centered" : ""}`}>
                 <h2>
                   {similar ? "Similar work " : title}
-                  <span className="dot">.</span>
+                  "Blog Caetegory"<span className="dot">.</span>
                 </h2>
               </div>
             )}

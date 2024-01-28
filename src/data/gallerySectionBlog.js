@@ -212,7 +212,7 @@ const gallerySection = {
     },
     {
       id: 3,
-      name: "illustration",
+      name: "travel",
       tab: "p-tab-3",
       count: 7,
     },
@@ -278,7 +278,7 @@ const gallerySection = {
 export default gallerySection;
 
 export const gallerySectionOne = {
-  title: "work showcase",
+  title: "Blog Category",
   tabBtns: [
     {
       id: 1,
@@ -287,13 +287,13 @@ export const gallerySectionOne = {
     },
     {
       id: 2,
-      name: "Branding",
-      tab: "branding",
+      name: "Book Review",
+      tab: "bookreview",
     },
     {
       id: 3,
-      name: "illustration",
-      tab: "illustration",
+      name: "Travel",
+      tab: "travel",
     },
     {
       id: 4,
@@ -302,8 +302,8 @@ export const gallerySectionOne = {
     },
     {
       id: 5,
-      name: "Web Design",
-      tab: "web-design",
+      name: "Food Review",
+      tab: "foodreview",
     },
   ],
   items: items2,

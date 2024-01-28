@@ -148,15 +148,27 @@ const CheckoutPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: "onBlur" });
+  const slugify = function (text) {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-") // Replace spaces with -
+      .replace(/[^\w-]+/g, "") // Remove all non-word chars
+      .replace(/--+/g, "-") // Replace multiple - with single -
+      .replace(/^-+/, "") // Trim - from start of text
+      .replace(/-+$/, ""); // Trim - from end of text
+  };
+
   const onSubmit = (data, e) => {
     e.preventDefault();
     console.log("test");
     if (country === "timeline") {
     }
+
     let datas = {
       id: uuid(),
       type: country,
-      slug: data.title.replace(/\s/g, "-").toLowerCase(),
+      slug: slugify(data.title),
       date: data.date,
       title: data.title,
       category: cat,
@@ -166,10 +178,7 @@ const CheckoutPage = () => {
       isactive: 1,
       website: "talesofsuba.com",
     };
-    if (country === "timeline") {
-      uploadFile(datas, "timeline");
-      return;
-    }
+
     if (country === "") {
       setMessage("Please select Type");
       return;
@@ -179,7 +188,10 @@ const CheckoutPage = () => {
       return;
     }
     console.log("timeline data", datas);
-
+    if (country === "timeline") {
+      uploadFile(datas, "timeline");
+      return;
+    }
     fetch(config.service_url + "/timeline", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
       .then((response) => response.json())
       .then((data) => {
@@ -214,7 +226,7 @@ const CheckoutPage = () => {
     setFile(file);
     setMessage("");
   };
-  const uploadFile = async (dataarray, type) => {
+  const uploadFile = (dataarray, type) => {
     // S3 Bucket Name
     const S3_BUCKET = "ssndigitalmedia/talesofsuba/gallery";
 
@@ -263,18 +275,21 @@ const CheckoutPage = () => {
       })
       .promise();
 
-    await upload.then((err, data) => {
-      console.log(err);
-      console.log("s3", data);
-      // Fille successfully uploaded
-      setMessage("File uploaded s3.");
-      seturl(config.s3bucket + file.name);
+    // upload.then((err, data) => {
+    //   console.log(err);
+    //   console.log("s3", data);
+    // Fille successfully uploaded
+    // setMessage("File uploaded s3.");
+    upload.then(() => {
+      console.log("after uplaod");
+      const url = config.s3bucket + file.name;
+      console.log(url);
       let datas;
       if (type == "timeline") {
         const { thumbnail } = {};
         datas = dataarray;
-        console.log("timeline", datas);
         datas.thumbnail = url;
+        console.log("timeline", datas);
       } else {
         datas = {
           id: uuid(),
@@ -293,8 +308,8 @@ const CheckoutPage = () => {
           console.log("submit", data.status);
           if (data.status == 200) {
             setMessage("Saved Sucessfully");
-            alert("Saved Sucessfully");
-            window.location.reload();
+            //alert("Saved Sucessfully");
+            //window.location.reload();
           }
         })
         .catch((err) => {
@@ -398,7 +413,7 @@ const CheckoutPage = () => {
                 </div>
               </Col>
               <Col lg={12} md={12} sm={12} className="form-group">
-                {msg}
+                {msg} {progress}
                 <br />
                 <button type="submit" className="theme-btn btn-style-one">
                   <i className="btn-curve"></i>
