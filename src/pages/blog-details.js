@@ -17,6 +17,7 @@ const BlogSingle = () => {
       <SearchPopup />
       <PageBanner title="Blog Posts" page="Blog Details" />
       <SidebarPageContainerTwo isDetails />
+
       <div className="sponsors-section__about-two">
         <br />
         <br />

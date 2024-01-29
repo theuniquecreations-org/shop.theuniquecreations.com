@@ -161,9 +161,6 @@ const CheckoutPage = () => {
 
   const onSubmit = (data, e) => {
     e.preventDefault();
-    console.log("test");
-    if (country === "timeline") {
-    }
 
     let datas = {
       id: uuid(),
@@ -173,7 +170,7 @@ const CheckoutPage = () => {
       title: data.title,
       category: cat,
       description: content,
-      thumbnail: country === "timeline" ? config.timelinethumbnail : cat === "bookreview" ? config.bookreviewthumbnail : config.blogthumbnail,
+      thumbnail: config.blogthumbnail,
       createddate: currentDate,
       isactive: 1,
       website: "talesofsuba.com",
@@ -188,32 +185,15 @@ const CheckoutPage = () => {
       return;
     }
     console.log("timeline data", datas);
-    if (country === "timeline") {
-      uploadFile(datas, "timeline");
+    if (country === "timeline" || country === "blog") {
+      uploadFile(datas, country);
       return;
     }
-    fetch(config.service_url + "/timeline", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("submit", data);
-        if (data === "200") {
-          e.target.reset();
-          setContent("");
-          setCat("");
-          setCountry("");
-          setType("");
-          setMessage("Sucessfully Submitted");
-        } else {
-        }
-      })
-      .catch((err) => {
-        console.log("timelinerrror", err);
-      });
   };
   const validate_image = async (e) => {
     const file = e.target.files[0];
     console.log("file", e.target.files[0]);
-    if (file.size > 400000) {
+    if (file?.size > 400000 || file === null) {
       setMessage("Please upload file less than 400 kb");
       return;
     }
@@ -228,7 +208,7 @@ const CheckoutPage = () => {
   };
   const uploadFile = (dataarray, type) => {
     // S3 Bucket Name
-    const S3_BUCKET = "ssndigitalmedia/talesofsuba/gallery";
+    const S3_BUCKET = config + S3_BUCKET_NAME + "gallery";
 
     // S3 Region
     const REGION = "ap-south-1";
@@ -253,7 +233,7 @@ const CheckoutPage = () => {
       setMessage("Please upload file less than 400 kb");
       return;
     }
-    if (imagedescription === "" && type != "timeline") {
+    if (imagedescription === "" && type == "gallery") {
       setMessage("Please add image description");
       return;
     }
@@ -285,7 +265,7 @@ const CheckoutPage = () => {
       const url = config.s3bucket + file.name;
       console.log(url);
       let datas;
-      if (type == "timeline") {
+      if (type == "timeline" || type == "blog") {
         const { thumbnail } = {};
         datas = dataarray;
         datas.thumbnail = url;
@@ -334,6 +314,7 @@ const CheckoutPage = () => {
         isactive: 1,
         website: "talesofsuba.com",
         createddate: currentDate,
+        bucketname: config.S3_BUCKET_NAME + "gallery",
       };
 
       console.log("image api request", datas);
@@ -458,11 +439,13 @@ const CheckoutPage = () => {
                     {msg} {progress}
                   </p>
                 </div>
-                <button type="button" className="theme-btn btn-style-one" onClick={(validate_image, uploadFile(null, null))}>
+                <button type="button" className="theme-btn btn-style-one" onClick={(e) => uploadFile(null, null)}>
                   <i className="btn-curve"></i>
                   <span className="btn-title">Upload</span>
                 </button>
-                <button type="button" className="theme-btn btn-style-one d-none" onClick={(validate_image, uploadFileAPI)}>
+                <br />
+                <br />
+                <button type="button" className="theme-btn btn-style-one" onClick={(validate_image, uploadFileAPI)}>
                   <i className="btn-curve"></i>
                   <span className="btn-title">Upload Via API</span>
                 </button>
