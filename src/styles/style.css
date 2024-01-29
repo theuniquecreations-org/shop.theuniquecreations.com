@@ -11957,7 +11957,7 @@ img.lazy-image.loaded {
 
 .post-details .image-box img {
   display: block;
-  width: 100%;
+  /* width: 100%; */
   -webkit-filter: grayscale(100%);
   -ms-filter: grayscale(100%);
   -moz-filter: grayscale(100%);

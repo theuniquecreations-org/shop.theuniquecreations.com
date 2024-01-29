@@ -11,6 +11,7 @@ const { id, slug, image, date, author, title, text1, text2, text3, text4, text5,
 
 const BlogDetails = () => {
   const [blog, setBlog] = useState([]);
+  const [blogrecent, setBlogRecent] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -29,7 +30,8 @@ const BlogDetails = () => {
       id === "undefined" ? "a" : id;
       const response = await axios.get(config.service_url + "/blog/" + id);
       setBlog(response.data[0]);
-      console.log("ssnbloginisde", response.data);
+      setBlogRecent(response.data);
+      console.log("ssnbloginisde 123", response.data);
     };
 
     fetchData();
@@ -42,7 +44,7 @@ const BlogDetails = () => {
           <div className="image-box">
             <Link href="/#">
               <a>
-                <Image src={blog?.thumbnail} alt="" />
+                <Image width="auto" src={blog?.thumbnail} alt="" />
               </a>
             </Link>
           </div>
