@@ -3,7 +3,7 @@ import React from "react";
 import { Col, Image } from "react-bootstrap";
 
 const SingleNews = ({ news = {} }) => {
-  const { id, slug, thumbnail, date, author, title, description } = news;
+  const { id, slug, thumbnail, date, author, title, description, category } = news;
 
   return (
     <Col lg={4} md={6} sm={12} className="news-block animated fadeInUp">
@@ -19,11 +19,11 @@ const SingleNews = ({ news = {} }) => {
           <div className="post-meta">
             <ul className="clearfix">
               <li>
-                <span className="far fa-clock"></span> {date}
+                <span className="far fa-clock"></span> {date} <span className="far fa-clock"></span>
+                {category} <br />
+                <span className="far fa-user-circle"></span>talesofSuBa
               </li>
-              <li>
-                <span className="far fa-user-circle"></span> talesofSuBa
-              </li>
+
               <li className="d-none">
                 <span className="far fa-comments"></span> Comments
               </li>
@@ -34,7 +34,10 @@ const SingleNews = ({ news = {} }) => {
           </h5>
           <div className="text">
             {/* <div style={{ color: "#2ecc71", fontSize: "12px" }} dangerouslySetInnerHTML={{ __html: description }} /> */}
-            <div style={{ fontSize: "Normal" }} dangerouslySetInnerHTML={{ __html: description.substring(0, 100) }} />
+            <div className="contentgrid d-none">
+              <div style={{ fontSize: "14px" }} dangerouslySetInnerHTML={{ __html: description.substring(0, 100) }} />
+            </div>
+            <div>{description.substring(0, 100).replace(/(<([^>]+)>)/gi, "")}</div>
           </div>
           <div className="link-box">
             <Link href={"/blog-details?id=" + slug}>
