@@ -208,7 +208,7 @@ const CheckoutPage = () => {
   };
   const uploadFile = (dataarray, type) => {
     // S3 Bucket Name
-    const S3_BUCKET = config + S3_BUCKET_NAME + "gallery";
+    const S3_BUCKET = config.S3_BUCKET_NAME + "gallery";
 
     // S3 Region
     const REGION = "ap-south-1";
