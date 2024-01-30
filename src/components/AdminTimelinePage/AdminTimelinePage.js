@@ -14,6 +14,7 @@ import { uploadData } from "aws-amplify/storage";
 import * as CryptoJS from "crypto-js";
 const S3KEY = "U2FsdGVkX1/byrsNTjlIFav5CwCAMI3ZuetGafp+EoIw+3LAyAraVj6f4DtP3C8P";
 const S3SECRET = "U2FsdGVkX19xsHGsr8Oql3DQONQSL68pVdWHUkfuFKGnWZU5068E7HzOxfaG0cJFa8Kl+0NPiycyqPA5n9FrWQ==";
+
 const options = [
   {
     value: "",
@@ -158,6 +159,15 @@ const CheckoutPage = () => {
       .replace(/^-+/, "") // Trim - from start of text
       .replace(/-+$/, ""); // Trim - from end of text
   };
+  const slugifyfilename = function (text) {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, "-") // Replace spaces with -
+      .replace(/--+/g, "-") // Replace multiple - with single -
+      .replace(/^-+/, "") // Trim - from start of text
+      .replace(/-+$/, ""); // Trim - from end of text
+  };
 
   const onSubmit = (data, e) => {
     e.preventDefault();
@@ -218,7 +228,7 @@ const CheckoutPage = () => {
       accessKeyId: CryptoJS.AES.decrypt(S3KEY, config.namename).toString(CryptoJS.enc.Utf8),
       secretAccessKey: CryptoJS.AES.decrypt(S3SECRET, config.namename).toString(CryptoJS.enc.Utf8),
     });
-    console.log("S3SECRET", S3SECRET);
+    //console.log("S3SECRET", S3SECRET);
     const s3 = new AWS.S3({
       params: { Bucket: S3_BUCKET },
       region: REGION,
@@ -229,8 +239,8 @@ const CheckoutPage = () => {
       setMessage("Please select file");
       return;
     }
-    if (file?.size > 400000) {
-      setMessage("Please upload file less than 400 kb");
+    if (file?.size > 500000) {
+      setMessage("Please upload file less than 500 kb");
       return;
     }
     if (imagedescription === "" && type == "gallery") {
@@ -239,11 +249,11 @@ const CheckoutPage = () => {
     }
     const params = {
       Bucket: S3_BUCKET,
-      Key: file.name,
+      Key: slugifyfilename(file.name),
       Body: file,
     };
 
-    console.log("s3parms", params);
+    //console.log("s3parms", params);
     // Uploading file to s3
 
     var upload = s3
@@ -261,8 +271,8 @@ const CheckoutPage = () => {
     // Fille successfully uploaded
     // setMessage("File uploaded s3.");
     upload.then(() => {
-      console.log("after uplaod");
-      const url = config.s3bucket + file.name;
+      // console.log("after uplaod");
+      const url = config.bucketurl + "gallery/" + slugifyfilename(file.name);
       console.log(url);
       let datas;
       if (type == "timeline" || type == "blog") {
@@ -288,8 +298,8 @@ const CheckoutPage = () => {
           console.log("submit", data.status);
           if (data.status == 200) {
             setMessage("Saved Sucessfully");
-            //alert("Saved Sucessfully");
-            //window.location.reload();
+            alert("Saved Sucessfully");
+            window.location.reload();
           }
         })
         .catch((err) => {
@@ -333,17 +343,6 @@ const CheckoutPage = () => {
           //setMessage(err.Message);
         });
     };
-  };
-  const uploadDataInBrowser = async () => {
-    if (event?.target?.files) {
-      console.log(event);
-      const file = event.target.files[0];
-      console.log("uploadDataInBrowser", file);
-      uploadData({
-        key: "filename",
-        data: file,
-      });
-    }
   };
 
   return (
