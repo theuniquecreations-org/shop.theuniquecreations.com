@@ -14,8 +14,12 @@ const ProcessOne = () => {
     const fetchData = async () => {
       console.log("ssntimleineinisdefetch");
       const response = await axios.get(config.service_url + "/timeline");
-      setTimeline(response.data);
-      console.log("ssntimleineinisde", response.data);
+      setTimeline(response.data.sort((b, a) => a.date.localeCompare(b.date)));
+
+      console.log(
+        "ssntimleineinisde timeline sorted",
+        response.data.sort((b, a) => a.date.localeCompare(b.date))
+      );
     };
 
     fetchData();
@@ -36,6 +40,7 @@ const ProcessOne = () => {
                   <h2>
                     {tim.title} <span className="dot">.</span>
                   </h2>
+                  <span className="dot"></span> {tim.date}
                 </div>
                 <p className="process-one__summery">
                   {" "}
