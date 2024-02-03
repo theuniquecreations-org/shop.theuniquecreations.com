@@ -32,16 +32,16 @@ const Home = () => {
       <AboutSection />
       {/* <LiveSection /> */}
       {/* <WeDOSection /> */}
-      <GallerySectionOne />
+      {/* <GallerySectionOne /> */}
       {/* <FunFactsOne /> */}
       {/* <TrustedSection /> */}
       {/* <TeamSection /> */}
-      <ParallaxSection />
+      {/* <ParallaxSection /> */}
       {/* <SponsorsSection /> */}
       {/* <AgencySection /> */}
       {/* <NewsSection /> */}
       <br />
-      <CallToSection />
+      {/* <CallToSection /> */}
       <MainFooter normalPadding={false} />
     </Layout>
   );

@@ -3920,10 +3920,10 @@ img.lazy-image.loaded {
 .about-section .image-column .image-block img {
   display: block;
   width: 100%;
-  -webkit-filter: grayscale(100%);
+  /* -webkit-filter: grayscale(100%);
   -ms-filter: grayscale(100%);
   -moz-filter: grayscale(100%);
-  filter: grayscale(100%);
+  filter: grayscale(100%); */
   border-radius: 7px;
 }
 
@@ -6284,6 +6284,7 @@ img.lazy-image.loaded {
   display: block;
 }
 
+/* talesofsuba */
 .news-block-two .lower-box .link-box {
   position: relative;
   margin-top: 20px;
@@ -11042,7 +11043,8 @@ img.lazy-image.loaded {
 
 .page-banner .inner-container {
   position: relative;
-  padding: 240px 0px 120px;
+  /* padding: 240px 0px 120px; */
+  padding: 150px 0px 30px;
 }
 
 .page-banner h1 {
@@ -11360,7 +11362,7 @@ img.lazy-image.loaded {
   height: 100%;
   min-height: 100%;
   padding: 45px 45px 40px;
-  background: #ffffff;
+  background: var(--thm-base);
   border-radius: 7px;
   -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.05);

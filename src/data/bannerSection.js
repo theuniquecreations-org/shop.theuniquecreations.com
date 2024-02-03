@@ -5,41 +5,41 @@ export const bannerTwo = [
     id: 1,
     bg: "https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/websiteimages/slide1.jpg",
     subtitle: "welcome to Tales of Suba",
-    title: "Read Review\nRecomend",
+    title: "Read Review\nRecommend",
   },
   {
     id: 2,
     bg: "https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/websiteimages/slide2.jpg",
     subtitle: "welcome to Tales of Suba",
-    title: "Travel Review\nRecomend",
+    title: "Travel Review\nPhotography",
   },
   {
     id: 3,
     bg: "https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/websiteimages/slide3.jpg",
     subtitle: "welcome to Tales of Suba",
-    title: "Food Review\nRecomend",
+    title: "Food Review\nRecommend",
   },
 ];
 
 export const bannerOne = {
   bg,
-  dayRange: "mon - fri",
-  timeRange: "9am - 7pm",
+  dayRange: "",
+  timeRange: "",
   socials: [
+    // {
+    //   id: 1,
+    //   href: "#",
+    //   title: "Twitter",
+    // },
     {
       id: 1,
-      href: "#",
-      title: "Twitter",
+      href: "https://www.youtube.com/@talesofsuba",
+      title: "Youtube",
     },
     {
       id: 2,
-      href: "#",
-      title: "Facebook",
-    },
-    {
-      id: 3,
-      href: "#",
-      title: "Youtube",
+      href: "https://www.instagram.com/talesofsuba/",
+      title: "Instagram",
     },
   ],
   banners: bannerTwo,

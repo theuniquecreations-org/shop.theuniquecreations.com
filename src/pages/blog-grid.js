@@ -18,7 +18,7 @@ const BlogGrid = () => {
       <SearchPopup />
       <PageBanner title="Blog Posts grid" />
       <NewsSection showTitle={false} isMore />
-      <GallerySectionOneBlog />
+      {/* <GallerySectionOneBlog /> */}
       <div className="sponsors-section__about-two">
         <br />
         <br />

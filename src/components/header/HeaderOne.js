@@ -77,7 +77,7 @@ const HeaderOne = ({ headerStyle = "header-style-one", logo = 1, onePage = false
             </div>
 
             {links && (
-              <div className="other-links clearfix">
+              <div className="other-links clearfix d-none">
                 <div className="cart-btn">
                   <Link href="/cart">
                     <a className="theme-btn cart-toggler">
