@@ -143,15 +143,15 @@ const navItems = [
   home,
   {
     id: 2,
-    name: "Timeline",
-    href: "timeline",
-  },
-  {
-    id: 2,
     name: "About Us",
-    href: "/about-2",
-    href_old: "/about-2",
+    href: "aboutus",
   },
+  // {
+  //   id: 2,
+  //   name: "About Us",
+  //   href: "/about-2",
+  //   href_old: "/about-2",
+  // },
 
   // {
   //   id: 6,
@@ -164,10 +164,15 @@ const navItems = [
   //     { id: 4, name: "Checkout Page", href: "/checkout" },
   //   ],
   // },
+  // {
+  //   id: 7,
+  //   name: "Blog",
+  //   href: "/blog-grid",
+  // },
   {
     id: 7,
-    name: "Blog",
-    href: "/blog-grid",
+    name: "Book Review",
+    href: "/bookreview",
   },
   {
     id: 8,
@@ -287,25 +292,25 @@ const navItemsold = [
 ];
 
 export const socials = [
-  {
-    id: 1,
-    icon: "fab fa-facebook-square",
-    href: "#",
-  },
-  {
-    id: 2,
-    icon: "fab fa-twitter",
-    href: "#",
-  },
+  // {
+  //   id: 1,
+  //   icon: "fab fa-facebook-square",
+  //   href: "#",
+  // },
+  // {
+  //   id: 2,
+  //   icon: "fab fa-twitter",
+  //   href: "#",
+  // },
   {
     id: 3,
     icon: "fab fa-instagram",
-    href: "#",
+    href: "https://www.instagram.com/talesofsuba",
   },
   {
     id: 4,
-    icon: "fab fa-pinterest-p",
-    href: "#",
+    icon: "fab fa-youtube",
+    href: "https://www.youtube.com/@talesofsuba",
   },
 ];
 
@@ -325,13 +330,13 @@ const headerData = {
   logo10,
   navItems,
   navItemsTwo,
-  address: "Suite 20 Golden Street USA",
-  phone: "666 888 0000",
-  phone2: "+ 92 666 888 0000",
-  email: "needhelp@linoor.com",
+  address: "",
+  phone: "",
+  phone2: "",
+  email: "",
   icon,
   socials,
-  text: "Linoor is a premium Template for Digital Agencies, Start Ups, Small Business and a wide range of other agencies.",
+  text: "Our Personal Blog",
 };
 
 export default headerData;

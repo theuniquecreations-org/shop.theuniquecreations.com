@@ -1,6 +1,6 @@
-import image1 from "@/images/resource/featured-image-1.jpg";
+import image1 from "@/images/resource/subabala.jpg";
 import image3 from "@/images/resource/featured-image-15.jpg";
-import image2 from "@/images/resource/featured-image-2.jpg";
+import image2 from "@/images/resource/balasuba1.jpg";
 import image12 from "@/images/update-01-10-2021/resources/about-10-1-1.jpg";
 import image11 from "@/images/update-01-10-2021/resources/about-11-1-3.jpg";
 import image10 from "@/images/update-01-10-2021/resources/about-eight-1-1.png";
@@ -16,10 +16,10 @@ export const aboutSectionOne = {
   image1,
   image2,
   title: "Love, Life, Time have chosen us to be together",
-  text1: "We are committed to providing our customers with exceptional service while offering our employees the best training.",
-  text2: "Lorem Ipsum is simply dummy text of free available in market the printing and typesetting industry has been the industry's standard dummy text ever.",
-  textList: ["Suspe ndisse suscipit sagittis leo.", "Entum estibulum dignissim posuere.", "If you are going to use a passage."],
-  since: "2008",
+  text1: "In the story of us, every chapter is written with the ink of passion and bound by the pages of commitment.",
+  text2: "With you, every day is a journey, and every step is a celebration of the love we share.",
+  textList: ["Trust", "Communication", "Respect", "Support"],
+  since: "2023",
 };
 
 export const aboutSectionTwo = {

@@ -38,15 +38,15 @@ export const mainFooter = {
   textBottom: "Sign up for our latest news & articles. We won’t give you spam mails.",
   subscribeText: "Register and get notified about the news & updates before it gets too late.",
   socials: [
-    {
-      id: 1,
-      href: "#",
-      icon: "fab fa-facebook-square",
-    },
+    // {
+    //   id: 1,
+    //   href: "#",
+    //   icon: "fab fa-facebook-square",
+    // },
 
     {
       id: 3,
-      href: "#",
+      href: "https://www.instagram.com/talesofsuba/",
       icon: "fab fa-instagram",
     },
     // {
@@ -63,21 +63,25 @@ export const mainFooter = {
     },
     {
       id: 2,
-      href: "/team",
-      title: "Meet Our Team",
+      href: "/aboutus",
+      title: "About Us",
     },
-
+    {
+      id: 3,
+      href: "/bookreview",
+      title: "Book Review",
+    },
     {
       id: 5,
       href: "/contact",
       title: "Contact",
     },
 
-    {
-      id: 7,
-      href: "/faqs",
-      title: "Privacy Policy",
-    },
+    // {
+    //   id: 7,
+    //   href: "/faqs",
+    //   title: "Privacy Policy",
+    // },
   ],
   ...footer,
   newses: [

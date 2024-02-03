@@ -5,8 +5,7 @@ import React from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import TextSplit from "../Reuseable/TextSplit";
 
-const { image1, image2, title, text1, text2, textList, since } =
-  aboutSectionOne;
+const { image1, image2, title, text1, text2, textList, since } = aboutSectionOne;
 
 const AboutSection = () => {
   const ref = useActive("#about");
@@ -18,10 +17,10 @@ const AboutSection = () => {
           <Col xl={6} lg={12} md={12} sm={12} className="image-column">
             <div className="inner">
               <div className="image-block animated fadeInLeft">
-                <Image src={image1.src} alt="" />
+                <Image src={image1.src} alt="talesofsuba" />
               </div>
               <div className="image-block animated fadeInUp">
-                <Image src={image2.src} alt="" />
+                <Image src={image2.src} alt="talesofsuba" />
               </div>
             </div>
           </Col>
@@ -51,10 +50,10 @@ const AboutSection = () => {
                 </div>
               </div>
               <div className="link-box">
-                <Link href="/about">
+                <Link href="/aboutus">
                   <a className="theme-btn btn-style-one">
                     <i className="btn-curve"></i>
-                    <span className="btn-title">Discover More</span>
+                    <span className="btn-title">More About US</span>
                   </a>
                 </Link>
               </div>
