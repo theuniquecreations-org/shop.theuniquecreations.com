@@ -42,7 +42,7 @@ const BlogDetails = () => {
   return (
     <div className="blog-details">
       <div className="post-details">
-        {blog ? (
+        {blog || blog.length === 0 ? (
           <div className="inner-box">
             <div className="image-box">
               <Link href="#">
