@@ -25,9 +25,13 @@ const options = [
     label: "timeline",
   },
   {
-    value: "blog",
-    label: "blog",
+    value: "bookreview",
+    label: "bookreview",
   },
+  // {
+  //   value: "blog",
+  //   label: "blog",
+  // },
   {
     value: "gallery",
     label: "gallery",
@@ -194,8 +198,8 @@ const CheckoutPage = () => {
       setMessage("Please select Type/Caetegory/Content");
       return;
     }
-    console.log("timeline data", datas);
-    if (country === "timeline" || country === "blog") {
+    console.log(" data", country, datas);
+    if (country === "timeline" || country === "blog" || country === "bookreview") {
       uploadFile(datas, country);
       return;
     }
@@ -275,7 +279,7 @@ const CheckoutPage = () => {
       const url = config.bucketurl + "gallery/" + slugifyfilename(file.name);
       console.log(url);
       let datas;
-      if (type == "timeline" || type == "blog") {
+      if (type == "timeline" || type == "blog" || type == "bookreview") {
         const { thumbnail } = {};
         datas = dataarray;
         datas.thumbnail = url;
@@ -299,7 +303,7 @@ const CheckoutPage = () => {
           if (data.status == 200) {
             setMessage("Saved Sucessfully");
             alert("Saved Sucessfully");
-            window.location.reload();
+            // window.location.reload();
           }
         })
         .catch((err) => {
