@@ -72,7 +72,7 @@ const BlogDetails = () => {
             </div>
           </div>
         ) : (
-          <h6>No Post Found.</h6>
+          <h6>No Post Found</h6>
         )}
         <div className="info-row clearfix"></div>
 
