@@ -187,6 +187,7 @@ const CheckoutPage = () => {
       thumbnail: config.blogthumbnail,
       createddate: currentDate,
       isactive: 1,
+      link: data.link,
       website: "talesofsuba.com",
     };
 
@@ -303,7 +304,7 @@ const CheckoutPage = () => {
           if (data.status == 200) {
             setMessage("Saved Sucessfully");
             alert("Saved Sucessfully");
-            // window.location.reload();
+            window.location.reload();
           }
         })
         .catch((err) => {
@@ -391,6 +392,12 @@ const CheckoutPage = () => {
                     <Col md={12} className="form-group">
                       <div className="field-inner">
                         <QuillEditor value={content} onChange={handleEditorChange} modules={quillModules} formats={quillFormats} className="" />
+                      </div>
+                    </Col>
+                    <Col md={6} className={type === "bookreview" ? "form-group" : "d-none"}>
+                      Affliate Buy Link (Optional)
+                      <div className="field-inner">
+                        <textarea type="text" {...register("link", { required: false })} placeholder="Paster your affiliate link here" name="link" id="link" />
                       </div>
                     </Col>
                   </Row>
