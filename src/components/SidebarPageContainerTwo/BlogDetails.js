@@ -24,13 +24,15 @@ const BlogDetails = () => {
     console.log("ssnbloginisde");
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
+    const type = params.get("bookreview");
     console.log("ssnid", id);
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
       id === "undefined" ? "a" : id;
       const response = await axios.get(config.service_url + "/items/" + id);
+      //const recentblog = await axios.get(config.service_url + "/itemsbytype/" + bookreview);
       setBlog(response.data[0]);
-      setBlogRecent(response.data);
+      //setBlogRecent(recentblog.data);
       console.log("ssnbloginisde 123", response.data);
     };
 
@@ -40,38 +42,39 @@ const BlogDetails = () => {
   return (
     <div className="blog-details">
       <div className="post-details">
-        <div className="inner-box">
-          <div className="image-box">
-            <Link href="/#">
-              <a>
-                <Image width="auto" src={blog?.thumbnail} alt="" />
-              </a>
-            </Link>
-          </div>
-          <div className="lower-box">
-            <div className="post-meta">
-              <ul className="clearfix">
-                <li>
-                  <span className="far fa-clock"></span> {blog?.date}
-                </li>
-                <li>
-                  <span className="far fa-user-circle"></span> talesofSuBa
-                </li>
-                <li className="d-none">
-                  <span className="far fa-comments"></span> {comments.length} Comments
-                </li>
-              </ul>
+        {blog ? (
+          <div className="inner-box">
+            <div className="image-box">
+              <Link href="#">
+                <a>
+                  <Image width="auto" src={blog?.thumbnail} alt="" />
+                </a>
+              </Link>
             </div>
-            <h4>{blog?.title}</h4>
-            <div className="text">
-              <div dangerouslySetInnerHTML={{ __html: blog?.description }} />
-              <p>{blog?.text2}</p>
-              <p>{blog?.text3}</p>
-              <p>{blog?.text4}</p>
-              <p>{blog?.text5}</p>
+            <div className="lower-box">
+              <div className="post-meta">
+                <ul className="clearfix">
+                  <li>
+                    <span className="far fa-clock"></span> {blog?.date}
+                  </li>
+                  <li>
+                    <span className="far fa-user-circle"></span> talesofSuBa
+                  </li>
+                  <li className="d-none">
+                    <span className="far fa-comments"></span> {comments.length} Comments
+                  </li>
+                </ul>
+              </div>
+              <h4>{blog?.title}</h4>
+              <div className="text">
+                <div dangerouslySetInnerHTML={{ __html: blog?.description }} />
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <h6>No Post Found.</h6>
+        )}
+        <div className="info-row clearfix"></div>
 
         <div className="info-row clearfix d-none">
           <div className="tags-info">
@@ -116,7 +119,7 @@ const BlogDetails = () => {
           <CommentBox key={comment.id} comment={comment} />
         ))}
       </div>
-      <div className="leave-comments d-none">
+      <div className="leave-comments ">
         <div className="comments-title">
           <h3>Leave a comment</h3>
         </div>
