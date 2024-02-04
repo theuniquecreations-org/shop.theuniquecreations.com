@@ -28,7 +28,7 @@ const BlogDetails = () => {
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
       id === "undefined" ? "a" : id;
-      const response = await axios.get(config.service_url + "/blog/" + id);
+      const response = await axios.get(config.service_url + "/items/" + id);
       setBlog(response.data[0]);
       setBlogRecent(response.data);
       console.log("ssnbloginisde 123", response.data);

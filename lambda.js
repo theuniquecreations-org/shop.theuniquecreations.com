@@ -31,12 +31,8 @@ export const handler = async (event, context) => {
         body = await dynamo.send(new ScanCommand({ TableName: tableName, FilterExpression: "contains(#columnname, :value)", ExpressionAttributeNames: { "#columnname": "type" }, ExpressionAttributeValues: { ":value": event.pathParameters.id } }));
         body = body.Items;
         break;
-      case "GET /items":
-        body = await dynamo.send(new ScanCommand({ TableName: tableName, FilterExpression: "contains(#name, :value)", ExpressionAttributeNames: { "#name": "type" }, ExpressionAttributeValues: { ":value": "product" } }));
-        body = body.Items;
-        break;
-      case "GET /timeline":
-        body = await dynamo.send(new ScanCommand({ TableName: tableName, FilterExpression: "contains(#type, :timeline)", ExpressionAttributeNames: { "#type": "type" }, ExpressionAttributeValues: { ":timeline": "timeline" } }));
+      case "GET /items/{id}":
+        body = await dynamo.send(new ScanCommand({ TableName: tableName, FilterExpression: "contains(#columnname, :value)", ExpressionAttributeNames: { "#columnname": "slug" }, ExpressionAttributeValues: { ":value": event.pathParameters.id } }));
         body = body.Items;
         break;
       case "PUT /items":
@@ -47,7 +43,6 @@ export const handler = async (event, context) => {
             Item: requestJSON,
           })
         );
-
         body = `Put item ${requestJSON.id}`;
         break;
       default:
