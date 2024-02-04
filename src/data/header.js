@@ -336,7 +336,7 @@ const headerData = {
   email: "",
   icon,
   socials,
-  text: "Our Personal Blog",
+  text: "Step into a realm where two middle-class souls navigate life's twists and turns armed with the knowledge they've gathered. Welcome to Our Space, a corner of the digital world where you're invited to join our Live, Love & Laugh Lifestyle. We're driven by a passion for devouring books, exploring cities, and embarking on thought journeys together, all while nurturing our individual growth.",
 };
 
 export default headerData;

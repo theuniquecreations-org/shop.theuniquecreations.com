@@ -11,16 +11,20 @@ const { title, newsData } = newsSection;
 const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
   const ref = useActive("#blog");
   // call service to get blog data
-
+  const type = "bookreview";
   const [blog, setBlog] = useState([]);
   console.log("ssnblog", blog);
   useEffect(() => {
     console.log("ssnbloginisde");
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
-      const response = await axios.get(config.service_url + "/blog");
+      const response = await axios.get(config.service_url + "itemsbytype/" + type);
       setBlog(response.data);
       console.log("ssnbloginisde blog single ", response.data);
+
+      //  const response = await axios.get(config.service_url + "/blog/" + id);
+      //  setBlog(response.data[0]);
+      //  setBlogRecent(response.data);
     };
 
     fetchData();
@@ -51,7 +55,7 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
             <Link href="#">
               <a className="theme-btn btn-style-one">
                 <i className="btn-curve"></i>
-                <span className="btn-title">Load more posts</span>
+                <span className="btn-title">Load more </span>
               </a>
             </Link>
           </div>

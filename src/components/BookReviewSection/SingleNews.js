@@ -19,8 +19,7 @@ const SingleNews = ({ news = {} }) => {
           <div className="post-meta">
             <ul className="clearfix">
               <li>
-                <span className="far fa-clock"></span> {date} <span className="far fa-clock"></span>
-                {category} <br />
+                <span className="far fa-clock"></span> {date}
                 <span className="far fa-user-circle"></span>talesofSuBa
               </li>
 
@@ -37,10 +36,10 @@ const SingleNews = ({ news = {} }) => {
             <div className="contentgrid d-none">
               <div style={{ fontSize: "14px" }} dangerouslySetInnerHTML={{ __html: description.substring(0, 100) }} />
             </div>
-            <div>{description.substring(0, 100).replace(/(<([^>]+)>)/gi, "")}</div>
+            <div>{description.substring(0, 100).replace(/(<([^>]+)>)/gi, "")}...</div>
           </div>
           <div className="link-box">
-            <Link href={"/blog-details?id=" + slug}>
+            <Link href={"/blog-details?bookreview=" + slug}>
               <a className="theme-btn">
                 <span className="flaticon-next-1"></span>
               </a>

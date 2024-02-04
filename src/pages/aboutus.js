@@ -16,7 +16,7 @@ const Process = () => {
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="about us" page="aboutus" parent="Page" />
+      <PageBanner title="about us" page="aboutus" />
       <ProcessOne />
       {/* <CallToSection /> */}
       <div className="sponsors-section__about-two">

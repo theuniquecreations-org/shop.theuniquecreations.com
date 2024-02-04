@@ -8,12 +8,12 @@ const ProcessOne = () => {
   // subhabala
 
   const [timeline, setTimeline] = useState([]);
-
+  const type = "timeline";
   useEffect(() => {
     console.log("ssnbloginisde");
     const fetchData = async () => {
       console.log("ssntimleineinisdefetch");
-      const response = await axios.get(config.service_url + "/timeline");
+      const response = await axios.get(config.service_url + "/itemsbytype/" + type);
       setTimeline(response.data.sort((b, a) => a.date.localeCompare(b.date)));
 
       console.log(

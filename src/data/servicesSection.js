@@ -45,12 +45,12 @@ export const serviceSectionThree = [
     href: "/bookreview",
     title: "Book\nReview",
   },
-  {
-    id: 1,
-    icon: "flaticon-responsive",
-    href: "/lifestyle",
-    title: "Life\nStyle",
-  },
+  // {
+  //   id: 1,
+  //   icon: "flaticon-responsive",
+  //   href: "/lifestyle",
+  //   title: "Life\nStyle",
+  // },
   {
     id: 2,
     icon: "flaticon-computer",
@@ -64,12 +64,12 @@ export const serviceSectionThree = [
     title: "Travel &\nExplore",
   },
 
-  {
-    id: 5,
-    icon: "flaticon-app-development",
-    href: "/blog",
-    title: "Blogging",
-  },
+  // {
+  //   id: 5,
+  //   icon: "flaticon-app-development",
+  //   href: "/blog",
+  //   title: "Blogging",
+  // },
   {
     id: 6,
     icon: "flaticon-ui",
