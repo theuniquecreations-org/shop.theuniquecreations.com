@@ -8,7 +8,7 @@ const SingleNews = ({ news = {} }) => {
   return (
     <Col lg={4} md={6} sm={12} className="news-block animated fadeInUp">
       <div className="inner-box">
-        <div className="image-box">
+        <div className="image-box1">
           <Link href={"/blog-details?id=" + slug}>
             <a>
               <Image src={thumbnail} alt="" />
@@ -37,10 +37,6 @@ const SingleNews = ({ news = {} }) => {
           </div>
 
           <div className="text1">
-            {/* <div style={{ color: "#2ecc71", fontSize: "12px" }} dangerouslySetInnerHTML={{ __html: description }} /> */}
-            <div className="contentgrid d-none">
-              <div style={{ fontSize: "14px" }} dangerouslySetInnerHTML={{ __html: description.substring(0, 100) }} />
-            </div>
             <div>{description.substring(0, 100).replace(/(<([^>]+)>)/gi, "")}...</div>
           </div>
           <div dangerouslySetInnerHTML={{ __html: link }} />
