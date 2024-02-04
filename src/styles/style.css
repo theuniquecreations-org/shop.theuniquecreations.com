@@ -6137,9 +6137,10 @@ img.lazy-image.loaded {
 
 .news-block .lower-box h5 {
   text-transform: uppercase;
-  font-size: 34px;
+  /* font-size: 34px; */
+  margin-bottom: 1px !important;
   color: var(--thm-black);
-  margin-bottom: 35px;
+  /* margin-bottom: 35px; */
 }
 
 .news-block .lower-box h5 a {

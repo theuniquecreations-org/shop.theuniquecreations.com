@@ -1,8 +1,10 @@
 import { sidebar } from "@/data/sidebarPageContainerTwo";
 import Link from "next/link";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Image } from "react-bootstrap";
 import TextSplit from "../Reuseable/TextSplit";
+import axios from "axios";
+import config from "../../config.json";
 
 const { categories, tags, comments, posts } = sidebar;
 
@@ -12,6 +14,28 @@ const SidebarSide = () => {
     const formData = new FormData(e.target);
     console.log(formData.get("search"));
   };
+
+  const [blog, setBlog] = useState([]);
+  const [blogrecent, setBlogRecent] = useState([]);
+
+  useEffect(() => {
+    console.log("ssnbloginisde");
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const type = "bookreview";
+    console.log("ssnid", id);
+    const fetchData = async () => {
+      console.log("ssnbloginisdefetch");
+      id === "undefined" ? "a" : id;
+      //const response = await axios.get(config.service_url + "/items/" + id);
+      const recentblog = await axios.get(config.service_url + "/itemsbytype/" + type);
+      //setBlog(response.data[0]);
+      setBlogRecent(recentblog.data);
+      console.log("recent post", recentblog.data);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <aside className="sidebar blog-sidebar">
@@ -34,13 +58,13 @@ const SidebarSide = () => {
             <h4>Latest Posts</h4>
           </div>
 
-          {posts.map(({ id, title, image }) => (
-            <div key={id} className="post">
+          {blogrecent.map((post) => (
+            <div key={post.id} className="post">
               <figure className="post-thumb">
-                <Image src={require(`@/images/resource/${image}`).default.src} alt="" />
+                <Image src={post.thumbnail} alt="" />
               </figure>
               <h5 className="text">
-                <a href="#">{title}</a>
+                <a href={"/blog-details?id=" + post.slug}>{post.title}</a>
               </h5>
             </div>
           ))}

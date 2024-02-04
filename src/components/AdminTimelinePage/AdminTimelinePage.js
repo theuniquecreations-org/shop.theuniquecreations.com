@@ -28,10 +28,14 @@ const options = [
     value: "bookreview",
     label: "bookreview",
   },
-  // {
-  //   value: "blog",
-  //   label: "blog",
-  // },
+  {
+    value: "products",
+    label: "products",
+  },
+  {
+    value: "blog",
+    label: "blog",
+  },
   {
     value: "gallery",
     label: "gallery",
@@ -51,8 +55,24 @@ const catoptions = [
     label: "food",
   },
   {
-    value: "bookreview",
-    label: "bookreview",
+    value: "lifestyle",
+    label: "lifestyle",
+  },
+  {
+    value: "quotes",
+    label: "quotes",
+  },
+  {
+    value: "photography",
+    label: "photography",
+  },
+  {
+    value: "others",
+    label: "others",
+  },
+  {
+    value: "tips",
+    label: "tips",
   },
 ];
 
@@ -187,6 +207,7 @@ const CheckoutPage = () => {
       thumbnail: config.blogthumbnail,
       createddate: currentDate,
       isactive: 1,
+      link: data.link,
       website: "talesofsuba.com",
     };
 
@@ -199,7 +220,7 @@ const CheckoutPage = () => {
       return;
     }
     console.log(" data", country, datas);
-    if (country === "timeline" || country === "blog" || country === "bookreview") {
+    if (country !== "gallery") {
       uploadFile(datas, country);
       return;
     }
@@ -279,7 +300,7 @@ const CheckoutPage = () => {
       const url = config.bucketurl + "gallery/" + slugifyfilename(file.name);
       console.log(url);
       let datas;
-      if (type == "timeline" || type == "blog" || type == "bookreview") {
+      if (type !== "gallery") {
         const { thumbnail } = {};
         datas = dataarray;
         datas.thumbnail = url;
@@ -303,7 +324,7 @@ const CheckoutPage = () => {
           if (data.status == 200) {
             setMessage("Saved Sucessfully");
             alert("Saved Sucessfully");
-            // window.location.reload();
+            window.location.reload();
           }
         })
         .catch((err) => {
@@ -364,37 +385,45 @@ const CheckoutPage = () => {
           <form id="login" onSubmit={handleSubmit(onSubmit)}>
             <Row>
               <Col lg={12}>
-                <h3 className="checkout__title">Timeline/Blog/Book Review</h3>
-                <div className="default-form">
-                  <Row>
-                    <Col md={12} className="form-group">
-                      <div className="field-inner">
-                        <input type="text" placeholder="Title" name="title" {...register("title", { required: true })} id="title" />
-                      </div>
-                    </Col>
-                    <Col md={6} className="form-group">
-                      <div className="field-inner">
-                        Select Thumbnail
-                        <input type="file" name="file" onChange={handleFileChange} />
-                      </div>
-                    </Col>
-                    <Col md={12} className="form-group">
-                      <div className="field-inner">
-                        Select Date: <input type="date" placeholder="Date" defaultValue={currentDate} name="date" {...register("date", { required: true })} id="date" />
-                      </div>
-                    </Col>
-                    <Col md={12} className="form-group" className={blog ? "" : "d-none"}>
-                      <div className="field-inner">
-                        <CustomSelect name="category" options={catoptions} name="category" onChange={handleSelectcategory} defaultValue={""} placeholder="Choose category" id="category" />
-                      </div>
-                    </Col>
-                    <Col md={12} className="form-group">
-                      <div className="field-inner">
-                        <QuillEditor value={content} onChange={handleEditorChange} modules={quillModules} formats={quillFormats} className="" />
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
+                <h3 className="checkout__title">{type}</h3>
+                {type && (
+                  <div className="default-form">
+                    <Row>
+                      <Col md={12} className="form-group">
+                        <div className="field-inner">
+                          <input type="text" placeholder="Title" name="title" {...register("title", { required: true })} id="title" />
+                        </div>
+                      </Col>
+                      <Col md={6} className="form-group">
+                        <div className="field-inner">
+                          Select Thumbnail
+                          <input type="file" name="file" onChange={handleFileChange} />
+                        </div>
+                      </Col>
+                      <Col md={12} className="form-group">
+                        <div className="field-inner">
+                          Select Date: <input type="date" placeholder="Date" defaultValue={currentDate} name="date" {...register("date", { required: true })} id="date" />
+                        </div>
+                      </Col>
+                      <Col md={12} className="form-group" className={blog ? "" : "d-none"}>
+                        <div className="field-inner">
+                          <CustomSelect name="category" options={catoptions} name="category" onChange={handleSelectcategory} defaultValue={""} placeholder="Choose category" id="category" />
+                        </div>
+                      </Col>
+                      <Col md={12} className="form-group">
+                        <div className="field-inner">
+                          <QuillEditor value={content} onChange={handleEditorChange} modules={quillModules} formats={quillFormats} className="" />
+                        </div>
+                      </Col>
+                      <Col md={6} className="form-group">
+                        Affliate Buy Link (Optional)
+                        <div className="field-inner">
+                          <textarea type="text" {...register("link", { required: false })} placeholder="Paster your affiliate link here" name="link" id="link" />
+                        </div>
+                      </Col>
+                    </Row>
+                  </div>
+                )}
               </Col>
               <Col lg={12} md={12} sm={12} className="form-group">
                 {msg} {progress}

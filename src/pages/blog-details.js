@@ -15,7 +15,7 @@ const BlogSingle = () => {
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Blog Posts" page="Blog Details" />
+      <PageBanner title="Post Details" page="Post Details" />
       <SidebarPageContainerTwo isDetails />
 
       <div className="sponsors-section__about-two">
