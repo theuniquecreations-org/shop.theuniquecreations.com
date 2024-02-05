@@ -52,21 +52,21 @@ const SidebarSide = () => {
         </div>
       </div>
 
-      <div className="sidebar-widget recent-posts">
+      <div className="sidebar-widget services">
         <div className="widget-inner">
           <div className="sidebar-title">
-            <h4>Latest Posts</h4>
+            <h4>More Book Reviews</h4>
           </div>
 
-          {blogrecent.map((post) => (
-            <div key={post.id} className="post">
-              <figure className="post-thumb">
+          {blogrecent?.map((post) => (
+            <ul>
+              {/* <figure className="post-thumb">
                 <Image src={post.thumbnail} alt="" />
-              </figure>
-              <h5 className="text">
-                <a href={"/blog-details?id=" + post.slug}>{post.title}</a>
-              </h5>
-            </div>
+              </figure> */}
+              <li className="text">
+                <a href={"/blog-details?id=" + post.slug}>{post.title.substring(0, 30)}</a>
+              </li>
+            </ul>
           ))}
         </div>
       </div>

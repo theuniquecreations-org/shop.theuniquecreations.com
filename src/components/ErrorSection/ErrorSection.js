@@ -17,24 +17,14 @@ const ErrorSection = () => {
       <div className="auto-container">
         <div className="content">
           <div className="big-text">
-            <Image
-              src={image.src}
-              id="error-404"
-              className="img-fluid"
-              alt=""
-            />
+            <Image src={image.src} id="error-404" className="img-fluid" alt="" />
           </div>
           <h2>{title}</h2>
           <div className="text">{text}</div>
           <div className="error-form">
             <form onSubmit={handleSubmit}>
               <div className="form-group clearfix">
-                <input
-                  type="search"
-                  name="email"
-                  placeholder="Search here"
-                  required
-                />
+                <input type="search" name="email" placeholder="Search here" required />
                 <button type="submit" className="theme-btn">
                   <span className="flaticon-search"></span>
                 </button>
@@ -42,7 +32,7 @@ const ErrorSection = () => {
             </form>
           </div>
           <div className="link-box">
-            <Link href="/index-main">
+            <Link href="/">
               <a className="theme-btn btn-style-one">
                 <i className="btn-curve"></i>
                 <span className="btn-title">Back to home</span>
