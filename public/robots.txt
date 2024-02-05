@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /contact
+Allow: /about
+Allow: /bookreview
+Allow: /aboutus
+
+Sitemap: https://www.talesofsuba.com/sitemap.txt
