@@ -60,14 +60,15 @@ const BlogDetails = () => {
                   <li>
                     <span className="far fa-user-circle"></span> talesofSuBa
                   </li>
+                  <li>{blog?.link?.includes("/a>") ? <div dangerouslySetInnerHTML={{ __html: blog.link }} /> : <a href={blog?.link}>Check at Amazon</a>}</li>
                   <li className="d-none">
                     <span className="far fa-comments"></span> {comments.length} Comments
                   </li>
                 </ul>
               </div>
               <h4>{blog?.title}</h4>
-              <div className="text">
-                <div dangerouslySetInnerHTML={{ __html: blog?.description }} />
+              <div className="text1">
+                <div dangerouslySetInnerHTML={{ __html: blog?.description?.replace("<br>", "").replace("<p><br></p>", "") }} />
               </div>
             </div>
           </div>

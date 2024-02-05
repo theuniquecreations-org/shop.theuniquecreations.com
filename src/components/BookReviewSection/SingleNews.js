@@ -39,8 +39,7 @@ const SingleNews = ({ news = {} }) => {
           <div className="text1">
             <div>{description.substring(0, 100).replace(/(<([^>]+)>)/gi, "")}...</div>
           </div>
-          <div dangerouslySetInnerHTML={{ __html: link }} />
-          <div></div>
+          <div>{link?.includes("/a>") ? <div dangerouslySetInnerHTML={{ __html: link }} /> : link ? <a href={link}>Check at Amazon</a> : ""}</div>
         </div>
       </div>
     </Col>
