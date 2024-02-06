@@ -15,10 +15,11 @@ const SidebarSide = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     console.log(formData.get("search"));
+    applyFilter(formData.get("search"));
   };
 
-  const [blog, setBlog] = useState([]);
   const [blogrecent, setBlogRecent] = useState([]);
+  const [allpost, setAllPost] = useState([]);
   const [urlslug, setURLSlug] = useState([]);
   useEffect(() => {
     console.log("ssnbloginisde");
@@ -37,19 +38,33 @@ const SidebarSide = () => {
       const recentblog = await axios.get(config.service_url + "/itemsbytype/" + type);
       //setBlog(response.data[0]);
       setBlogRecent(recentblog.data);
+      setAllPost(recentblog.data);
       console.log("recent post", recentblog.data);
     };
 
     fetchData();
   }, []);
+  const applyFilter = (searchValue) => {
+    console.log("searchvalue", searchValue);
+    if (searchValue !== "") {
+      const filteredData = blogrecent.filter((data) => {
+        console.log("searchdata", data);
+        return Object.keys(data).some((k) => data[k]?.toString().toLowerCase().includes(searchValue.toLowerCase().trim()));
+      });
 
+      setBlogRecent(filteredData);
+    } else {
+      setBlogRecent(allpost);
+    }
+    //Paginate();
+  };
   return (
     <aside className="sidebar blog-sidebar">
       <div className="sidebar-widget search-box">
         <div className="widget-inner">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <input type="search" name="search" placeholder="Search" required />
+              <input type="search" name="search" onChange={(e) => applyFilter(e.target.value)} placeholder="Search" required />
               <button type="submit">
                 <span className="icon flaticon-magnifying-glass-1"></span>
               </button>
