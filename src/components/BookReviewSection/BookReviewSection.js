@@ -10,6 +10,7 @@ const { title, newsData } = newsSection;
 
 const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
   const ref = useActive("#blog");
+  const [loading, setLoading] = useState(false);
   // call service to get blog data
   const type = "bookreview";
   const [blog, setBlog] = useState([]);
@@ -17,9 +18,11 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
   useEffect(() => {
     console.log("ssnbloginisde");
     const fetchData = async () => {
+      setLoading(true);
       console.log("ssnbloginisdefetch");
       const response = await axios.get(config.service_url + "itemsbytype/" + type);
       setBlog(response.data);
+
       console.log("ssnbloginisde blog single ", response.data);
 
       //  const response = await axios.get(config.service_url + "/blog/" + id);
@@ -27,7 +30,9 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
       //  setBlogRecent(response.data);
     };
 
-    fetchData();
+    fetchData().then(() => {
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -41,24 +46,26 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
             </h2>
           </div>
         )}
-
-        <Row className="clearfix">
-          {/* {blog.slice(0, showTitle ? 3 : undefined).map((news) => (
-            <SingleNews key={news.id} news={news} />
-          ))} */}
-          {blog?.map((news) => (
-            <SingleNews key={news.id} news={news} />
-          ))}
-        </Row>
-        {isMore && (
-          <div className="more-box d-none">
-            <Link href="#">
-              <a className="theme-btn btn-style-one">
-                <i className="btn-curve"></i>
-                <span className="btn-title">Load more </span>
-              </a>
-            </Link>
-          </div>
+        {loading ? (
+          <h5>Please wait while we are loading...</h5>
+        ) : (
+          <>
+            <Row className="clearfix">
+              {blog?.map((news) => (
+                <SingleNews key={news.id} news={news} />
+              ))}
+            </Row>
+            {isMore && (
+              <div className="more-box d-none">
+                <Link href="#">
+                  <a className="theme-btn btn-style-one">
+                    <i className="btn-curve"></i>
+                    <span className="btn-title">Load more </span>
+                  </a>
+                </Link>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>

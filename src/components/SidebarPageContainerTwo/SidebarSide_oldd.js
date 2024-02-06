@@ -60,7 +60,7 @@ const SidebarSide = () => {
             {navItems?.map(({ id, slug, title }) => (
               <li key={id} className={pathname.includes(slug) ? "active" : ""}>
                 {/* <Link href={""}>{title}</Link> */}
-                <Link href={"/blog-details?id=" + slug}>{title.substring(0, 30)}</Link>
+                <Link href={"/bookreview-details?id=" + slug}>{title.substring(0, 30)}</Link>
               </li>
             ))}
           </ul>

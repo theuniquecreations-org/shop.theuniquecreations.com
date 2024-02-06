@@ -5,10 +5,12 @@ import { Image } from "react-bootstrap";
 import TextSplit from "../Reuseable/TextSplit";
 import axios from "axios";
 import config from "../../config.json";
+import { useRouter } from "next/router";
 
 const { categories, tags, comments, posts } = sidebar;
 
 const SidebarSide = () => {
+  const { pathname } = useRouter();
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -17,13 +19,17 @@ const SidebarSide = () => {
 
   const [blog, setBlog] = useState([]);
   const [blogrecent, setBlogRecent] = useState([]);
-
+  const [urlslug, setURLSlug] = useState([]);
   useEffect(() => {
     console.log("ssnbloginisde");
+
     const params = new URLSearchParams(window.location.search);
+
     const id = params.get("id");
+    console.log("pathname", id);
     const type = "bookreview";
     console.log("ssnid", id);
+    setURLSlug(id);
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
       id === "undefined" ? "a" : id;
@@ -63,8 +69,8 @@ const SidebarSide = () => {
               {/* <figure className="post-thumb">
                 <Image src={post.thumbnail} alt="" />
               </figure> */}
-              <li className="text">
-                <a href={"/blog-details?id=" + post.slug}>{post.title.substring(0, 30)}</a>
+              <li key={post.id} className={urlslug === post.slug ? "active" : ""}>
+                <a href={"/bookreview-details?id=" + post.slug}>{post.title.substring(0, 30)}</a>
               </li>
             </ul>
           ))}

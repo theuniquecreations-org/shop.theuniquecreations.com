@@ -10,9 +10,9 @@ const VideoModal = dynamic(() => import("../VideoModal/VideoModal"));
 
 const { videoId } = blogPage;
 
-const SidebarPageContainerTwo = ({ isDetails = false }) => {
+const SidebarPageContainerTwo = ({ isDetails = false }, { blog }) => {
   const [isOpen, setOpen] = useState(false);
-
+  console.log("bookreview blog", blog);
   const handleOpen = () => setOpen(true);
 
   return (
@@ -21,10 +21,10 @@ const SidebarPageContainerTwo = ({ isDetails = false }) => {
         <div className="auto-container">
           <Row className="clearfix">
             <Col lg={8} md={12} sm={12} className="content-side">
-              {isDetails ? <BlogDetails /> : <ContentSide handleOpen={handleOpen} />}
+              {isDetails ? <BlogDetails blog={blog} /> : <ContentSide handleOpen={handleOpen} />}
             </Col>
             <Col lg={4} md={12} sm={12} className="sidebar-side">
-              <SidebarSide />
+              <SidebarSide blog={blog} />
             </Col>
           </Row>
         </div>

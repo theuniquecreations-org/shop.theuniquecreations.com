@@ -9,7 +9,7 @@ import config from "../../config.json";
 
 const { id, slug, image, date, author, title, text1, text2, text3, text4, text5, comments, tags, category, posts, inputs } = blogDetails;
 
-const BlogDetails = () => {
+const BlogDetails = (blog1) => {
   const [blog, setBlog] = useState([]);
   const [blogrecent, setBlogRecent] = useState([]);
   const handleSubmit = (e) => {
@@ -44,7 +44,7 @@ const BlogDetails = () => {
       <div className="post-details">
         {blog || (blog && blog.length === 0) ? (
           <div className="inner-box">
-            <div className="image-box">
+            <div className="image-box1">
               <Link href="#">
                 <a>
                   <Image width="auto" src={blog?.thumbnail} alt="" />

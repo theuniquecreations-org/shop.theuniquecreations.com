@@ -10,7 +10,7 @@ import React from "react";
 
 const BlogSingle = () => {
   return (
-    <Layout pageTitle="Blog Details">
+    <Layout pageTitle="Book Review">
       <Style />
       <HeaderOne />
       <MobileMenu />
