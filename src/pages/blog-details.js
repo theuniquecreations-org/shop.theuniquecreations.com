@@ -1,27 +1,32 @@
 import PageBanner from "@/components/BannerSection/PageBanner";
-import CallToSection from "@/components/CallToSection/CallToSection";
 import HeaderOne from "@/components/header/HeaderOne";
 import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
 import MainFooter from "@/components/MainFooter/MainFooter";
-import ProcessOne from "@/components/ProcessSection/ProcessOne";
 import Style from "@/components/Reuseable/Style";
 import SearchPopup from "@/components/SearchPopup/SearchPopup";
+import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/SidebarPageContainerTwo";
 import React from "react";
+import axios from "axios";
+import config from "../config.json";
 
-const Process = () => {
+const BlogSingle = () => {
   return (
-    <Layout pageTitle="Process Page">
+    <Layout pageTitle="Blog Details" thumbnail={config.blogthumbnail}>
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="our timeline" page="timeline" parent="Page" />
-      <ProcessOne />
-      <CallToSection />
-      <MainFooter normalPadding={false} />
+      <PageBanner title="Blog Details" page="Blog Details" />
+      <SidebarPageContainerTwo isDetails />
+
+      <div className="sponsors-section__about-two">
+        <br />
+        <br />
+      </div>
+      <MainFooter />
     </Layout>
   );
 };
 
-export default Process;
+export default BlogSingle;

@@ -4,7 +4,7 @@ import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { Link as ScrollLink } from "react-scroll";
 
-const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass }) => {
+const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thumbnail }) => {
   const [loading, setLoading] = useState(true);
   const { scrollTop } = useScroll(100);
 
@@ -21,6 +21,7 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass }) =
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Tales Of SuBa | {pageTitle}</title>
+        <meta property="og:image" itemprop="image" content={thumbnail} />
       </Head>
       <Preloader className={preloaderClass} loading={loading} bg={preloader} />
       <main id="wrapper" style={{ opacity: loading ? 0 : 1 }} className={`page-wrapper ${mainClass}`}>

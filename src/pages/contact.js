@@ -15,8 +15,9 @@ const Contact = () => {
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Contact" />
-      <ContactSection map form />
+      <PageBanner title="Contact us" />
+      {/* <ContactSection map form /> */}
+      <ContactSection />
       <MainFooter />
     </Layout>
   );

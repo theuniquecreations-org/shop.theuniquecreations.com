@@ -11,8 +11,7 @@ const masonryOptions = {
 
 const { title, tabBtns, items } = gallerySectionOne;
 
-const getCurrentItems = (current = "") =>
-  items.filter((it) => it.filter.includes(current));
+const getCurrentItems = (current = "") => items.filter((it) => it.filter.includes(current));
 
 const getCount = (current = "") => getCurrentItems(current).length;
 
@@ -22,11 +21,7 @@ const GallerySectionOne = ({ portfolio = false, similar = false }) => {
   const ref = useActive("#portfolio");
 
   return (
-    <section
-      ref={ref}
-      className={`gallery-section${similar ? " similar-gallery" : ""}`}
-      id="portfolio"
-    >
+    <section ref={ref} className={`gallery-section${similar ? " similar-gallery" : ""}`} id="portfolio">
       <div className="auto-container">
         <div className="mixitup-gallery">
           <div className={portfolio || similar ? "" : "upper-row clearfix"}>
@@ -39,17 +34,10 @@ const GallerySectionOne = ({ portfolio = false, similar = false }) => {
               </div>
             )}
             {!similar && (
-              <div
-                className={`filters clearfix${portfolio ? " centered" : ""}`}
-              >
+              <div className={`filters clearfix${portfolio ? " centered" : ""}`}>
                 <ul className="filter-tabs filter-btns clearfix">
                   {tabBtns.map(({ id, name, tab }) => (
-                    <li
-                      onClick={() => setCurrent(tab)}
-                      key={id}
-                      className={`${current === tab ? "active " : ""}filter`}
-                      data-role="button"
-                    >
+                    <li onClick={() => setCurrent(tab)} key={id} className={`${current === tab ? "active " : ""}filter`} data-role="button">
                       {name}
                       <sup>[{getCount(tab)}]</sup>
                     </li>
@@ -58,10 +46,7 @@ const GallerySectionOne = ({ portfolio = false, similar = false }) => {
               </div>
             )}
           </div>
-          <Masonry
-            options={masonryOptions}
-            className="row position-relative filter-list"
-          >
+          <Masonry options={masonryOptions} className="row position-relative filter-list">
             {currentItems.slice(similar ? 3 : 0).map((item) => (
               <GalleryItem item={item} key={item.id} />
             ))}

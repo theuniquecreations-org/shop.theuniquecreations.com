@@ -30,35 +30,29 @@ export const contactSection = {
       required: true,
     },
   ],
-  title: "Offices near you",
+  title: "Contact Us",
   contacts: [
     {
       id: 1,
-      name: "Austin",
-      address: "22 Texas West Hills",
-      email: "needhelp@linoor.com",
-      phone: "666 888 000",
+      name: "Tales of SuBa",
+      youtube: "https://www.youtube.com/@talesofsuba",
+      email: "talesofsuba@gmail.com",
+      whatsapp: "",
+      instagram: "https://www.instagram.com/talesofsuba/",
+      iconins: "fab fa-instagram",
+      iconyt: "fab fa-youtube",
+      iconemail: "fab fa-envelope",
     },
     {
       id: 2,
-      name: "Boston",
-      address: "5 Federal Street Boston",
-      email: "needhelp@linoor.com",
-      phone: "666 888 000",
-    },
-    {
-      id: 3,
-      name: "New york",
-      address: "8th Broklyn New York",
-      email: "needhelp@linoor.com",
-      phone: "666 888 000",
-    },
-    {
-      id: 4,
-      name: "baltimore",
-      address: "3 Lombabr 50 Baltimore",
-      email: "needhelp@linoor.com",
-      phone: "666 888 000",
+      name: "SSN Digital Media Services",
+      youtube: "https://www.youtube.com/@ssndigitalmediaservices",
+      email: "ssndigitalmediaservices@gmail.com",
+      whatsapp: "",
+      instagram: "https://www.instagram.com/ssndigitalmedia/",
+      iconins: "fab fa-instagram",
+      iconyt: "fab fa-youtube",
+      iconemail: "fab fa-envelope",
     },
   ],
 };
@@ -66,12 +60,7 @@ export const contactSection = {
 export const contactSectionTwo = {
   title: "Write us any message",
   text: "Lorem Ipsum is simply proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem is simply free text quis bibendum.",
-  socials: [
-    "fab fa-twitter",
-    "fab fa-facebook",
-    "fab fa-pinterest-p",
-    "fab fa-instagram",
-  ],
+  socials: ["fab fa-twitter", "fab fa-facebook", "fab fa-pinterest-p", "fab fa-instagram"],
 };
 
 export const contactInfoTwo = [

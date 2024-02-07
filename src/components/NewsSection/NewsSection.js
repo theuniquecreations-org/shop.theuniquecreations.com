@@ -20,7 +20,7 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
       console.log("ssnbloginisdefetch");
       const response = await axios.get(config.service_url + "/blog");
       setBlog(response.data);
-      console.log("ssnbloginisde", response.data);
+      console.log("ssnbloginisde blog single ", response.data);
     };
 
     fetchData();

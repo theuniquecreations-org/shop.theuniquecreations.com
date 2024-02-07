@@ -15,7 +15,10 @@ const LoginWrapper = ({ register = false, forgot = false }) => {
     const formData = new FormData(e.target);
     const data = {};
     newInputs.forEach(({ name }) => (data[name] = formData.get(name)));
-    console.log(data);
+    // console.log(data);
+    if (data.text === "pappu" && data.password === "pappu") {
+      window.location.href = "/adminhome";
+    }
   };
 
   return (

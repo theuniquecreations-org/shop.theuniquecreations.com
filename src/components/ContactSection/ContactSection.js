@@ -15,7 +15,7 @@ const ContactSection = ({ className = "", map = false, form = false }) => {
   return (
     <section ref={ref} className={`contact-section ${className}`} id="contact">
       <div className="auto-container">
-        <div className="sec-title centered">
+        <div className="sec-title centered d-none">
           <h2>
             {title} <span className="dot">.</span>
           </h2>
@@ -23,27 +23,19 @@ const ContactSection = ({ className = "", map = false, form = false }) => {
 
         <div className="upper-info">
           <Row className="clearfix">
-            {contacts.map(({ id, name, address, email, phone }) => (
-              <Col
-                key={id}
-                xl={3}
-                lg={6}
-                md={6}
-                sm={12}
-                className="info-block animated fadeInUp"
-              >
+            {contacts.map(({ id, name, address, email, instagram, iconins, iconemail, iconyt, youtube }) => (
+              <Col key={id} xl={6} lg={6} md={6} sm={12} className="info-block animated fadeInUp">
                 <div className="inner-box">
                   <h5>{name}</h5>
-                  <div className="text">
-                    <ul className="info">
-                      <li>{address}</li>
-                      <li>
-                        <a href={`mailto:${email}`}>{email}</a>
-                      </li>
-                      <li>
-                        <a href={`tel:${phone.split(" ").join("")}`}>{phone}</a>
-                      </li>
-                    </ul>
+                  <div className="text--">
+                    <div className="side-menu__social">
+                      <a key={id} href={instagram} target="blank">
+                        <i className={iconins}></i>
+                      </a>
+                      <a key={id} href={youtube} target="blank">
+                        <i className={iconyt}></i>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </Col>

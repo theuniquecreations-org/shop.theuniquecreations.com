@@ -40,35 +40,36 @@ export default servicesSection;
 
 export const serviceSectionThree = [
   {
-    id: 1,
-    icon: "flaticon-responsive",
-    href: "/#",
-    title: "Life\nStyle",
+    id: 4,
+    icon: "flaticon-development",
+    href: "/bookreview",
+    title: "Book\nReview",
   },
+  // {
+  //   id: 1,
+  //   icon: "flaticon-responsive",
+  //   href: "/lifestyle",
+  //   title: "Life\nStyle",
+  // },
   {
     id: 2,
     icon: "flaticon-computer",
-    href: "/#",
-    title: "Photography\n",
+    href: "/photography",
+    title: "Photography",
   },
   {
     id: 3,
     icon: "flaticon-digital-marketing",
-    href: "/#",
+    href: "/travel",
     title: "Travel &\nExplore",
   },
-  {
-    id: 4,
-    icon: "flaticon-development",
-    href: "/#",
-    title: "Book\nReview",
-  },
-  {
-    id: 5,
-    icon: "flaticon-app-development",
-    href: "/#",
-    title: "Blogging",
-  },
+
+  // {
+  //   id: 5,
+  //   icon: "flaticon-app-development",
+  //   href: "/blog",
+  //   title: "Blogging",
+  // },
   {
     id: 6,
     icon: "flaticon-ui",

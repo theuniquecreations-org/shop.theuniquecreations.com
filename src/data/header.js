@@ -143,31 +143,37 @@ const navItems = [
   home,
   {
     id: 2,
-    name: "Timeline",
-    href: "timeline",
-  },
-  {
-    id: 2,
     name: "About Us",
-    href: "https://wedding.talesofsuba.com",
-    href_old: "/about-2",
+    href: "aboutus",
   },
+  // {
+  //   id: 2,
+  //   name: "About Us",
+  //   href: "/about-2",
+  //   href_old: "/about-2",
+  // },
+
+  // {
+  //   id: 6,
+  //   name: "Shop",
+  //   href: "/shop",
+  //   subNavItems: [
+  //     { id: 1, name: "Shop Page", href: "/shop" },
+  //     { id: 2, name: "Product Details", href: "/product-details" },
+  //     { id: 3, name: "Cart Page", href: "/cart" },
+  //     { id: 4, name: "Checkout Page", href: "/checkout" },
+  //   ],
+  // },
 
   {
-    id: 6,
-    name: "Shop",
-    href: "/shop",
-    subNavItems: [
-      { id: 1, name: "Shop Page", href: "/shop" },
-      { id: 2, name: "Product Details", href: "/product-details" },
-      { id: 3, name: "Cart Page", href: "/cart" },
-      { id: 4, name: "Checkout Page", href: "/checkout" },
-    ],
+    id: 7,
+    name: "Book Review",
+    href: "/bookreview",
   },
   {
     id: 7,
     name: "Blog",
-    href: "/blog-grid",
+    href: "/blog",
   },
   {
     id: 8,
@@ -272,7 +278,7 @@ const navItemsold = [
     subNavItems: [
       { id: 1, name: "Blog Sidebar", href: "/blog" },
       { id: 2, name: "Blog Grid View", href: "/blog-grid" },
-      { id: 3, name: "Blog Single", href: "/blog-single" },
+      { id: 3, name: "Blog Single", href: "/bookreview-details" },
     ],
   },
   {
@@ -287,25 +293,25 @@ const navItemsold = [
 ];
 
 export const socials = [
-  {
-    id: 1,
-    icon: "fab fa-facebook-square",
-    href: "#",
-  },
-  {
-    id: 2,
-    icon: "fab fa-twitter",
-    href: "#",
-  },
+  // {
+  //   id: 1,
+  //   icon: "fab fa-facebook-square",
+  //   href: "#",
+  // },
+  // {
+  //   id: 2,
+  //   icon: "fab fa-twitter",
+  //   href: "#",
+  // },
   {
     id: 3,
     icon: "fab fa-instagram",
-    href: "#",
+    href: "https://www.instagram.com/talesofsuba",
   },
   {
     id: 4,
-    icon: "fab fa-pinterest-p",
-    href: "#",
+    icon: "fab fa-youtube",
+    href: "https://www.youtube.com/@talesofsuba",
   },
 ];
 
@@ -325,13 +331,13 @@ const headerData = {
   logo10,
   navItems,
   navItemsTwo,
-  address: "Suite 20 Golden Street USA",
-  phone: "666 888 0000",
-  phone2: "+ 92 666 888 0000",
-  email: "needhelp@linoor.com",
+  address: "",
+  phone: "",
+  phone2: "",
+  email: "",
   icon,
   socials,
-  text: "Linoor is a premium Template for Digital Agencies, Start Ups, Small Business and a wide range of other agencies.",
+  text: "Step into a realm where two middle-class souls navigate life's twists and turns armed with the knowledge they've gathered. Welcome to Our Space, a corner of the digital world where you're invited to join our Live, Love & Laugh Lifestyle. We're driven by a passion for devouring books, exploring cities, and embarking on thought journeys together, all while nurturing our individual growth.",
 };
 
 export default headerData;

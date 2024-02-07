@@ -77,8 +77,8 @@ const HeaderOne = ({ headerStyle = "header-style-one", logo = 1, onePage = false
             </div>
 
             {links && (
-              <div className="other-links clearfix">
-                <div className="cart-btn">
+              <div className="other-links clearfix ">
+                <div className="cart-btn d-none">
                   <Link href="/cart">
                     <a className="theme-btn cart-toggler">
                       <span className="flaticon-shopping-cart"></span>
@@ -92,11 +92,19 @@ const HeaderOne = ({ headerStyle = "header-style-one", logo = 1, onePage = false
                 </div>
                 <div className="link-box">
                   <div className="call-us">
-                    <a className="link" target="blank" href={config.instagram}>
+                    <span className="link">
                       <span className="icon"></span>
-                      <span className="sub-text">Instagram</span>
-                      <span className="number">@talesofSuBa</span>
-                    </a>
+                      <span className="number">
+                        <a href="https://wedding.talesofsuba.com" target="blank">
+                          Wedding Website
+                        </a>
+                      </span>
+                      <span className="number">
+                        <a target="blank" href={config.instagram}>
+                          @talesofSuBa
+                        </a>
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>

@@ -308,6 +308,37 @@ export const gallerySectionOne = {
   ],
   items: items2,
 };
+export const gallerySectionOneBlog = {
+  title: "Blog Category",
+  tabBtns: [
+    {
+      id: 1,
+      name: "All",
+      tab: "all",
+    },
+    {
+      id: 2,
+      name: "Branding",
+      tab: "branding",
+    },
+    {
+      id: 3,
+      name: "illustration",
+      tab: "illustration",
+    },
+    {
+      id: 4,
+      name: "Photography",
+      tab: "photography",
+    },
+    {
+      id: 5,
+      name: "Web Design",
+      tab: "web-design",
+    },
+  ],
+  items: items2,
+};
 
 export const gallerySectionThree = {
   tagline: "What We did",

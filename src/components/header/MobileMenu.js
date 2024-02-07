@@ -13,28 +13,19 @@ const MobileMenu = ({ onePage = false }) => {
 
   return (
     <div className={`side-menu__block${menuStatus ? " active" : ""}`}>
-      <div
-        onClick={toggleMenu}
-        className="side-menu__block-overlay custom-cursor__overlay"
-      >
+      <div onClick={toggleMenu} className="side-menu__block-overlay custom-cursor__overlay">
         <div className="cursor"></div>
         <div className="cursor-follower"></div>
       </div>
       <div className="side-menu__block-inner">
         <div className="side-menu__top justify-content-end">
-          <a
-            onClick={toggleMenu}
-            className="side-menu__toggler side-menu__close-btn"
-          >
+          <a onClick={toggleMenu} className="side-menu__toggler side-menu__close-btn">
             <Image src={icon.src} alt="" />
           </a>
         </div>
 
         <nav className="mobile-nav__container">
-          <div
-            className="collapse navbar-collapse show clearfix"
-            id="navbarSupportedContent"
-          >
+          <div className="collapse navbar-collapse show clearfix" id="navbarSupportedContent">
             <ul className="navigation clearfix">
               {newNavItems.map((navItem) => (
                 <NavItem navItem={navItem} key={navItem.id} mobile />
@@ -45,10 +36,6 @@ const MobileMenu = ({ onePage = false }) => {
         <div className="side-menu__sep"></div>
         <div className="side-menu__content">
           <p>{text}</p>
-          <p>
-            <a href={`mailto:${email}`}>{email}</a> <br />{" "}
-            <a href={`tel:${phone.split(" ").join("")}`}>{phone}</a>
-          </p>
           <div className="side-menu__social">
             {socials.map(({ id, icon, href }) => (
               <a key={id} href={href}>

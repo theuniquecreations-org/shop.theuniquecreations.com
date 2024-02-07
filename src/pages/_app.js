@@ -17,6 +17,10 @@ import "@/styles/hover.css";
 import "@/styles/responsive.css";
 
 const MyApp = ({ Component, pageProps }) => {
+  if (process.env.NODE_ENV !== "development")
+    console.log = () => {
+      "talesofsuba";
+    };
   return (
     <ContextProvider>
       <Component {...pageProps} />

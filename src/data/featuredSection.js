@@ -2,18 +2,18 @@ import image from "@/images/resource/featured-image-7.jpg";
 
 const featuredSection = {
   image,
-  title: "MAKE WEBSITES WITHOUT TOUCHING the CODing",
-  text: "We are committed to providing our customers with exceptional service while offering our employees the best training. There are many variations of passages of lorem ipsum is simply free text available in the market, but the majority have suffered time.",
+  title: "Destiny Brought Us Together & Now, Your blessings & Our Love will seal the bond forever",
+  text: "",
   features: [
     {
       id: 1,
-      title: "Free Consultation",
-      text: "Lorem ipsum is not dolor sit amet, consectetur notted.",
+      title: "Subha Swetha",
+      text: "A girl who is a software engineer by profession and a passionate badminton player at heart, who has found her eternal love in solitude.",
     },
     {
       id: 2,
-      title: "Best team members",
-      text: "Lorem ipsum is not dolor sit amet, consectetur notted.",
+      title: "Balakumar",
+      text: "A Man Who is a Software Engineer by profession & a Passionate Photographer at heart, who has found his eternal love in his passion.",
     },
   ],
 };

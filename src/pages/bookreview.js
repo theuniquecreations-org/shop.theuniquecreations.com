@@ -3,23 +3,29 @@ import HeaderOne from "@/components/header/HeaderOne";
 import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
 import MainFooter from "@/components/MainFooter/MainFooter";
+import BookReviewSection from "@/components/BookReviewSection/BookReviewSection";
 import Style from "@/components/Reuseable/Style";
 import SearchPopup from "@/components/SearchPopup/SearchPopup";
-import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/SidebarPageContainerTwo";
+import GallerySectionOneBlog from "@/components/GallerySectionBlog/GallerySectionOne";
 import React from "react";
 
-const BlogSingle = () => {
+const BlogGrid = () => {
   return (
-    <Layout pageTitle="Blog Single">
+    <Layout pageTitle="Book Review">
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Blog Posts" page="Blog Single" />
-      <SidebarPageContainerTwo isDetails />
+      <PageBanner title="Book Review" />
+      <BookReviewSection showTitle={false} isMore />
+      {/* <GallerySectionOneBlog /> */}
+      <div className="sponsors-section__about-two">
+        <br />
+        <br />
+      </div>
       <MainFooter />
     </Layout>
   );
 };
 
-export default BlogSingle;
+export default BlogGrid;

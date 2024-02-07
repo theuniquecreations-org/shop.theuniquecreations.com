@@ -19,10 +19,11 @@ import TeamSection from "@/components/TeamSection/TeamSection";
 import TrustedSection from "@/components/TrustedSection/TrustedSection";
 import WeDOSection from "@/components/WeDOSection/WeDOSection";
 import React from "react";
+import config from "../config.json";
 
 const Home = () => {
   return (
-    <Layout pageTitle="Home">
+    <Layout pageTitle="Home" thumbnail={config.favicon}>
       <Style />
       <HeaderOne />
       <MobileMenu />
@@ -36,12 +37,12 @@ const Home = () => {
       {/* <FunFactsOne /> */}
       {/* <TrustedSection /> */}
       {/* <TeamSection /> */}
-      <ParallaxSection />
+      {/* <ParallaxSection /> */}
       {/* <SponsorsSection /> */}
       {/* <AgencySection /> */}
       {/* <NewsSection /> */}
       <br />
-      <CallToSection />
+      {/* <CallToSection /> */}
       <MainFooter normalPadding={false} />
     </Layout>
   );

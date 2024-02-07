@@ -24,7 +24,7 @@ const MainFooter = ({ normalPadding = true }) => {
                   <div className="logo">
                     <Link href="/">
                       <a>
-                        <Image id="fLogo" src={logo.src} alt="" />
+                        <Image id="talesofsuba" src={logo.src} alt="talesofsuba" />
                       </a>
                     </Link>
                   </div>
@@ -44,7 +44,7 @@ const MainFooter = ({ normalPadding = true }) => {
             <Col xl={3} lg={6} md={6} sm={12} className="column">
               <div className="footer-widget links-widget">
                 <div className="widget-content">
-                  <h6>Explore</h6>
+                  <h6>Links</h6>
                   <Row className="clearfix">
                     <Col md={6} sm={12}>
                       <ul>
@@ -68,31 +68,11 @@ const MainFooter = ({ normalPadding = true }) => {
                 </div>
               </div>
             </Col>
-            <Col xl={3} lg={6} md={6} sm={12} className="column">
-              <div className="footer-widget info-widget">
-                <div className="widget-content">
-                  <h6>Contact</h6>
-                  <ul className="contact-info">
-                    {/* <li className="address">
-                      <span className="icon flaticon-pin-1"></span>{" "}
-                      <TextSplit text={address} />
-                    </li>
-                    <li>
-                      <span className="icon flaticon-call"></span>
-                      <a href={`tel:${phone.split(" ").join("")}`}>{phone}</a>
-                    </li> */}
-                    <li>
-                      <span className="icon flaticon-email-2"></span>
-                      <a href={`mailto:${email}`}>{email}</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </Col>
+
             <Col xl={3} lg={6} md={6} sm={12} className="column">
               <div className="footer-widget newsletter-widget">
                 <div className="widget-content">
-                  <h6>Newsletter</h6>
+                  <h6>Subscribe</h6>
                   <div className="newsletter-form">
                     <form onSubmit={handleSubmit}>
                       <div className="form-group clearfix">
@@ -104,6 +84,24 @@ const MainFooter = ({ normalPadding = true }) => {
                     </form>
                   </div>
                   <div className="text">{textBottom}</div>
+                </div>
+              </div>
+            </Col>
+            <Col xl={3} lg={6} md={6} sm={12} className="column ">
+              <div className="footer-widget info-widget">
+                <div className="widget-content">
+                  <h6>Please note</h6>
+                  <ul className="contact-info">
+                    {/* <li className="address">
+                      <span className="icon flaticon-pin-1"></span>{" "}
+                      <TextSplit text={address} />
+                    </li>
+                    <li>
+                      <span className="icon flaticon-call"></span>
+                      <a href={`tel:${phone.split(" ").join("")}`}>{phone}</a>
+                    </li> */}
+                    <span>TalesofSuBa articles and other editorial content are meant for educational purposes only, and should not be relied upon instead of professional legal or financial advice.</span>
+                  </ul>
                 </div>
               </div>
             </Col>

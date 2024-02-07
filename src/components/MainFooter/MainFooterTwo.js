@@ -4,18 +4,7 @@ import React from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import TextSplit from "../Reuseable/TextSplit";
 
-const {
-  about,
-  year,
-  author,
-  logo3,
-  socials,
-  links,
-  address,
-  phone,
-  email,
-  newses,
-} = mainFooter;
+const { about, year, author, logo3, socials, links, address, phone, email, newses } = mainFooter;
 
 const MainFooterTwo = () => {
   return (
@@ -49,15 +38,7 @@ const MainFooterTwo = () => {
               <ul className="post-list">
                 {newses.map(({ id, title, image, date }) => (
                   <li key={id}>
-                    <Image
-                      src={
-                        require(`@/images/update-1-12-2020/resources/${image}`)
-                          .default.src
-                      }
-                      width={68}
-                      height={70}
-                      alt=""
-                    />
+                    <Image src={require(`@/images/update-1-12-2020/resources/${image}`).default.src} width={68} height={70} alt="" />
                     <div className="content">
                       <p>{date}</p>
                       <h4>
