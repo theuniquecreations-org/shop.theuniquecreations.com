@@ -6,18 +6,64 @@ import { Col, Image, Row } from "react-bootstrap";
 import CommentBox from "./CommentBox";
 import axios from "axios";
 import config from "../../config.json";
+import uuid from "react-uuid";
 
 const { id, slug, image, date, author, title, text1, text2, text3, text4, text5, comments, tags, category, posts, inputs } = blogDetails;
+const commentform = [
+  {
+    name: "username",
+    placeholder: "Your Name",
+    type: "text",
+    required: true,
+  },
+  // {
+  //   name: "email",
+  //   placeholder: "Email Address",
+  //   type: "email",
+  //   required: true,
+  // },
+  // {
+  //   name: "phone",
+  //   placeholder: "Phone Number",
+  //   type: "text",
+  //   required: true,
+  // },
+  // {
+  //   name: "subject",
+  //   placeholder: "Subject",
+  //   type: "text",
+  //   required: true,
+  // },
+  {
+    name: "message",
+    placeholder: "Your Comments",
+    required: true,
+  },
+];
 
-const BlogDetails = () => {
+const BlogDetails = (blog1) => {
   const [blog, setBlog] = useState([]);
   const [blogrecent, setBlogRecent] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = {};
-    inputs.forEach(({ name }) => (data[name] = formData.get(name)));
-    console.log(data);
+    commentform.forEach(({ name }) => (data[name] = formData.get(name)));
+    (data.postid = blog.id), (data.id = uuid()), (data.type = "comments"), (data.isactive = 1), (data.website = "talesofsuba.com"), console.log(data);
+
+    fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+      .then((response) => response)
+      .then((data) => {
+        console.log("comment submit", data.status);
+        if (data.status == 200) {
+          alert("Saved Sucessfully");
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        console.log("commnets", err);
+        //setMessage(err.Message);
+      });
   };
 
   useEffect(() => {
@@ -42,9 +88,9 @@ const BlogDetails = () => {
   return (
     <div className="blog-details">
       <div className="post-details">
-        {blog || blog.length === 0 ? (
+        {blog || (blog && blog.length === 0) ? (
           <div className="inner-box">
-            <div className="image-box">
+            <div className="image-box1">
               <Link href="#">
                 <a>
                   <Image width="auto" src={blog?.thumbnail} alt="" />
@@ -60,14 +106,27 @@ const BlogDetails = () => {
                   <li>
                     <span className="far fa-user-circle"></span> talesofSuBa
                   </li>
+                  <li>
+                    <div>
+                      {blog.link?.includes("/a>") ? (
+                        <div dangerouslySetInnerHTML={{ __html: blog.link }} />
+                      ) : blog.link === "" || blog.link === undefined ? (
+                        ""
+                      ) : (
+                        <a href={blog.link} target="_blank">
+                          Check at Amazon
+                        </a>
+                      )}
+                    </div>
+                  </li>
                   <li className="d-none">
                     <span className="far fa-comments"></span> {comments.length} Comments
                   </li>
                 </ul>
               </div>
               <h4>{blog?.title}</h4>
-              <div className="text">
-                <div dangerouslySetInnerHTML={{ __html: blog?.description }} />
+              <div className="text1">
+                <div dangerouslySetInnerHTML={{ __html: blog?.description?.replace("<br>", "").replace("<p><br></p>", "") }} />
               </div>
             </div>
           </div>
@@ -126,7 +185,7 @@ const BlogDetails = () => {
         <div className="default-form comment-form">
           <form onSubmit={handleSubmit}>
             <Row className="clearfix">
-              {inputs.map(({ name, type, placeholder, required }) => (
+              {commentform.map(({ name, type, placeholder, required }) => (
                 <Col key={name} md={type ? 6 : 12} sm={12} className="form-group">
                   {type ? <input type={type} name={name} placeholder={placeholder} required={required} /> : <textarea name={name} placeholder={placeholder} required={required}></textarea>}
                 </Col>

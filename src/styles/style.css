@@ -6106,6 +6106,7 @@ img.lazy-image.loaded {
 }
 
 .news-block .post-meta ul {
+  margin-top: 20px;
   position: relative;
   display: block;
   padding: 10px 5px 0px;

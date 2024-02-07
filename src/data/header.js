@@ -164,15 +164,16 @@ const navItems = [
   //     { id: 4, name: "Checkout Page", href: "/checkout" },
   //   ],
   // },
-  // {
-  //   id: 7,
-  //   name: "Blog",
-  //   href: "/blog-grid",
-  // },
+
   {
     id: 7,
     name: "Book Review",
     href: "/bookreview",
+  },
+  {
+    id: 7,
+    name: "Blog",
+    href: "/blog",
   },
   {
     id: 8,
@@ -277,7 +278,7 @@ const navItemsold = [
     subNavItems: [
       { id: 1, name: "Blog Sidebar", href: "/blog" },
       { id: 2, name: "Blog Grid View", href: "/blog-grid" },
-      { id: 3, name: "Blog Single", href: "/blog-details" },
+      { id: 3, name: "Blog Single", href: "/bookreview-details" },
     ],
   },
   {

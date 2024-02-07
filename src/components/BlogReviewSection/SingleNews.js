@@ -4,12 +4,12 @@ import { Col, Image } from "react-bootstrap";
 
 const SingleNews = ({ news = {} }) => {
   const { id, slug, thumbnail, date, author, title, description, category, link } = news;
-
+  console.log(link, "link111");
   return (
     <Col lg={4} md={6} sm={12} className="news-block animated fadeInUp">
       <div className="inner-box">
         <div className="image-box1">
-          <Link href={"/bookreview-details?id=" + slug}>
+          <Link href={"/blog-details?id=" + slug}>
             <a>
               <Image src={thumbnail} alt="" />
             </a>
@@ -31,7 +31,7 @@ const SingleNews = ({ news = {} }) => {
             <span>
               {" "}
               <h5>
-                <a href={"/bookreview-details?id=" + slug}>{title}</a>
+                <a href={"/blog-details?id=" + slug}>{title}</a>
               </h5>
             </span>
           </div>
@@ -42,12 +42,12 @@ const SingleNews = ({ news = {} }) => {
           <div>
             {link?.includes("/a>") ? (
               <div dangerouslySetInnerHTML={{ __html: link }} />
-            ) : link ? (
-              <a href={link} target="blank">
+            ) : link === "" || link === undefined ? (
+              ""
+            ) : (
+              <a href={link} target="_blank">
                 Check at Amazon
               </a>
-            ) : (
-              ""
             )}
           </div>
         </div>
