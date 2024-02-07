@@ -8,10 +8,11 @@ import ProcessOne from "@/components/ProcessSection/ProcessOne";
 import Style from "@/components/Reuseable/Style";
 import SearchPopup from "@/components/SearchPopup/SearchPopup";
 import React from "react";
+import config from "../config.json";
 
 const Process = () => {
   return (
-    <Layout pageTitle="Process Page">
+    <Layout pageTitle="About us" thumbnail={config.favicon}>
       <Style />
       <HeaderOne />
       <MobileMenu />
