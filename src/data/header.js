@@ -164,15 +164,16 @@ const navItems = [
   //     { id: 4, name: "Checkout Page", href: "/checkout" },
   //   ],
   // },
-  // {
-  //   id: 7,
-  //   name: "Blog",
-  //   href: "/blog-grid",
-  // },
+
   {
     id: 7,
     name: "Book Review",
     href: "/bookreview",
+  },
+  {
+    id: 7,
+    name: "Blog",
+    href: "/blog",
   },
   {
     id: 8,

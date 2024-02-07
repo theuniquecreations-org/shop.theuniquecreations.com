@@ -13,7 +13,7 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
   const [loading, setLoading] = useState(false);
   const [allpost, setAllPost] = useState([]);
   // call service to get blog data
-  const type = "bookreview";
+  const type = "blog";
   const [blog, setBlog] = useState([]);
   console.log("ssnblog", blog);
   const handleSubmit = (e) => {
@@ -69,7 +69,7 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
                 <div className="sidebar-widget search-box">
                   <div className="sec-title">
                     <h2>
-                      Book Review
+                      Useful Blogs
                       <span className="dot">.</span>
                     </h2>
                   </div>

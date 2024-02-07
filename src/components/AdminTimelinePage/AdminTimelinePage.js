@@ -416,7 +416,7 @@ const CheckoutPage = () => {
                         </div>
                       </Col>
                       <Col md={6} className="form-group">
-                        Affliate Buy Link (Optional)
+                        Only Amazon Affliate Buy Link (Optional)
                         <div className="field-inner">
                           <textarea type="text" {...register("link", { required: false })} placeholder="Paster your affiliate link here" name="link" id="link" />
                         </div>

@@ -3,6 +3,7 @@ Allow: /contact
 Allow: /about
 Allow: /bookreview
 Allow: /aboutus
+Allow: /blog
 Disallow: /_app
 Disallow: /_document
 Disallow: /about-2
@@ -12,7 +13,6 @@ Disallow: /adminhome
 Disallow: /app-development
 Disallow: /blog-details
 Disallow: /blog-grid
-Disallow: /blog
 Disallow: /cart
 Disallow: /checkout
 Disallow: /clients

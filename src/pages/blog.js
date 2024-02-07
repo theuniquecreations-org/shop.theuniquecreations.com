@@ -3,20 +3,22 @@ import HeaderOne from "@/components/header/HeaderOne";
 import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
 import MainFooter from "@/components/MainFooter/MainFooter";
+import BlogReviewSection from "@/components/BlogReviewSection/BlogReviewSection";
 import Style from "@/components/Reuseable/Style";
 import SearchPopup from "@/components/SearchPopup/SearchPopup";
-import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/SidebarPageContainerTwo";
+import GallerySectionOneBlog from "@/components/GallerySectionBlog/GallerySectionOne";
 import React from "react";
 
-const Blog = () => {
+const BlogGrid = () => {
   return (
-    <Layout pageTitle="Blog Sidebar">
+    <Layout pageTitle="SuBa Blogs">
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Blog Posts" />
-      <SidebarPageContainerTwo />
+      <PageBanner title="SuBa Blogs" />
+      <BlogReviewSection showTitle={false} isMore />
+      {/* <GallerySectionOneBlog /> */}
       <div className="sponsors-section__about-two">
         <br />
         <br />
@@ -26,4 +28,4 @@ const Blog = () => {
   );
 };
 
-export default Blog;
+export default BlogGrid;

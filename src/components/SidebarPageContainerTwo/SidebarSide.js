@@ -15,36 +15,35 @@ const SidebarSide = () => {
     e.preventDefault();
     const formData = new FormData(e.target);
     console.log(formData.get("search"));
-    applyFilter(formData.get("search"));
+    applyFilter(allpost, formData.get("search"));
   };
 
   const [blogrecent, setBlogRecent] = useState([]);
   const [allpost, setAllPost] = useState([]);
   const [urlslug, setURLSlug] = useState([]);
   useEffect(() => {
-    console.log("ssnbloginisde");
+    console.log("pathname", pathname);
 
     const params = new URLSearchParams(window.location.search);
 
     const id = params.get("id");
     console.log("pathname", id);
-    const type = "bookreview";
+    const type = pathname == "/bookreview-details" ? "bookreview" : "blog";
     console.log("ssnid", id);
     setURLSlug(id);
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
       id === "undefined" ? "a" : id;
-      //const response = await axios.get(config.service_url + "/items/" + id);
-      const recentblog = await axios.get(config.service_url + "/itemsbytype/" + type);
-      //setBlog(response.data[0]);
-      setBlogRecent(recentblog.data);
-      setAllPost(recentblog.data);
-      console.log("recent post", recentblog.data);
+      const response = await axios.get(config.service_url + "/itemsbytype/" + type);
+      const sorteddata = response.data.sort((b, a) => a.date.localeCompare(b.date));
+      setBlogRecent(sorteddata);
+      setAllPost(sorteddata);
+      console.log("recent post", sorteddata);
     };
 
     fetchData();
   }, []);
-  const applyFilter = (searchValue) => {
+  const applyFilter = (blogrecent, searchValue) => {
     console.log("searchvalue", searchValue);
     if (searchValue !== "") {
       const filteredData = blogrecent.filter((data) => {
@@ -64,7 +63,7 @@ const SidebarSide = () => {
         <div className="widget-inner">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <input type="search" name="search" onChange={(e) => applyFilter(e.target.value)} placeholder="Search" required />
+              <input type="search" name="search" onChange={(e) => applyFilter(blogrecent, e.target.value)} placeholder="Search" required />
               <button type="submit">
                 <span className="icon flaticon-magnifying-glass-1"></span>
               </button>
@@ -76,7 +75,7 @@ const SidebarSide = () => {
       <div className="sidebar-widget services">
         <div className="widget-inner">
           <div className="sidebar-title">
-            <h4>More Book Reviews</h4>
+            <h4>More Topics</h4>
           </div>
 
           {blogrecent?.map((post) => (
@@ -85,7 +84,7 @@ const SidebarSide = () => {
                 <Image src={post.thumbnail} alt="" />
               </figure> */}
               <li key={post.id} className={urlslug === post.slug ? "active" : ""}>
-                <a href={"/bookreview-details?id=" + post.slug}>{post.title.substring(0, 30)}</a>
+                {pathname == "/bookreview-details" ? <a href={"/bookreview-details?id=" + post.slug}>{post.title.substring(0, 30)}</a> : <a href={"/blog-details?id=" + post.slug}>{post.title.substring(0, 30)}</a>}
               </li>
             </ul>
           ))}

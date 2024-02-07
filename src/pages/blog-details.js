@@ -7,15 +7,17 @@ import Style from "@/components/Reuseable/Style";
 import SearchPopup from "@/components/SearchPopup/SearchPopup";
 import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/SidebarPageContainerTwo";
 import React from "react";
+import axios from "axios";
+import config from "../config.json";
 
 const BlogSingle = () => {
   return (
-    <Layout pageTitle="Book Review">
+    <Layout pageTitle="Blog Details" thumbnail={config.blogthumbnail}>
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Post Details" page="Post Details" />
+      <PageBanner title="Blog Details" page="Blog Details" />
       <SidebarPageContainerTwo isDetails />
 
       <div className="sponsors-section__about-two">

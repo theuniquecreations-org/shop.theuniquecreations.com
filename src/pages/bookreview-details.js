@@ -7,7 +7,6 @@ import Style from "@/components/Reuseable/Style";
 import SearchPopup from "@/components/SearchPopup/SearchPopup";
 import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/SidebarPageContainerTwo";
 import React, { useState, useEffect } from "react";
-
 import axios from "axios";
 import config from "../config.json";
 
@@ -23,22 +22,6 @@ const BookReviewDetails = () => {
     console.log(data);
   };
   useEffect(() => {
-    // setLoading(true);
-    // console.log("BookReviewDetails");
-    // const params = new URLSearchParams(window.location.search);
-    // const id = params.get("id");
-    // console.log("bookreview", id);
-    // const fetchData = async () => {
-    //   id === "undefined" ? "a" : id;
-    //   response = await axios.get(config.service_url + "/items/" + id);
-    //   setLoading(false);
-    //   setSingleblog(response && response.data[0]);
-    //   console.log("bookreview singleblog", singleblog);
-    //   console.log("bookreview image", singleblog.thumbnail);
-    // };
-
-    // fetchData();
-
     const getbookDetails = async () => {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
@@ -57,11 +40,11 @@ const BookReviewDetails = () => {
         console.log("bookreview error");
       }
     };
-    getbookDetails();
+    //getbookDetails();
   }, []);
 
   return (
-    <Layout pageTitle="Book Review" thumbnail={singleblog.thumbnail}>
+    <Layout pageTitle="Book Review" thumbnail={config.bookreviewthumbnail}>
       <Style />
       <HeaderOne />
       <MobileMenu />

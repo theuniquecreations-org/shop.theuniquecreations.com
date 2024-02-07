@@ -60,7 +60,19 @@ const BlogDetails = (blog1) => {
                   <li>
                     <span className="far fa-user-circle"></span> talesofSuBa
                   </li>
-                  <li>{blog?.link?.includes("/a>") ? <div dangerouslySetInnerHTML={{ __html: blog.link }} /> : <a href={blog?.link}>Check at Amazon</a>}</li>
+                  <li>
+                    <div>
+                      {blog.link?.includes("/a>") ? (
+                        <div dangerouslySetInnerHTML={{ __html: blog.link }} />
+                      ) : blog.link === "" || blog.link === undefined ? (
+                        ""
+                      ) : (
+                        <a href={blog.link} target="_blank">
+                          Check at Amazon
+                        </a>
+                      )}
+                    </div>
+                  </li>
                   <li className="d-none">
                     <span className="far fa-comments"></span> {comments.length} Comments
                   </li>
