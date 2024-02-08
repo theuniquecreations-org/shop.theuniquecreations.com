@@ -1,9 +1,8 @@
 User-agent: *
 Allow: /contact
-Allow: /about
-Allow: /bookreview
+Allow: /bookreviews
 Allow: /aboutus
-Allow: /blog
+Allow: /blogs
 Disallow: /_app
 Disallow: /_document
 Disallow: /about-2
