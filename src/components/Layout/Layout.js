@@ -27,6 +27,11 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="noindex,nofollow" />
+        <meta
+          name="keywords"
+          content="Book Review, Romance Books, Fiction 
+          Books, Bookreview"
+        />
         <meta charset="utf-8" />
         <meta name="description" content={config.sitedescription} />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-7F27M995N4"></script>
