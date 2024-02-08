@@ -21,7 +21,7 @@ const ErrorSection = () => {
           </div>
           <h2>{title}</h2>
           <div className="text">{text}</div>
-          <div className="error-form">
+          <div className="error-form d-none">
             <form onSubmit={handleSubmit}>
               <div className="form-group clearfix">
                 <input type="search" name="email" placeholder="Search here" required />
