@@ -317,7 +317,7 @@ const CheckoutPage = () => {
         };
       }
 
-      fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
+      fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "cors", body: JSON.stringify(datas) })
         .then((response) => response)
         .then((data) => {
           console.log("submit", data.status);

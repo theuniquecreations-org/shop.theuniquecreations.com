@@ -5,6 +5,7 @@ import logo6 from "@/images/update-01-10-2021/logo-6-light.png";
 import logo7 from "@/images/update-01-10-2021/logo-7-light.png";
 import logo8 from "@/images/update-01-10-2021/logo-8-light.png";
 import logo5 from "@/images/update-09-06-2021/logo-5-light.png";
+import config from "../config.json";
 
 export const footer = { year: new Date().getFullYear(), author: "Tales Of SuBa | SSN Digital Media" };
 
@@ -28,7 +29,7 @@ export const mainFooter = {
   about: "There are many variation of passages of lorem ipsum available, but the majority suffered.",
   about2: "The new corporate agency theme",
   about3: "We’ve grown our business on a set of \n three building blocks. Enjoy the \n people you work.",
-  text: "Step into a realm where two middle-class souls navigate life's twists and turns armed with the knowledge they've gathered. Welcome to Our Space, a corner of the digital world where you're invited to join our Live, Love & Laugh Lifestyle. We're driven by a passion for devouring books, exploring cities, and embarking on thought journeys together, all while nurturing our individual growth.",
+  text: config.json,
   address: "",
   address3: "66 Mark Street, New Town DC 5752, Lo New York",
   address2: "214 Gold Street Round Road. 66 \n Code New York, United States \n of America",

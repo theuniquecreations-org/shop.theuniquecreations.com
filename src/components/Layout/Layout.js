@@ -3,6 +3,7 @@ import useScroll from "@/hooks/useScroll";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { Link as ScrollLink } from "react-scroll";
+import config from "../../config.json";
 
 const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thumbnail }) => {
   const [loading, setLoading] = useState(true);
@@ -22,6 +23,12 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Tales Of SuBa | {pageTitle}</title>
         <meta property="og:image" itemprop="image" content={thumbnail} />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="noindex,nofollow" />
+        <meta charset="utf-8" />
+        <meta name="description" content={config.sitedescription} />
       </Head>
       <Preloader className={preloaderClass} loading={loading} bg={preloader} />
       <main id="wrapper" style={{ opacity: loading ? 0 : 1 }} className={`page-wrapper ${mainClass}`}>
