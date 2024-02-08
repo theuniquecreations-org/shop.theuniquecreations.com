@@ -1,4 +1,5 @@
 import Document, { Head, Html, Main, NextScript, Script } from "next/document";
+import config from "../config.json";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -26,9 +27,9 @@ class MyDocument extends Document {
           <link rel="shortcut icon" href="favicon.ico" id="fav-shortcut" type="image/x-icon" />
           <link rel="icon" href="favicon.ico" id="fav-icon" type="image/x-icon" />
           <link rel="icon" href="favicon.ico" />
-          <meta name="description" content="tales of suba" />
+          <meta name="google-site-verification" content="dPbEyl8q9dRMdnUD0jtYolty4V2Z8z7nBiSGXYDc87M" />
+          <meta name="description" content={config.sitedescription} />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
           <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Teko:wght@300;400;500;600;700&family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap" rel="stylesheet" />
@@ -37,6 +38,8 @@ class MyDocument extends Document {
           <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
           <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Shadows+Into+Light&display=swap" rel="stylesheet" />
         </Head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-7F27M995N4"></script>
+
         <body>
           <Main />
           <NextScript />
