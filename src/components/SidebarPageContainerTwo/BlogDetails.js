@@ -53,7 +53,7 @@ const BlogDetails = (singleblog) => {
     commentform.forEach(({ name }) => (data[name] = formData.get(name)));
     (data.postid = blog.id), (data.id = uuid()), (data.type = "comments"), (data.isactive = 1), (data.website = "talesofsuba.com"), console.log(data);
 
-    fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "cors", body: JSON.stringify(data) })
+    fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "no-cors", body: JSON.stringify(data) })
       .then((response) => response)
       .then((data) => {
         console.log("comment submit", data.status);
