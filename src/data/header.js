@@ -178,7 +178,7 @@ const navItems = [
   },
   {
     id: 8,
-    name: "Contact",
+    name: "Contact Us",
     href: "/contact",
   },
 ];
