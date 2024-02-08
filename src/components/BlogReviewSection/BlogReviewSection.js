@@ -47,11 +47,6 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
       const sorteddata = response.data.sort((b, a) => a.date.localeCompare(b.date));
       setBlog(sorteddata);
       setAllPost(sorteddata);
-      console.log("ssnbloginisde blog single ", response.data);
-
-      //  const response = await axios.get(config.service_url + "/blog/" + id);
-      //  setBlog(response.data[0]);
-      //  setBlogRecent(response.data);
     };
 
     fetchData().then(() => {

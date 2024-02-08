@@ -41,9 +41,11 @@ const commentform = [
   },
 ];
 
-const BlogDetails = (blog1) => {
-  const [blog, setBlog] = useState([]);
+const BlogDetails = (singleblog) => {
+  console.log("blogg singleblog", singleblog);
+  const [blog, setBlog] = useState(singleblog.singleblog);
   const [blogrecent, setBlogRecent] = useState([]);
+  const [comments, setComments] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -51,38 +53,42 @@ const BlogDetails = (blog1) => {
     commentform.forEach(({ name }) => (data[name] = formData.get(name)));
     (data.postid = blog.id), (data.id = uuid()), (data.type = "comments"), (data.isactive = 1), (data.website = "talesofsuba.com"), console.log(data);
 
-    fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+    fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "cors", body: JSON.stringify(data) })
       .then((response) => response)
       .then((data) => {
         console.log("comment submit", data.status);
         if (data.status == 200) {
-          alert("Saved Sucessfully");
+          alert("Comments Saved Sucessfully");
           window.location.reload();
         }
       })
       .catch((err) => {
         console.log("commnets", err);
-        //setMessage(err.Message);
       });
   };
 
   useEffect(() => {
-    console.log("ssnbloginisde");
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-    const type = params.get("bookreview");
-    console.log("ssnid", id);
-    const fetchData = async () => {
-      console.log("ssnbloginisdefetch");
-      id === "undefined" ? "a" : id;
-      const response = await axios.get(config.service_url + "/items/" + id);
-      //const recentblog = await axios.get(config.service_url + "/itemsbytype/" + bookreview);
-      setBlog(response.data[0]);
-      //setBlogRecent(recentblog.data);
-      console.log("ssnbloginisde 123", response.data);
+    const getComments = async () => {
+      const id = "comments";
+      try {
+        await fetch(config.service_url + "/itemsbytype/" + id)
+          .then((response) => response.json())
+          .then((data) => {
+            let dataObject = data;
+            console.log("comments", dataObject);
+            let _filter = dataObject.filter((_d) => _d.isactive === 1 && _d.postid === blog.id);
+            //localStorage.setItem("talesofsubabook", JSON.stringify(dataObject));
+            setComments(_filter);
+            return;
+          })
+          .catch((err) => {
+            console.log("getComments error", err);
+          });
+      } catch (er) {
+        console.log("getComments error", er);
+      }
     };
-
-    fetchData();
+    getComments();
   }, []);
 
   return (
@@ -105,6 +111,9 @@ const BlogDetails = (blog1) => {
                   </li>
                   <li>
                     <span className="far fa-user-circle"></span> talesofSuBa
+                  </li>
+                  <li>
+                    <span className="far fa-comments"></span> {comments.length}
                   </li>
                   <li>
                     <div>
@@ -170,7 +179,7 @@ const BlogDetails = (blog1) => {
           ))}
         </Row>
       </div>
-      <div className="comments-area d-none">
+      <div className="comments-area">
         <div className="comments-title">
           <h3>{comments.length} Comments</h3>
         </div>
