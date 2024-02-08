@@ -63,9 +63,9 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
     <section ref={ref} className={`news-section ${className}`} id="blog">
       <div className="auto-container">
         <Row className="clearfix">
-          <Col md={6}>
+          <Col md={4}>
             {!showTitle && (
-              <div className="sidebar blog-sidebar">
+              <div className="sidebar blog-sidebar d-none">
                 <div className="sidebar-widget search-box">
                   <div className="sec-title">
                     <h2>
@@ -77,7 +77,7 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
               </div>
             )}
           </Col>
-          <Col md={6}>
+          <Col md={4}>
             {" "}
             <div className="sidebar blog-sidebar">
               <div className="sidebar-widget search-box">
@@ -94,6 +94,7 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
               </div>
             </div>
           </Col>
+          <Col md={4}></Col>
         </Row>
         <br />
         {showTitle && (

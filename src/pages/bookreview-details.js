@@ -44,7 +44,7 @@ const BookReviewDetails = () => {
   }, []);
 
   return (
-    <Layout pageTitle="Book Review" thumbnail={config.bookreviewthumbnail}>
+    <Layout pageTitle="Book Reviews" thumbnail={config.bookreviewthumbnail}>
       <Style />
       <HeaderOne />
       <MobileMenu />

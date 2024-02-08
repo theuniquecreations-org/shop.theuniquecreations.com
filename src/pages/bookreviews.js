@@ -11,12 +11,12 @@ import React from "react";
 
 const BlogGrid = () => {
   return (
-    <Layout pageTitle="Book Review">
+    <Layout pageTitle="Book Reviews">
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Book Review" />
+      <PageBanner title="Book Reviews" />
       <BookReviewSection showTitle={false} isMore />
       {/* <GallerySectionOneBlog /> */}
       <div className="sponsors-section__about-two">
