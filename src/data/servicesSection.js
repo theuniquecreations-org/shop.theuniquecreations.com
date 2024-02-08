@@ -42,27 +42,27 @@ export const serviceSectionThree = [
   {
     id: 4,
     icon: "flaticon-development",
-    href: "/bookreview",
-    title: "Book\nReview",
+    href: "/bookreviews",
+    title: "Book\nReviews",
   },
-  // {
-  //   id: 1,
-  //   icon: "flaticon-responsive",
-  //   href: "/lifestyle",
-  //   title: "Life\nStyle",
-  // },
+  {
+    id: 6,
+    icon: "flaticon-ui",
+    href: "/blog",
+    title: "Interesting\nBlog",
+  },
   {
     id: 2,
     icon: "flaticon-computer",
-    href: "/photography",
+    href: "#",
     title: "Photography",
   },
-  {
-    id: 3,
-    icon: "flaticon-digital-marketing",
-    href: "/travel",
-    title: "Travel &\nExplore",
-  },
+  // {
+  //   id: 3,
+  //   icon: "flaticon-digital-marketing",
+  //   href: "/#",
+  //   title: "Travel &\nExplore",
+  // },
 
   // {
   //   id: 5,
@@ -70,12 +70,6 @@ export const serviceSectionThree = [
   //   href: "/blog",
   //   title: "Blogging",
   // },
-  {
-    id: 6,
-    icon: "flaticon-ui",
-    href: "/#",
-    title: "Food\nReview",
-  },
 ];
 
 export const servicesSectionOne = {

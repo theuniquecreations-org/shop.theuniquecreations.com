@@ -168,13 +168,13 @@ const navItems = [
 
   {
     id: 7,
-    name: "Book Review",
-    href: "/bookreview",
+    name: "Book Reviews",
+    href: "/bookreviews",
   },
   {
     id: 7,
-    name: "Blog",
-    href: "/blog",
+    name: "Blogs",
+    href: "/blogs",
   },
   {
     id: 8,
