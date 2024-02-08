@@ -29,6 +29,7 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
         <meta name="robots" content="noindex,nofollow" />
         <meta charset="utf-8" />
         <meta name="description" content={config.sitedescription} />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-7F27M995N4"></script>
       </Head>
       <Preloader className={preloaderClass} loading={loading} bg={preloader} />
       <main id="wrapper" style={{ opacity: loading ? 0 : 1 }} className={`page-wrapper ${mainClass}`}>

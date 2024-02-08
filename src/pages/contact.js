@@ -10,7 +10,7 @@ import React from "react";
 
 const Contact = () => {
   return (
-    <Layout pageTitle="Contact">
+    <Layout pageTitle="Contact Us">
       <Style />
       <HeaderOne />
       <MobileMenu />
