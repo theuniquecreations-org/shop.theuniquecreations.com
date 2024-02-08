@@ -22,6 +22,12 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Tales Of SuBa | {pageTitle}</title>
         <meta property="og:image" itemprop="image" content={thumbnail} />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="noindex,nofollow" />
+        <meta charset="utf-8" />
+        <meta name="description" content="Author: A.N. Author, Illustrator: P. Picture, Category: Books, Price:  £9.24, Length: 784 pages" />
       </Head>
       <Preloader className={preloaderClass} loading={loading} bg={preloader} />
       <main id="wrapper" style={{ opacity: loading ? 0 : 1 }} className={`page-wrapper ${mainClass}`}>

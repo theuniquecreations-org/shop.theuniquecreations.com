@@ -12264,6 +12264,7 @@ img.lazy-image.loaded {
 ***/
 .service-details {
   position: relative;
+  color: #000;
 }
 
 .service-details .image {
@@ -12358,7 +12359,23 @@ img.lazy-image.loaded {
   color: var(--thm-base);
   font-weight: 400;
   font-size: 18px;
+ 
 }
+service-details .text-content ol {
+  margin-bottom: 20px;
+}
+
+.service-details .text-content ol li {
+  position: relative;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.service-details .text-content ol li {
+  list-style: auto !important;
+}
+
+
 
 /***
 

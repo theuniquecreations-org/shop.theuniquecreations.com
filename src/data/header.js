@@ -9,6 +9,7 @@ import logo8 from "@/images/update-01-10-2021/logo-8-light.png";
 import logo5 from "@/images/update-09-06-2021/logo-5.png";
 import logo10 from "@/images/update-09-06-2021/logo-6.png";
 import logo9 from "@/images/update-26-02-2021/logo-horizontal-portfolio.png";
+import config from "../config.json";
 
 const home = {
   id: 1,
@@ -337,7 +338,7 @@ const headerData = {
   email: "",
   icon,
   socials,
-  text: "Step into a realm where two middle-class souls navigate life's twists and turns armed with the knowledge they've gathered. Welcome to Our Space, a corner of the digital world where you're invited to join our Live, Love & Laugh Lifestyle. We're driven by a passion for devouring books, exploring cities, and embarking on thought journeys together, all while nurturing our individual growth.",
+  text: config.sitedescription,
 };
 
 export default headerData;
