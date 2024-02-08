@@ -48,8 +48,8 @@ export const serviceSectionThree = [
   {
     id: 6,
     icon: "flaticon-ui",
-    href: "/blog",
-    title: "Interesting\nBlog",
+    href: "/blogs",
+    title: "Interesting\nBlogs",
   },
   {
     id: 2,

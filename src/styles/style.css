@@ -12157,8 +12157,8 @@ img.lazy-image.loaded {
 
 .comments-area .comment-box {
   position: relative;
-  margin-bottom: 60px;
-  padding-bottom: 60px;
+  margin-bottom: 10px !important;
+  padding-bottom: 10px !important;
   border-bottom: 1px solid #e9ebee;
 }
 
@@ -12218,7 +12218,7 @@ img.lazy-image.loaded {
   position: relative;
   display: block;
   color: var(--thm-text);
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .comments-area .comment-box .reply-btn {
