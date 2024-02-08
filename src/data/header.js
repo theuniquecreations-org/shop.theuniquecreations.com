@@ -135,7 +135,7 @@ const navItemsTwo = [
   },
   {
     id: 8,
-    name: "Contact",
+    name: "Contact us",
     href: "#contact",
   },
 ];

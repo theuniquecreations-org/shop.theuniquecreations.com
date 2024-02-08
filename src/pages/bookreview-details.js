@@ -9,10 +9,12 @@ import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/Sideba
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../config.json";
-
+var img;
+var title;
 const BookReviewDetails = () => {
   const [singleblog, setSingleblog] = useState([]);
   const [loading, setLoading] = useState(false);
+
   var response;
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,30 +30,34 @@ const BookReviewDetails = () => {
       id === "undefined" ? "a" : id;
       try {
         setLoading(true);
-        const response = await axios.get(config.service_url + "/items/" + id).then((response) => {
-          let dataObject = response.data[0];
-          setSingleblog(dataObject);
-          console.log("bookreview dataObject", dataObject);
-          console.log("bookreview singleblog", singleblog);
-          console.log("bookreview image", dataObject.thumbnail);
-          setLoading(false);
-        });
-      } catch {
-        console.log("bookreview error");
+        await fetch(config.service_url + "/items/" + id)
+          .then((response) => response.json())
+          .then((data) => {
+            let dataObject = data[0];
+            localStorage.setItem("talesofsubabook", JSON.stringify(dataObject));
+            setSingleblog(JSON.parse(localStorage.getItem("talesofsubabook")));
+            return;
+          })
+          .catch((err) => {
+            console.log("error", err);
+          });
+        setLoading(false);
+      } catch (er) {
+        console.log("bookreview error", er);
       }
     };
-    //getbookDetails();
+    getbookDetails();
   }, []);
 
   return (
-    <Layout pageTitle="Book Reviews" thumbnail={config.bookreviewthumbnail}>
+    <Layout pageTitle="Book Review" thumbnail={config.bookreviewthumbnail}>
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Book Details" page="Book Details" />
+      <PageBanner title={singleblog?.title} page="Book Details" />
       {!loading ? (
-        <SidebarPageContainerTwo isDetails blog={singleblog} />
+        <SidebarPageContainerTwo singleblog={singleblog} />
       ) : (
         <p className="p-5">
           <h5>Please wait while we are loading...</h5>

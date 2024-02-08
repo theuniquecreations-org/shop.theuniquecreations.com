@@ -39,7 +39,7 @@ const ContentSide = ({ handleOpen }) => {
         </div>
       </div>
       <div className="more-box">
-        <Link href="/blog">
+        <Link href="/blogs">
           <a className="theme-btn btn-style-one">
             <i className="btn-curve"></i>
             <span className="btn-title">Load more posts</span>
