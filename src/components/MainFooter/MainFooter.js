@@ -112,7 +112,7 @@ const MainFooter = ({ normalPadding = true }) => {
         <div className="auto-container">
           <div className="inner clearfix">
             <div className="copyright">
-              &copy; copyright {year} by {author}
+              &copy; copyright {year} Developed by {author}
             </div>
           </div>
         </div>
