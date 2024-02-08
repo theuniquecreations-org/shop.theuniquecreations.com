@@ -86,8 +86,8 @@ const BlogDetails = (blog1) => {
   }, []);
 
   return (
-    <div className="blog-details">
-      <div className="post-details">
+    <div className="blog-details service-details">
+      <div className="post-details service-details">
         {blog || (blog && blog.length === 0) ? (
           <div className="inner-box">
             <div className="image-box1">
@@ -125,8 +125,8 @@ const BlogDetails = (blog1) => {
                 </ul>
               </div>
               <h4>{blog?.title}</h4>
-              <div className="text1">
-                <div dangerouslySetInnerHTML={{ __html: blog?.description?.replace("<br>", "").replace("<p><br></p>", "") }} />
+              <div className="text-content">
+                <div dangerouslySetInnerHTML={{ __html: blog?.description?.replace("<br>", "").replace("<p><br></p>", "").replace("<h3", "<h4") }} />
               </div>
             </div>
           </div>
