@@ -80,7 +80,7 @@ export const mainFooter = {
     {
       id: 5,
       href: "/contact",
-      title: "Contact",
+      title: "Contact Us",
     },
 
     // {

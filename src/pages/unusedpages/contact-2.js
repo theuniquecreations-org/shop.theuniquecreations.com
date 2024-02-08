@@ -12,12 +12,12 @@ import React from "react";
 
 const Contact2 = () => {
   return (
-    <Layout pageTitle="Contact">
+    <Layout pageTitle="Contact Us">
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title="Contact" />
+      <PageBanner title="Contact Us" />
       <ContactSectionTwo />
       <ContactInfoTwo />
       <MapBox />
