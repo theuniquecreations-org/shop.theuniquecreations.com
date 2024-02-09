@@ -44,14 +44,18 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
       setLoading(true);
       console.log("ssnbloginisdefetch");
       const response = await axios.get(config.service_url + "itemsbytype/" + type);
-      const sorteddata = response.data.sort((b, a) => a.date.localeCompare(b.date));
+      const sorteddata = response?.data.sort((b, a) => a.date.localeCompare(b.date));
       setBlog(sorteddata);
       setAllPost(sorteddata);
-    };
-
-    fetchData().then(() => {
       setLoading(false);
-    });
+    };
+    try {
+      fetchData();
+    } catch (ex) {
+      console.log("error", ex);
+      setLoading(false);
+      setAllPost([]);
+    }
   }, []);
 
   return (

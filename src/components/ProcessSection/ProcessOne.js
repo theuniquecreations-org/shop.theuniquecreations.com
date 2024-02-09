@@ -13,13 +13,10 @@ const ProcessOne = () => {
     console.log("ssnbloginisde");
     const fetchData = async () => {
       console.log("ssntimleineinisdefetch");
-      const response = await axios.get(config.service_url + "/itemsbytype/" + type);
-      setTimeline(response.data.sort((b, a) => a.date.localeCompare(b.date)));
-
-      console.log(
-        "ssntimleineinisde timeline sorted",
-        response.data.sort((b, a) => a.date.localeCompare(b.date))
-      );
+      try {
+        const response = await axios.get(config.service_url + "/itemsbytype/" + type);
+        setTimeline(response.data.sort((b, a) => a.date.localeCompare(b.date)));
+      } catch (err) {}
     };
 
     fetchData();
