@@ -26,7 +26,7 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="noindex,nofollow" />
+        <meta name="robots" content="index,follow" />
         <meta
           name="keywords"
           content="Book Review, Romance Books, Fiction 
