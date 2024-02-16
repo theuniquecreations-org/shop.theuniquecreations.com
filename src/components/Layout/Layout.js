@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Link as ScrollLink } from "react-scroll";
 import config from "../../config.json";
 
-const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thumbnail }) => {
+const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thumbnail, description }) => {
   const [loading, setLoading] = useState(true);
   const { scrollTop } = useScroll(100);
 
@@ -13,7 +13,7 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
     const timeoutId = setTimeout(() => {
       setLoading(false);
     }, 400);
-
+    console.log("pageTitle", pageTitle);
     return () => clearTimeout(timeoutId);
   }, []);
 
@@ -21,8 +21,8 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Tales Of SuBa | {pageTitle}</title>
-        <meta property="og:image" itemprop="image" content={thumbnail} />
+        <title>{pageTitle === null || pageTitle === "" || pageTitle === undefined || pageTitle === "undefined" ? "Tales of SuBa | Blogs | Books Review" : pageTitle}</title>
+        <meta property="og:image" itemprop="image" content={thumbnail === null || thumbnail === "" || thumbnail === undefined ? config.favicon : thumbnail} />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,7 +33,7 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
           Books, Bookreview"
         />
         <meta charset="utf-8" />
-        <meta name="description" content={config.sitedescription} />
+        <meta name="description" content={description === null || description === "" || description === undefined ? config.sitedescription : description} />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-7F27M995N4"></script>
       </Head>
       <Preloader className={preloaderClass} loading={loading} bg={preloader} />

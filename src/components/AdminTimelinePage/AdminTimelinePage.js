@@ -203,6 +203,7 @@ const CheckoutPage = () => {
       date: data.date,
       title: data.title,
       category: cat,
+      shortdescription: data.shortdescription,
       description: content,
       thumbnail: config.blogthumbnail,
       createddate: currentDate,
@@ -403,6 +404,12 @@ const CheckoutPage = () => {
                       <Col md={12} className="form-group" className={blog ? "" : "d-none"}>
                         <div className="field-inner">
                           <CustomSelect name="category" options={catoptions} name="category" onChange={handleSelectcategory} defaultValue={""} placeholder="Choose category" id="category" />
+                        </div>
+                      </Col>
+                      <Col md={12} className="form-group">
+                        Shot Description (Optional - this is for SEO)
+                        <div className="field-inner">
+                          <textarea type="text" {...register("shortdescription", { required: false })} placeholder="Short Description here" name="shortdescription" id="shortdescription" />
                         </div>
                       </Col>
                       <Col md={12} className="form-group">

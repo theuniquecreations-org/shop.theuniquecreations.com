@@ -9,7 +9,7 @@
   "email_service_url": "https://asia-south1-tucfbclouddb.cloudfunctions.net/tuc_shop_node_api/email/",
   "============================": "==========================",
   "service_url_qa": "https://59vwrpwnqj.execute-api.ap-south-1.amazonaws.com/",
-  "service_url_prod": " https://9z5mz8msg9.execute-api.us-east-1.amazonaws.com/",
+  "service_url_prod": "https://9z5mz8msg9.execute-api.us-east-1.amazonaws.com/",
   "logo1": "https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/websiteimages/talesofsubalogo_shadow.png",
   "logo": "https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/websiteimages/talesofsubalogo.png",
   "blogthumbnail": "https://ssndigitalmedia.s3.ap-south-1.amazonaws.com/talesofsuba/websiteimages/Blogs+talesofsuba.jpg",
@@ -31,8 +31,6 @@
   "qrurl": "#",
   "website": "https://www.talesofsuba.com",
   "whatsappurl": "https://wa.me/91xxxxx",
-  "instagram_feedcount": "12",
-  "instagram_access_token": "",
   "namename": "b@l@kuMarsUb@",
   "razorpaylink": "https://pages.razorpay.com/talesofsuba",
   "how to run code": "npm run dev"

@@ -57,7 +57,7 @@ const BlogDetails = (singleblog) => {
       .then((response) => response)
       .then((data) => {
         console.log("comment submit", data.status);
-        if (data.status == 200) {
+        if (data.status == 200 || data.status == 0) {
           alert("Comments Saved Sucessfully");
           window.location.reload();
         }
