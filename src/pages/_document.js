@@ -16,7 +16,7 @@ class MyDocument extends Document {
 
     // Run the parent `getInitialProps`, it now includes the custom `renderPage`
     const initialProps = await Document.getInitialProps(ctx);
-    //console.log("header page", initialProps);
+    //console.log("header page1", originalRenderPage);
     return initialProps;
   }
 
@@ -28,7 +28,6 @@ class MyDocument extends Document {
           <link rel="icon" href="favicon.ico" id="fav-icon" type="image/x-icon" />
           <link rel="icon" href="favicon.ico" />
           <meta name="google-site-verification" content="dPbEyl8q9dRMdnUD0jtYolty4V2Z8z7nBiSGXYDc87M" />
-          <meta name="description" content={config.sitedescription} />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
