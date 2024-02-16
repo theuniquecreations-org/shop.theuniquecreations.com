@@ -203,12 +203,13 @@ const CheckoutPage = () => {
       date: data.date,
       title: data.title,
       category: cat,
+      shortdescription: data.shortdescription,
       description: content,
       thumbnail: config.blogthumbnail,
       createddate: currentDate,
       isactive: 1,
       link: data.link,
-      website: "talesofsuba.com",
+      website: config.domain,
     };
 
     if (country === "") {
@@ -243,7 +244,7 @@ const CheckoutPage = () => {
   };
   const uploadFile = (dataarray, type) => {
     // S3 Bucket Name
-    const S3_BUCKET = config.S3_BUCKET_NAME + "gallery";
+    const S3_BUCKET = config.env === "QA" ? config.S3_BUCKET_NAME_QA : config.S3_BUCKET_NAME_PROD + type;
 
     // S3 Region
     const REGION = "ap-south-1";
@@ -290,14 +291,9 @@ const CheckoutPage = () => {
       })
       .promise();
 
-    // upload.then((err, data) => {
-    //   console.log(err);
-    //   console.log("s3", data);
-    // Fille successfully uploaded
-    // setMessage("File uploaded s3.");
     upload.then(() => {
-      // console.log("after uplaod");
-      const url = config.bucketurl + "gallery/" + slugifyfilename(file.name);
+      const url = config.env === "QA" ? config.qa_bucketurl + slugifyfilename(file.name) : config.prod_bucketurl + type + "/" + slugifyfilename(file.name);
+
       console.log(url);
       let datas;
       if (type !== "gallery") {
@@ -313,15 +309,15 @@ const CheckoutPage = () => {
           description: imagedescription,
           thumbnail: url,
           isactive: 1,
-          website: "talesofsuba.com",
+          website: config.domain,
         };
       }
 
-      fetch(config.service_url + "/gallery", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "no-cors", body: JSON.stringify(datas) })
+      fetch(config.service_url + "/items", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "no-cors", body: JSON.stringify(datas) })
         .then((response) => response)
         .then((data) => {
-          console.log("submit", data.status);
-          if (data.status == 200) {
+          console.log("submit", data);
+          if (data.status == 200 || data.status == 0) {
             setMessage("Saved Sucessfully");
             alert("Saved Sucessfully");
             window.location.reload();
@@ -408,6 +404,12 @@ const CheckoutPage = () => {
                       <Col md={12} className="form-group" className={blog ? "" : "d-none"}>
                         <div className="field-inner">
                           <CustomSelect name="category" options={catoptions} name="category" onChange={handleSelectcategory} defaultValue={""} placeholder="Choose category" id="category" />
+                        </div>
+                      </Col>
+                      <Col md={12} className="form-group">
+                        Shot Description (Optional - this is for SEO)
+                        <div className="field-inner">
+                          <textarea type="text" {...register("shortdescription", { required: false })} placeholder="Short Description here" name="shortdescription" id="shortdescription" />
                         </div>
                       </Col>
                       <Col md={12} className="form-group">

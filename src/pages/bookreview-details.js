@@ -34,8 +34,10 @@ const BookReviewDetails = () => {
           .then((response) => response.json())
           .then((data) => {
             let dataObject = data[0];
-            localStorage.setItem("talesofsubabook", JSON.stringify(dataObject));
-            setSingleblog(JSON.parse(localStorage.getItem("talesofsubabook")));
+            //localStorage.setItem("talesofsubabook", JSON.stringify(dataObject));
+            // setSingleblog(JSON.parse(localStorage.getItem("talesofsubabook")));
+            setSingleblog(dataObject);
+            console.log("bookreview singleblog.title", singleblog.title);
             return;
           })
           .catch((err) => {
@@ -50,7 +52,7 @@ const BookReviewDetails = () => {
   }, []);
 
   return (
-    <Layout pageTitle="Book Review" thumbnail={config.bookreviewthumbnail}>
+    <Layout pageTitle={singleblog.title} thumbnail={singleblog.thumbnail} description={singleblog.shortdescription}>
       <Style />
       <HeaderOne />
       <MobileMenu />
