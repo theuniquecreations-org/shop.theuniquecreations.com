@@ -23,7 +23,7 @@ const BlogSingle = () => {
     console.log(data);
   };
   useEffect(() => {
-    const getbookDetails = async () => {
+    const getblogDetails = async () => {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
       id === "undefined" ? "a" : id;
@@ -33,8 +33,9 @@ const BlogSingle = () => {
           .then((response) => response.json())
           .then((data) => {
             let dataObject = data[0];
-            localStorage.setItem("talesofsubapost", JSON.stringify(dataObject));
-            setSingleblog(JSON.parse(localStorage.getItem("talesofsubapost")));
+            // localStorage.setItem("talesofsubapost", JSON.stringify(dataObject));
+            // setSingleblog(JSON.parse(localStorage.getItem("talesofsubapost")));
+            setSingleblog(dataObject);
             return;
           })
           .catch((err) => {
@@ -45,11 +46,11 @@ const BlogSingle = () => {
         console.log("error", er);
       }
     };
-    getbookDetails();
+    getblogDetails();
   }, []);
 
   return (
-    <Layout pageTitle="Blog Details" thumbnail={config.blogthumbnail}>
+    <Layout pageTitle={singleblog.title} thumbnail={singleblog.thumbnail} description={singleblog.shortdescription}>
       <Style />
       <HeaderOne />
       <MobileMenu />
@@ -62,7 +63,6 @@ const BlogSingle = () => {
           <h5>Please wait while we are loading...</h5>
         </p>
       )}
-
       <div className="sponsors-section__about-two">
         <br />
         <br />
