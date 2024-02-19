@@ -43,13 +43,13 @@ const NewsSection = ({ className = "", showTitle = true, isMore = false }) => {
     const fetchData = async () => {
       setLoading(true);
       console.log("ssnbloginisdefetch");
-      const response = await axios.get(config.service_url + "itemsbytype/" + type);
+      const response = await axios.get(process.env.NEXT_PUBLIC_SERVICE_URL + "itemsbytype/" + type);
       const sorteddata = response.data.sort((b, a) => a.date.localeCompare(b.date));
       setBlog(sorteddata);
       setAllPost(sorteddata);
       console.log("ssnbloginisde blog single ", response.data);
 
-      //  const response = await axios.get(config.service_url + "/blog/" + id);
+      //  const response = await axios.get(process.env.NEXT_PUBLIC_SERVICE_URL + "/blog/" + id);
       //  setBlog(response.data[0]);
       //  setBlogRecent(response.data);
     };
