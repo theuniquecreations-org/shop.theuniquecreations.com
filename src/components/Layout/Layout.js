@@ -17,7 +17,7 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
       setLoading(false);
     }, 400);
     setTitle(pageTitle);
-    setDescription(pageTitle);
+    setDescription(description);
     console.log("pagedescription", description1);
     return () => clearTimeout(timeoutId);
   }, [pageTitle, description1]);
@@ -37,7 +37,7 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
         <meta
           name="keywords"
           content="Book Review, Romance Books, Fiction 
-          Books, Bookreview"
+          Books, Bookreview, Good Story books, top book review"
         />
         <meta charset="utf-8" />
         <meta name="description" content={description1 === null || description1 === "" || description1 === undefined ? config.sitedescription : description1} />
