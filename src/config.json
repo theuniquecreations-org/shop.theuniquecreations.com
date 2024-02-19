@@ -26,6 +26,7 @@
   "razorpaylink": "https://pages.razorpay.com/talesofsuba",
   "how to run code": "npm run dev",
   "===========": "==not in use and moved to Env==",
+  "============": "==Create .env file from qa==",
   "env1": "QA",
   "S3_BUCKET_NAME_PROD1": "ssndigitalmedia/talesofsuba/",
   "S3_BUCKET_NAME_QA1": "ssndigitalmedia/talesofsuba/qa",

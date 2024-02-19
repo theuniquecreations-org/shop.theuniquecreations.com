@@ -294,7 +294,7 @@ const CheckoutPage = () => {
       .promise();
 
     upload.then(() => {
-      const url = process.env.NEXT_PUBLIC_BUCKETURL + slugifyfilename(file.name);
+      const url = process.env.NEXT_PUBLIC_BUCKETURL + type + "/" + slugifyfilename(file.name);
 
       console.log(url);
       let datas;

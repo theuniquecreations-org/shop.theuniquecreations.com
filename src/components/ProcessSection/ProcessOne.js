@@ -16,6 +16,7 @@ const ProcessOne = () => {
       try {
         const response = await axios.get(process.env.NEXT_PUBLIC_SERVICE_URL + "/itemsbytype/" + type);
         setTimeline(response.data.sort((b, a) => a.date.localeCompare(b.date)));
+        console.log("ssntimleineinisdefetch", response);
       } catch (err) {}
     };
 
