@@ -28,8 +28,8 @@ const SidebarSide = () => {
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
       id === "undefined" ? "a" : id;
-      //const response = await axios.get(config.service_url + "/items/" + id);
-      const recentblog = await axios.get(config.service_url + "/itemsbytype/" + type);
+      //const response = await axios.get(process.env.NEXT_PUBLIC_SERVICE_URL + "/items/" + id);
+      const recentblog = await axios.get(process.env.NEXT_PUBLIC_SERVICE_URL + "/itemsbytype/" + type);
       //setBlog(response.data[0]);
       setBlogRecent(recentblog.data);
       console.log("recent post", recentblog.data);

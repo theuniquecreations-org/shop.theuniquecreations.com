@@ -30,7 +30,7 @@ const BookReviewDetails = () => {
       id === "undefined" ? "a" : id;
       try {
         setLoading(true);
-        await fetch(config.service_url + "/items/" + id)
+        await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "/items/" + id)
           .then((response) => response.json())
           .then((data) => {
             let dataObject = data[0];

@@ -53,7 +53,7 @@ const BlogDetails = (singleblog) => {
     commentform.forEach(({ name }) => (data[name] = formData.get(name)));
     (data.postid = blog.id), (data.id = uuid()), (data.type = "comments"), (data.isactive = 1), (data.website = "talesofsuba.com"), console.log(data);
 
-    fetch(config.service_url + "/items", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "no-cors", body: JSON.stringify(data) })
+    fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "/items", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "no-cors", body: JSON.stringify(data) })
       .then((response) => response)
       .then((data) => {
         console.log("comment submit", data.status);
@@ -71,7 +71,7 @@ const BlogDetails = (singleblog) => {
     const getComments = async () => {
       const id = "comments";
       try {
-        await fetch(config.service_url + "/itemsbytype/" + id)
+        await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "/itemsbytype/" + id)
           .then((response) => response.json())
           .then((data) => {
             let dataObject = data;

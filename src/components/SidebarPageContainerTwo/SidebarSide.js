@@ -34,7 +34,7 @@ const SidebarSide = () => {
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
       id === "undefined" ? "a" : id;
-      const response = await axios.get(config.service_url + "/itemsbytype/" + type);
+      const response = await axios.get(process.env.NEXT_PUBLIC_SERVICE_URL + "/itemsbytype/" + type);
       const sorteddata = response.data.sort((b, a) => a.date.localeCompare(b.date));
       setBlogRecent(sorteddata);
       setAllPost(sorteddata);
