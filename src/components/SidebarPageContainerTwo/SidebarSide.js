@@ -28,13 +28,13 @@ const SidebarSide = () => {
 
     const id = params.get("id");
     console.log("pathname", id);
-    const type = pathname == "/bookreview-details" ? "bookreview" : "blog";
+    const type = pathname.includes("/bookreviewdetails") ? "bookreview" : "blog";
     console.log("ssnid", id);
     setURLSlug(id);
     const fetchData = async () => {
       console.log("ssnbloginisdefetch");
       id === "undefined" ? "a" : id;
-      const response = await axios.get(config.service_url + "/itemsbytype/" + type);
+      const response = await axios.get(process.env.NEXT_PUBLIC_SERVICE_URL + "/itemsbytype/" + type);
       const sorteddata = response.data.sort((b, a) => a.date.localeCompare(b.date));
       setBlogRecent(sorteddata);
       setAllPost(sorteddata);
@@ -84,7 +84,7 @@ const SidebarSide = () => {
                 <Image src={post.thumbnail} alt="" />
               </figure> */}
               <li key={post.id} className={urlslug === post.slug ? "active" : ""}>
-                {pathname == "/bookreview-details" ? <a href={"/bookreview-details?id=" + post.slug}>{post.title.substring(0, 30)}</a> : <a href={"/blog-details?id=" + post.slug}>{post.title.substring(0, 30)}</a>}
+                {pathname.includes("/bookreviewdetails") ? <a href={"/bookreviewdetails/" + post.slug}>{post.title.substring(0, 30)}</a> : <a href={"/blogdetails/" + post.slug}>{post.title.substring(0, 30)}</a>}
               </li>
             </ul>
           ))}

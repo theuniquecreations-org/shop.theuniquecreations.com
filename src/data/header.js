@@ -145,27 +145,8 @@ const navItems = [
   {
     id: 2,
     name: "About Us",
-    href: "aboutus",
+    href: "/aboutus",
   },
-  // {
-  //   id: 2,
-  //   name: "About Us",
-  //   href: "/about-2",
-  //   href_old: "/about-2",
-  // },
-
-  // {
-  //   id: 6,
-  //   name: "Shop",
-  //   href: "/shop",
-  //   subNavItems: [
-  //     { id: 1, name: "Shop Page", href: "/shop" },
-  //     { id: 2, name: "Product Details", href: "/product-details" },
-  //     { id: 3, name: "Cart Page", href: "/cart" },
-  //     { id: 4, name: "Checkout Page", href: "/checkout" },
-  //   ],
-  // },
-
   {
     id: 7,
     name: "Book Reviews",

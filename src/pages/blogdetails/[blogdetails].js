@@ -8,7 +8,7 @@ import SearchPopup from "@/components/SearchPopup/SearchPopup";
 import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/SidebarPageContainerTwo";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import config from "../config.json";
+import config from "../../config.json";
 
 const BlogSingle = () => {
   const [singleblog, setSingleblog] = useState([]);
@@ -24,12 +24,11 @@ const BlogSingle = () => {
   };
   useEffect(() => {
     const getblogDetails = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
+      const id = window.location.pathname.split("/").pop();
       id === "undefined" ? "a" : id;
       try {
         setLoading(true);
-        await fetch(config.service_url + "/items/" + id)
+        await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "/items/" + id)
           .then((response) => response.json())
           .then((data) => {
             let dataObject = data[0];

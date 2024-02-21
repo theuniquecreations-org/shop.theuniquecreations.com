@@ -9,9 +9,8 @@ import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/Sideba
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../config.json";
-var img;
-var title;
-const BookReviewDetails = () => {
+
+const BlogSingle = () => {
   const [singleblog, setSingleblog] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -24,20 +23,19 @@ const BookReviewDetails = () => {
     console.log(data);
   };
   useEffect(() => {
-    const getbookDetails = async () => {
+    const getblogDetails = async () => {
       const params = new URLSearchParams(window.location.search);
       const id = params.get("id");
       id === "undefined" ? "a" : id;
       try {
         setLoading(true);
-        await fetch(config.service_url + "/items/" + id)
+        await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "/items/" + id)
           .then((response) => response.json())
           .then((data) => {
             let dataObject = data[0];
-            //localStorage.setItem("talesofsubabook", JSON.stringify(dataObject));
-            // setSingleblog(JSON.parse(localStorage.getItem("talesofsubabook")));
+            // localStorage.setItem("talesofsubapost", JSON.stringify(dataObject));
+            // setSingleblog(JSON.parse(localStorage.getItem("talesofsubapost")));
             setSingleblog(dataObject);
-            console.log("bookreview singleblog.title", singleblog.title);
             return;
           })
           .catch((err) => {
@@ -45,10 +43,10 @@ const BookReviewDetails = () => {
           });
         setLoading(false);
       } catch (er) {
-        console.log("bookreview error", er);
+        console.log("error", er);
       }
     };
-    getbookDetails();
+    getblogDetails();
   }, []);
 
   return (
@@ -57,7 +55,7 @@ const BookReviewDetails = () => {
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title={singleblog?.title} page="Book Details" />
+      <PageBanner title="Blog Details" page="Blog Details" />
       {!loading ? (
         <SidebarPageContainerTwo singleblog={singleblog} />
       ) : (
@@ -74,4 +72,4 @@ const BookReviewDetails = () => {
   );
 };
 
-export default BookReviewDetails;
+export default BlogSingle;

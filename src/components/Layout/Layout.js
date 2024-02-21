@@ -27,10 +27,10 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{title === null || title === "" || title === undefined || title === "undefined" ? defaulttitle : title}</title>
+        <meta property="og:title" content={pageTitle === null || pageTitle === "" || pageTitle === undefined || pageTitle === "undefined" ? defaulttitle : pageTitle} />
         <meta property="og:image" itemprop="image" content={thumbnail === null || thumbnail === "" || thumbnail === undefined ? config.favicon : thumbnail} />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content={pageTitle === null || pageTitle === "" || pageTitle === undefined || pageTitle === "undefined" ? defaulttitle : pageTitle} />
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index,follow" />
@@ -58,3 +58,4 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
 };
 
 export default Layout;
+// or Dynamic metadata

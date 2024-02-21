@@ -167,7 +167,9 @@ const CheckoutPage = () => {
     console.log(value);
     setMessage("");
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log("Env variable", process.env.NEXT_PUBLIC_ENV);
+  }, []);
   const {
     register,
     handleSubmit,
@@ -244,15 +246,15 @@ const CheckoutPage = () => {
   };
   const uploadFile = (dataarray, type) => {
     // S3 Bucket Name
-    const S3_BUCKET = config.env === "QA" ? config.S3_BUCKET_NAME_QA : config.S3_BUCKET_NAME_PROD + type;
+    const S3_BUCKET = process.env.NEXT_PUBLIC_S3_BUCKET_NAME + type;
 
     // S3 Region
     const REGION = "ap-south-1";
 
     // S3 Credentials
     AWS.config.update({
-      accessKeyId: CryptoJS.AES.decrypt(S3KEY, config.namename).toString(CryptoJS.enc.Utf8),
-      secretAccessKey: CryptoJS.AES.decrypt(S3SECRET, config.namename).toString(CryptoJS.enc.Utf8),
+      accessKeyId: CryptoJS.AES.decrypt(S3KEY, process.env.NEXT_PUBLIC_NAMENAME).toString(CryptoJS.enc.Utf8),
+      secretAccessKey: CryptoJS.AES.decrypt(S3SECRET, process.env.NEXT_PUBLIC_NAMENAME).toString(CryptoJS.enc.Utf8),
     });
     //console.log("S3SECRET", S3SECRET);
     const s3 = new AWS.S3({
@@ -292,7 +294,7 @@ const CheckoutPage = () => {
       .promise();
 
     upload.then(() => {
-      const url = config.env === "QA" ? config.qa_bucketurl + slugifyfilename(file.name) : config.prod_bucketurl + type + "/" + slugifyfilename(file.name);
+      const url = process.env.NEXT_PUBLIC_BUCKETURL + type + "/" + slugifyfilename(file.name);
 
       console.log(url);
       let datas;
@@ -301,7 +303,7 @@ const CheckoutPage = () => {
         datas = dataarray;
         datas.thumbnail = url;
         console.log("timeline", datas);
-      } else {
+      } else if (type === "gallery") {
         datas = {
           id: uuid(),
           type: "gallery",
@@ -311,9 +313,11 @@ const CheckoutPage = () => {
           isactive: 1,
           website: config.domain,
         };
+      } else {
+        return;
       }
 
-      fetch(config.service_url + "/items", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "no-cors", body: JSON.stringify(datas) })
+      fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "/items", { method: "POST", headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }, mode: "no-cors", body: JSON.stringify(datas) })
         .then((response) => response)
         .then((data) => {
           console.log("submit", data);
@@ -349,7 +353,7 @@ const CheckoutPage = () => {
       };
 
       console.log("image api request", datas);
-      fetch(config.service_url + "/imageuploadtos3", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
+      fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "/imageuploadtos3", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datas) })
         .then((response) => response)
         .then((data) => {
           console.log("submit", data.status);
