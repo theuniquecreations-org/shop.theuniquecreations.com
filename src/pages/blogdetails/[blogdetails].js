@@ -8,10 +8,9 @@ import SearchPopup from "@/components/SearchPopup/SearchPopup";
 import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/SidebarPageContainerTwo";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import config from "../config.json";
-var img;
-var title;
-const BookReviewDetails = () => {
+import config from "../../config.json";
+
+const BlogSingle = () => {
   const [singleblog, setSingleblog] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -24,9 +23,8 @@ const BookReviewDetails = () => {
     console.log(data);
   };
   useEffect(() => {
-    const getbookDetails = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get("id");
+    const getblogDetails = async () => {
+      const id = window.location.pathname.split("/").pop();
       id === "undefined" ? "a" : id;
       try {
         setLoading(true);
@@ -34,10 +32,9 @@ const BookReviewDetails = () => {
           .then((response) => response.json())
           .then((data) => {
             let dataObject = data[0];
-            //localStorage.setItem("talesofsubabook", JSON.stringify(dataObject));
-            // setSingleblog(JSON.parse(localStorage.getItem("talesofsubabook")));
+            // localStorage.setItem("talesofsubapost", JSON.stringify(dataObject));
+            // setSingleblog(JSON.parse(localStorage.getItem("talesofsubapost")));
             setSingleblog(dataObject);
-            console.log("bookreview singleblog.title", singleblog.title);
             return;
           })
           .catch((err) => {
@@ -45,10 +42,10 @@ const BookReviewDetails = () => {
           });
         setLoading(false);
       } catch (er) {
-        console.log("bookreview error", er);
+        console.log("error", er);
       }
     };
-    getbookDetails();
+    getblogDetails();
   }, []);
 
   return (
@@ -57,7 +54,7 @@ const BookReviewDetails = () => {
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
-      <PageBanner title={singleblog?.title} page="Book Details" />
+      <PageBanner title="Blog Details" page="Blog Details" />
       {!loading ? (
         <SidebarPageContainerTwo singleblog={singleblog} />
       ) : (
@@ -74,4 +71,4 @@ const BookReviewDetails = () => {
   );
 };
 
-export default BookReviewDetails;
+export default BlogSingle;
