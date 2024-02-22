@@ -6,7 +6,7 @@ export const loginWrapper = {
   logo,
   logoTitle: "Tale of SuBa",
   year: new Date().getFullYear(),
-  author: "Tales Of SuBa | SSN Digital Media",
+  author: "Tales Of SuBa",
   forgotText: "Please enter your email \n address to get password reset link.",
   inputs: [
     {
