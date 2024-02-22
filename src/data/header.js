@@ -298,7 +298,7 @@ export const socials = [
 ];
 
 const headerData = {
-  title: "Tales of SuBa | Books Review | Blogs",
+  title: "Tales of SuBa",
   title2: "",
   title3: "",
   logo1,
