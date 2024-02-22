@@ -298,9 +298,9 @@ export const socials = [
 ];
 
 const headerData = {
-  title: "Linoor - DIgital Agency NextJS Template",
-  title2: "Welcome to Creative Buinsess Agency.",
-  title3: "Welcome to Amazing Consulting Agency.",
+  title: "Tales of SuBa | Books Review | Blogs",
+  title2: "",
+  title3: "",
   logo1,
   logo2,
   logo3,
