@@ -31,7 +31,9 @@ const SingleNews = ({ news = {} }) => {
             <span>
               {" "}
               <h5>
-                <a href={"/blogdetails/" + slug}>{title}</a>
+                <a title={title} href={"/blogdetails/" + slug}>
+                  {title}
+                </a>
               </h5>
             </span>
           </div>

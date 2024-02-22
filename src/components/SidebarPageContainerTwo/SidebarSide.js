@@ -84,7 +84,15 @@ const SidebarSide = () => {
                 <Image src={post.thumbnail} alt="" />
               </figure> */}
               <li key={post.id} className={urlslug === post.slug ? "active" : ""}>
-                {pathname.includes("/bookreviewdetails") ? <a href={"/bookreviewdetails/" + post.slug}>{post.title.substring(0, 30)}</a> : <a href={"/blogdetails/" + post.slug}>{post.title.substring(0, 30)}</a>}
+                {pathname.includes("/bookreviewdetails") ? (
+                  <a title={post.title} href={"/bookreviewdetails/" + post.slug}>
+                    {post.title.substring(0, 30)}
+                  </a>
+                ) : (
+                  <a title={post.title} href={"/blogdetails/" + post.slug}>
+                    {post.title.substring(0, 30)}
+                  </a>
+                )}
               </li>
             </ul>
           ))}
