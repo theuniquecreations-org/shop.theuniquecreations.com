@@ -270,6 +270,7 @@ const CheckoutPage = () => {
     console.log("file", e.target.files[0]);
     const file = e.target.files[0];
     // Changing file state
+
     setFile(file);
     setMessage("");
   };
@@ -304,9 +305,10 @@ const CheckoutPage = () => {
       setMessage("Please add image description");
       return;
     }
+    const imagename = slugifyfilename(slugify(dataarray.title) + "-talesofsuba-" + file.name);
     const params = {
       Bucket: S3_BUCKET,
-      Key: slugifyfilename(file.name),
+      Key: imagename,
       Body: file,
     };
 
@@ -323,8 +325,7 @@ const CheckoutPage = () => {
       .promise();
 
     upload.then(() => {
-      const url = process.env.NEXT_PUBLIC_BUCKETURL + type + "/" + slugifyfilename(file.name);
-
+      const url = process.env.NEXT_PUBLIC_BUCKETURL + type + "/" + imagename;
       console.log(url);
       let datas;
       if (type !== "gallery") {
