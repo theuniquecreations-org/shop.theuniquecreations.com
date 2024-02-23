@@ -466,7 +466,7 @@ const CheckoutPage = () => {
                       <Col md={12} className="form-group">
                         Key words spit by commas (Optional - this is for SEO)
                         <div className="field-inner">
-                          <textarea type="text" {...register("keywords", { required: false })} placeholder="Key here" name="keywords" id="keywords" />
+                          <textarea type="text" {...register("keywords", { required: false })} placeholder="Keyword here" name="keywords" id="keywords" />
                         </div>
                       </Col>
                     </Row>
