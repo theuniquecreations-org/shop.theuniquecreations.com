@@ -240,6 +240,7 @@ const CheckoutPage = () => {
       link: data.link,
       website: config.domain,
       author: author,
+      keywords: data.keywords,
     };
 
     if (country === "") {
@@ -445,6 +446,7 @@ const CheckoutPage = () => {
                         </div>
                       </Col>
                       <Col md={12} className="form-group">
+                        Description
                         <div className="field-inner">
                           <QuillEditor value={content} onChange={handleEditorChange} modules={quillModules} formats={quillFormats} className="" />
                         </div>
@@ -459,6 +461,12 @@ const CheckoutPage = () => {
                         Author
                         <div className="field-inner">
                           <CustomSelect name="author" options={authoroptions} name="author" onChange={handleSelectauthor} defaultValue={""} placeholder="Choose Author" id="author" />
+                        </div>
+                      </Col>
+                      <Col md={12} className="form-group">
+                        Key words spit by commas (Optional - this is for SEO)
+                        <div className="field-inner">
+                          <textarea type="text" {...register("keywords", { required: false })} placeholder="Keyword here" name="keywords" id="keywords" />
                         </div>
                       </Col>
                     </Row>
