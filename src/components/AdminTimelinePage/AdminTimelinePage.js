@@ -445,6 +445,7 @@ const CheckoutPage = () => {
                         </div>
                       </Col>
                       <Col md={12} className="form-group">
+                        Description
                         <div className="field-inner">
                           <QuillEditor value={content} onChange={handleEditorChange} modules={quillModules} formats={quillFormats} className="" />
                         </div>
