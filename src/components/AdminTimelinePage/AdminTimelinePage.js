@@ -41,6 +41,28 @@ const options = [
     label: "gallery",
   },
 ];
+const authoroptions = [
+  {
+    value: "",
+    label: "Choose Author",
+  },
+  {
+    value: "subha",
+    label: "subha",
+  },
+  {
+    value: "bala",
+    label: "bala",
+  },
+  {
+    value: "talesofsuba",
+    label: "talesofsuba",
+  },
+  {
+    value: "general",
+    label: "general",
+  },
+];
 const catoptions = [
   {
     value: "",
@@ -110,6 +132,7 @@ const CheckoutPage = () => {
   const [country, setCountry] = useState("");
   const [type, setType] = useState("");
   const [cat, setCat] = useState("");
+  const [author, setAuthor] = useState("talesofsuba");
   const [blog, setBlog] = useState(false);
   const [msg, setMessage] = useState(false);
   const [content, setContent] = useState("");
@@ -162,6 +185,10 @@ const CheckoutPage = () => {
     setCat(value);
     setMessage("");
   };
+  const handleSelectauthor = ({ value }) => {
+    setAuthor(value);
+    setMessage("");
+  };
   const handleImageSelecttype = ({ value }) => {
     setimagetype(value);
     console.log(value);
@@ -212,6 +239,7 @@ const CheckoutPage = () => {
       isactive: 1,
       link: data.link,
       website: config.domain,
+      author: author,
     };
 
     if (country === "") {
@@ -417,6 +445,7 @@ const CheckoutPage = () => {
                         </div>
                       </Col>
                       <Col md={12} className="form-group">
+                        Description
                         <div className="field-inner">
                           <QuillEditor value={content} onChange={handleEditorChange} modules={quillModules} formats={quillFormats} className="" />
                         </div>
@@ -425,6 +454,12 @@ const CheckoutPage = () => {
                         Only Amazon Affliate Buy Link (Optional)
                         <div className="field-inner">
                           <textarea type="text" {...register("link", { required: false })} placeholder="Paster your affiliate link here" name="link" id="link" />
+                        </div>
+                      </Col>
+                      <Col md={6} className="form-group">
+                        Author
+                        <div className="field-inner">
+                          <CustomSelect name="author" options={authoroptions} name="author" onChange={handleSelectauthor} defaultValue={""} placeholder="Choose Author" id="author" />
                         </div>
                       </Col>
                     </Row>
