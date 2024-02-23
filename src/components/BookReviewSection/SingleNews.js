@@ -19,7 +19,7 @@ const SingleNews = ({ news = {} }) => {
           <div className="post-meta">
             <ul className="clearfix">
               <li>
-                <span className="far fa-clock"></span> {date} <span className="far fa-user-circle"></span>talesofSuBa
+                <span className="far fa-clock"></span> {date} <span className="far fa-user-circle"></span> {author === "" || author === undefined ? "tales of suba" : author}
               </li>
 
               <li className="d-none">

@@ -110,7 +110,7 @@ const BlogDetails = (singleblog) => {
                     <span className="far fa-clock"></span> {blog?.date}
                   </li>
                   <li>
-                    <span className="far fa-user-circle"></span> talesofSuBa
+                    <span className="far fa-user-circle"></span> {blog.author === "" || blog.author === undefined ? "tales of suba" : blog.author}
                   </li>
                   <li>
                     <span className="far fa-comments"></span> {comments.length}
@@ -144,12 +144,12 @@ const BlogDetails = (singleblog) => {
         )}
         <div className="info-row clearfix"></div>
 
-        <div className="info-row clearfix d-none">
+        <div className="info-row clearfix">
           <div className="tags-info">
             <strong>Tags:</strong>{" "}
             {tags.map((tag, i) => (
               <Fragment key={i}>
-                <a href="#">{tag}</a>
+                <a href={"/" + tag.toLowerCase().replace(" ", "")}>{tag}</a>
                 {tags.length !== i + 1 && ", "}
               </Fragment>
             ))}
@@ -167,7 +167,7 @@ const BlogDetails = (singleblog) => {
       </div>
       <div className="post-control-two d-none">
         <Row className="clearfix">
-          {posts.map((post, i) => (
+          {/* {posts.map((post, i) => (
             <Col key={i} md={6} sm={12} className="control-col">
               <div className="control-inner">
                 <h4>
@@ -176,7 +176,7 @@ const BlogDetails = (singleblog) => {
                 <a href="#" className="over-link"></a>
               </div>
             </Col>
-          ))}
+          ))} */}
         </Row>
       </div>
       <div className="comments-area">
