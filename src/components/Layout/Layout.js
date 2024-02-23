@@ -30,14 +30,15 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
         <meta property="og:title" content={pageTitle === null || pageTitle === "" || pageTitle === undefined || pageTitle === "undefined" ? defaulttitle : pageTitle} />
         <meta property="og:image" itemprop="image" content={thumbnail === null || thumbnail === "" || thumbnail === undefined ? config.favicon : thumbnail} />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="Tales of SuBa" />
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index,follow" />
         <meta
           name="keywords"
           content="Book Review, Romance Books, Fiction 
-          Books, Bookreview, Good Story books, top book review"
+          Books, Bookreview, Good Story books, top book review, tales of suba, talesofsuba, tales of suba blogs"
         />
         <meta charset="utf-8" />
         <meta name="description" content={description1 === null || description1 === "" || description1 === undefined ? config.sitedescription : description1} />
