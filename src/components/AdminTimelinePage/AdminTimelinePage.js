@@ -14,6 +14,7 @@ import { uploadData } from "aws-amplify/storage";
 import * as CryptoJS from "crypto-js";
 const S3KEY = "U2FsdGVkX1/byrsNTjlIFav5CwCAMI3ZuetGafp+EoIw+3LAyAraVj6f4DtP3C8P";
 const S3SECRET = "U2FsdGVkX19xsHGsr8Oql3DQONQSL68pVdWHUkfuFKGnWZU5068E7HzOxfaG0cJFa8Kl+0NPiycyqPA5n9FrWQ==";
+import axios from "axios";
 
 const options = [
   {
@@ -133,10 +134,12 @@ const CheckoutPage = () => {
   const [type, setType] = useState("");
   const [cat, setCat] = useState("");
   const [author, setAuthor] = useState("talesofsuba");
+  const [loading, setLoading] = useState(false);
   const [blog, setBlog] = useState(false);
   const [msg, setMessage] = useState(false);
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
+  const [post, setPost] = useState([]);
   const [progress, setProgress] = useState("");
   const [url, seturl] = useState("");
   const [imagetype, setimagetype] = useState("");
@@ -180,6 +183,24 @@ const CheckoutPage = () => {
 
     // const plainText = CryptoJS.AES.decrypt(cipherText, secretKey).toString(CryptoJS.enc.Utf8);
     // console.log("plainText", plainText);
+  };
+  const handleSelectView = ({ value }) => {
+    const fetchData = async () => {
+      setLoading(true);
+      console.log("ssnbloginisdefetch");
+      const response = await axios.get(process.env.NEXT_PUBLIC_SERVICE_URL + "itemsbytype/" + value);
+      const sorteddata = response?.data.sort((b, a) => a.date?.localeCompare(b.date));
+      setPost(sorteddata);
+      console.log(value, sorteddata);
+      setLoading(false);
+    };
+    try {
+      fetchData();
+    } catch (ex) {
+      console.log("error", ex);
+      setLoading(false);
+      setPost([]);
+    }
   };
   const handleSelectcategory = ({ value }) => {
     setCat(value);
@@ -297,8 +318,8 @@ const CheckoutPage = () => {
       setMessage("Please select file");
       return;
     }
-    if (file?.size > 500000) {
-      setMessage("Please upload file less than 500 kb");
+    if (file?.size > 400000) {
+      setMessage("Please upload file less than 400 kb");
       return;
     }
     if (imagedescription === "" && type == "gallery") {
@@ -402,6 +423,7 @@ const CheckoutPage = () => {
 
   return (
     <section className="checkout-page">
+      <h3>Create</h3>
       <div className="auto-container">
         <Col md={6} className="form-group">
           <div className="field-inner">
@@ -534,6 +556,16 @@ const CheckoutPage = () => {
             </Row>
           </form>
         )}
+      </div>
+      <div className="auto-container">
+        <br />
+        <Col md={6} className="form-group">
+          <div className="field-inner">
+            View:
+            <CustomSelect name="view" options={options} name="view" onChange={handleSelectView} defaultValue={""} placeholder="Choose View" id="view" />
+          </div>
+          <br />
+        </Col>
       </div>
     </section>
   );
