@@ -211,7 +211,13 @@ p {
 ::-ms-input-placeholder {
   color: inherit;
 }
-
+.p-datatable td{
+  padding: 10px !important;
+  
+}
+.p-datatable th {
+  padding: 10px !important;
+}
 .page-wrapper {
   position: relative;
   margin: 0 auto;
