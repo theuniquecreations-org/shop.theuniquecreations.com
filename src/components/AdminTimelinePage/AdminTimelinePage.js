@@ -18,6 +18,7 @@ import axios from "axios";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputSwitch } from "primereact/inputswitch";
+import secureLocalStorage from "react-secure-storage";
 
 const options = [
   {
@@ -132,6 +133,7 @@ const { inputs, checkoutMethods } = timelinePage;
 const CheckoutPage = () => {
   const [currentDate, setCurrentDate] = useState(getDate());
   const editorRef = useRef(null);
+  const [authorised, setAuthorised] = useState(false);
   const [currentCheckout, setCurrentCheckout] = useState(1);
   const [country, setCountry] = useState("");
   const [type, setType] = useState("");
@@ -243,6 +245,15 @@ const CheckoutPage = () => {
   };
   useEffect(() => {
     console.log("Env variable", process.env.NEXT_PUBLIC_ENV);
+    let username = secureLocalStorage.getItem("subausername");
+    let password = secureLocalStorage.getItem("subapassword");
+    if (username === "pappu" && password === "pappu") {
+      console.log("username", username, password);
+      setAuthorised(true);
+    } else {
+      setAuthorised(false);
+      return;
+    }
   }, []);
   const {
     register,
@@ -477,192 +488,203 @@ const CheckoutPage = () => {
 
   return (
     <section className="checkout-page">
-      <div className="auto-container">
-        {update ? (
-          ""
-        ) : (
-          <Col md={6} className="form-group">
-            <h3>CREATE</h3>
-            <div className="field-inner">
-              Type:
-              <CustomSelect name="type" options={options} name="type" onChange={handleSelecttype} defaultValue={type} placeholder="Choose Type" id="type" />
-            </div>
-            <br />
-          </Col>
-        )}
+      {authorised ? (
+        <>
+          <div className="auto-container">
+            {update ? (
+              ""
+            ) : (
+              <Col md={6} className="form-group">
+                <h3>CREATE</h3>
+                <div className="field-inner">
+                  Type:
+                  <CustomSelect name="type" options={options} name="type" onChange={handleSelecttype} defaultValue={type} placeholder="Choose Type" id="type" />
+                </div>
+                <br />
+              </Col>
+            )}
 
-        {type !== "gallery" ? (
-          <form id="login" onSubmit={handleSubmit(onSubmit)}>
-            <Row>
-              <Col lg={12}>
-                <h3 className="checkout__title">{type}</h3>
-                {type && (
-                  <div className="default-form">
-                    <Row>
-                      {!update ? (
-                        <>
-                          <Col md={12} className="form-group">
-                            <div className="field-inner">
-                              Title
-                              <input type="text" placeholder="Title" name="title" {...register("title", { required: true })} id="title" />
-                            </div>
-                          </Col>
-                          <Col md={6} className="form-group">
-                            <div className="field-inner">
-                              Select Thumbnail
-                              <input type="file" name="file" onChange={handleFileChange} />
-                            </div>
-                          </Col>
-                          <Col md={12} className="form-group">
-                            <div className="field-inner">
-                              Select Date: <input type="date" placeholder="Date" defaultValue={currentDate} name="date" {...register("date", { required: true })} id="date" />
-                            </div>
-                          </Col>
-                          <Col md={12} className="form-group" className={blog ? "" : "d-none"}>
-                            <div className="field-inner">
-                              <CustomSelect name="category" options={catoptions} name="category" onChange={handleSelectcategory} defaultValue={""} placeholder="Choose category" id="category" />
-                            </div>
-                          </Col>
-                          <Col md={12} className="form-group">
-                            Shot Description (Optional - this is for SEO)
-                            <div className="field-inner">
-                              <textarea type="text" {...register("shortdescription", { required: false })} placeholder="Short Description here" name="shortdescription" id="shortdescription" />
-                            </div>
-                          </Col>
-                          <Col md={12} className="form-group">
-                            Description
-                            <div className="field-inner">
-                              <QuillEditor value={content} onChange={handleEditorChange} modules={quillModules} formats={quillFormats} className="" />
-                            </div>
-                          </Col>
-                          <Col md={6} className="form-group">
-                            Only Amazon Affliate Buy Link (Optional)
-                            <div className="field-inner">
-                              <textarea type="text" {...register("link", { required: false })} placeholder="Paster your affiliate link here" name="link" id="link" />
-                            </div>
-                          </Col>
-                          <Col md={6} className="form-group">
-                            Author
-                            <div className="field-inner">
-                              <CustomSelect name="author" options={authoroptions} name="author" onChange={handleSelectauthor} defaultValue={""} placeholder="Choose Author" id="author" />
-                            </div>
-                          </Col>
-                          <Col md={12} className="form-group">
-                            Key words spit by commas (Optional - this is for SEO)
-                            <div className="field-inner">
-                              <textarea type="text" {...register("keywords", { required: false })} placeholder="Keywords here" name="keywords" id="keywords" />
-                            </div>
-                          </Col>
-                        </>
-                      ) : (
-                        <Col md={12} className="form-group">
-                          {selectedPost.length === 0 ? "" : "Update Id - " + selectedPost[0].id}
-                          <br />
-                          Title: {update && selectedPost[0]?.title}
-                          <br /> Description
+            {type !== "gallery" ? (
+              <form id="login" onSubmit={handleSubmit(onSubmit)}>
+                <Row>
+                  <Col lg={12}>
+                    <h3 className="checkout__title">{type}</h3>
+                    {type && (
+                      <div className="default-form">
+                        <Row>
+                          {!update ? (
+                            <>
+                              <Col md={12} className="form-group">
+                                <div className="field-inner">
+                                  Title
+                                  <input type="text" placeholder="Title" name="title" {...register("title", { required: true })} id="title" />
+                                </div>
+                              </Col>
+                              <Col md={6} className="form-group">
+                                <div className="field-inner">
+                                  Select Thumbnail
+                                  <input type="file" name="file" onChange={handleFileChange} />
+                                </div>
+                              </Col>
+                              <Col md={12} className="form-group">
+                                <div className="field-inner">
+                                  Select Date: <input type="date" placeholder="Date" defaultValue={currentDate} name="date" {...register("date", { required: true })} id="date" />
+                                </div>
+                              </Col>
+                              <Col md={12} className="form-group" className={blog ? "" : "d-none"}>
+                                <div className="field-inner">
+                                  <CustomSelect name="category" options={catoptions} name="category" onChange={handleSelectcategory} defaultValue={""} placeholder="Choose category" id="category" />
+                                </div>
+                              </Col>
+                              <Col md={12} className="form-group">
+                                Shot Description (Optional - this is for SEO)
+                                <div className="field-inner">
+                                  <textarea type="text" {...register("shortdescription", { required: false })} placeholder="Short Description here" name="shortdescription" id="shortdescription" />
+                                </div>
+                              </Col>
+                              <Col md={12} className="form-group">
+                                Description
+                                <div className="field-inner">
+                                  <QuillEditor value={content} onChange={handleEditorChange} modules={quillModules} formats={quillFormats} className="" />
+                                </div>
+                              </Col>
+                              <Col md={6} className="form-group">
+                                Only Amazon Affliate Buy Link (Optional)
+                                <div className="field-inner">
+                                  <textarea type="text" {...register("link", { required: false })} placeholder="Paster your affiliate link here" name="link" id="link" />
+                                </div>
+                              </Col>
+                              <Col md={6} className="form-group">
+                                Author
+                                <div className="field-inner">
+                                  <CustomSelect name="author" options={authoroptions} name="author" onChange={handleSelectauthor} defaultValue={""} placeholder="Choose Author" id="author" />
+                                </div>
+                              </Col>
+                              <Col md={12} className="form-group">
+                                Key words spit by commas (Optional - this is for SEO)
+                                <div className="field-inner">
+                                  <textarea type="text" {...register("keywords", { required: false })} placeholder="Keywords here" name="keywords" id="keywords" />
+                                </div>
+                              </Col>
+                            </>
+                          ) : (
+                            <Col md={12} className="form-group">
+                              {selectedPost.length === 0 ? "" : "Update Id - " + selectedPost[0].id}
+                              <br />
+                              Title: {update && selectedPost[0]?.title}
+                              <br /> Description
+                              <div className="field-inner">
+                                <QuillEditor value={contentupdate} onChange={handleEditorChangeUpdate} modules={quillModules} formats={quillFormats} className="" />
+                              </div>
+                            </Col>
+                          )}
+                        </Row>
+                      </div>
+                    )}
+                  </Col>
+                  <Col lg={12} md={12} sm={12} className="form-group">
+                    {msg} {progress}
+                    <br />
+                    {type && (
+                      <button type="submit" className="theme-btn btn-style-one">
+                        <i className="btn-curve"></i>
+                        <span className="btn-title">{!update ? "Create " + type : "Update " + type}</span>
+                      </button>
+                    )}{" "}
+                    {update && (
+                      <button type="button" onClick={(e) => (setUpdate(false), setType(""), setMessage(""))} className="theme-btn btn-style-two border">
+                        <i className="btn-curve"></i>
+                        <span className="btn-title">Create</span>
+                      </button>
+                    )}
+                  </Col>
+                </Row>
+              </form>
+            ) : (
+              <form id="uploadimage" onSubmit={handleSubmit(onSubmit)}>
+                <Row>
+                  <Col lg={12}>
+                    <h3 className="checkout__title">Galery Upload</h3>
+                    <div className="default-form">
+                      <Row>
+                        <Col md={6} className="form-group">
                           <div className="field-inner">
-                            <QuillEditor value={contentupdate} onChange={handleEditorChangeUpdate} modules={quillModules} formats={quillFormats} className="" />
+                            Image
+                            <CustomSelect name="type" options={imagetypes} name="type" onChange={handleImageSelecttype} defaultValue={""} id="imagetype" />
+                          </div>
+                          <br />
+                        </Col>
+
+                        <Col md={6} className="form-group">
+                          <div className="field-inner">
+                            Upload File
+                            <input type="file" name="file" onChange={handleFileChange} />
                           </div>
                         </Col>
-                      )}
-                    </Row>
-                  </div>
-                )}
-              </Col>
-              <Col lg={12} md={12} sm={12} className="form-group">
-                {msg} {progress}
-                <br />
-                {type && (
-                  <button type="submit" className="theme-btn btn-style-one">
-                    <i className="btn-curve"></i>
-                    <span className="btn-title">{!update ? "Create " + type : "Update " + type}</span>
-                  </button>
-                )}{" "}
-                {update && (
-                  <button type="button" onClick={(e) => (setUpdate(false), setType(""), setMessage(""))} className="theme-btn btn-style-two border">
-                    <i className="btn-curve"></i>
-                    <span className="btn-title">Create</span>
-                  </button>
-                )}
-              </Col>
-            </Row>
-          </form>
-        ) : (
-          <form id="uploadimage" onSubmit={handleSubmit(onSubmit)}>
-            <Row>
-              <Col lg={12}>
-                <h3 className="checkout__title">Galery Upload</h3>
-                <div className="default-form">
-                  <Row>
-                    <Col md={6} className="form-group">
-                      <div className="field-inner">
-                        Image
-                        <CustomSelect name="type" options={imagetypes} name="type" onChange={handleImageSelecttype} defaultValue={""} id="imagetype" />
-                      </div>
-                      <br />
-                    </Col>
-
-                    <Col md={6} className="form-group">
-                      <div className="field-inner">
-                        Upload File
-                        <input type="file" name="file" onChange={handleFileChange} />
-                      </div>
-                    </Col>
-                    <Col md={6} className="form-group">
-                      Description
-                      <div className="field-inner">
-                        <textarea type="text" onChange={handleImgDesc} required placeholder="Description" name="imagedes" id="imagedes" />
-                      </div>
-                    </Col>
-                  </Row>
-                </div>
-              </Col>
-              <Col lg={12} md={12} sm={12} className="form-group">
-                <div>
-                  <p>
-                    {msg} {progress}
-                  </p>
-                </div>
-                <button type="button" className="theme-btn btn-style-one" onClick={(e) => uploadFile(null, null)}>
-                  <i className="btn-curve"></i>
-                  <span className="btn-title">Upload</span>
-                </button>
-                <br />
-                <br />
-                <button type="button" className="theme-btn btn-style-one" onClick={(validate_image, uploadFileAPI)}>
-                  <i className="btn-curve"></i>
-                  <span className="btn-title">Upload Via API</span>
-                </button>
-              </Col>
-            </Row>
-          </form>
-        )}
-      </div>
-      <div className="auto-container">
-        <br />
-        <Col md={6} className="form-group">
-          <div className="field-inner">
-            View:
-            <CustomSelect name="view" options={options} name="view" onChange={handleSelectView} defaultValue={""} placeholder="Choose View" id="view" />
-          </div>
-          <br />
-        </Col>
-        <Col md={12} className="form-group">
-          <div>
-            {loading ? "Please wait..." : ""}
-            {/* <InputSwitch checked={metaKey} onChange={(e) => setMetaKey(e.value)} /> */}
-            {!loading && (
-              <DataTable value={post} paginator rows={5} selectionMode={rowClick ? null : "radiobutton"} selection={selectedPost} onSelectionChange={(e) => onSelectionChange(e.value)} dataKey="id" stripedRows showGridlines tableStyle={{ minWidth: "50rem" }}>
-                <Column className="p-1" field="title" header={view + " Title"}></Column>
-                <Column field="createddate" header="Date"></Column>
-                <Column field="isactive" header="Is Active"></Column>
-              </DataTable>
+                        <Col md={6} className="form-group">
+                          Description
+                          <div className="field-inner">
+                            <textarea type="text" onChange={handleImgDesc} required placeholder="Description" name="imagedes" id="imagedes" />
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Col>
+                  <Col lg={12} md={12} sm={12} className="form-group">
+                    <div>
+                      <p>
+                        {msg} {progress}
+                      </p>
+                    </div>
+                    <button type="button" className="theme-btn btn-style-one" onClick={(e) => uploadFile(null, null)}>
+                      <i className="btn-curve"></i>
+                      <span className="btn-title">Upload</span>
+                    </button>
+                    <br />
+                    <br />
+                    <button type="button" className="theme-btn btn-style-one" onClick={(validate_image, uploadFileAPI)}>
+                      <i className="btn-curve"></i>
+                      <span className="btn-title">Upload Via API</span>
+                    </button>
+                  </Col>
+                </Row>
+              </form>
             )}
           </div>
-        </Col>
+          <div className="auto-container">
+            <br />
+            <Col md={6} className="form-group">
+              <div className="field-inner">
+                View:
+                <CustomSelect name="view" options={options} name="view" onChange={handleSelectView} defaultValue={""} placeholder="Choose View" id="view" />
+              </div>
+              <br />
+            </Col>
+            <Col md={12} className="form-group">
+              <div>
+                {loading ? "Please wait..." : ""}
+                {/* <InputSwitch checked={metaKey} onChange={(e) => setMetaKey(e.value)} /> */}
+                {!loading && (
+                  <DataTable value={post} paginator rows={5} selectionMode={rowClick ? null : "radiobutton"} selection={selectedPost} onSelectionChange={(e) => onSelectionChange(e.value)} dataKey="id" stripedRows showGridlines tableStyle={{ minWidth: "50rem" }}>
+                    <Column className="p-1" field="title" header={view + " Title"}></Column>
+                    <Column field="createddate" header="Date"></Column>
+                    <Column field="isactive" header="Is Active"></Column>
+                  </DataTable>
+                )}
+              </div>
+            </Col>
 
-        <br />
-      </div>
+            <br />
+          </div>
+        </>
+      ) : (
+        <section className="auto-container">
+          <h3>Unauthorized to view.</h3>
+          <Link href="/login" className="theme-btn btn-style-one">
+            Log in
+          </Link>
+        </section>
+      )}
     </section>
   );
 };
