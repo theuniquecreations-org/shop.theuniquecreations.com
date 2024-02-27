@@ -4,6 +4,7 @@ import React from "react";
 import { Col, Image, Row } from "react-bootstrap";
 import TextSplit from "../Reuseable/TextSplit";
 import config from "../../config.json";
+import secureLocalStorage from "react-secure-storage";
 //import bcrypt from "bcrypt";
 
 const { bg, logo, logoTitle, year, author, inputs, forgotText } = loginWrapper;
@@ -18,7 +19,8 @@ const LoginWrapper = ({ register = false, forgot = false }) => {
     newInputs.forEach(({ name }) => (data[name] = formData.get(name)));
     // console.log(data);
     if (data.text === "pappu" && data.password === "pappu") {
-      //const hashedPassword = await bcrypt.hash(password, 10);
+      secureLocalStorage.setItem("subausername", data.text);
+      secureLocalStorage.setItem("subapassword", data.password);
       window.location.href = "/adminhome";
     } else {
       alert("Incorrect username / Password");
