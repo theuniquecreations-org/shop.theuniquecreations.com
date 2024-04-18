@@ -1,6 +1,7 @@
 import PageBanner from "@/components/BannerSection/PageBanner";
 import HeaderOne from "@/components/header/HeaderOne";
 import MobileMenu from "@/components/header/MobileMenu";
+//import { blogData } from "@/data/blogData";
 import Layout from "@/components/Layout/Layout";
 import MainFooter from "@/components/MainFooter/MainFooter";
 import Style from "@/components/Reuseable/Style";
@@ -9,54 +10,35 @@ import SidebarPageContainerTwo from "@/components/SidebarPageContainerTwo/Sideba
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import config from "../../config.json";
+import { useRouter } from "next/router";
 
-const BlogSingle = () => {
+export async function getServerSideProps({ params, searchParams }) {
+  // Fetch data from external API
+  const id = params.blogdetails;
+  console.log("ssr params", params.blogdetails);
+  const res = await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "/items/" + id);
+  const data = await res.json();
+  // Pass data to the page via props
+  return { props: { data } };
+}
+const BlogSingle = ({ data }) => {
+  const { query } = useRouter();
+  console.log("ssr data", query);
   const [singleblog, setSingleblog] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  var response;
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = {};
-    inputs.forEach(({ name }) => (data[name] = formData.get(name)));
-    console.log(data);
-  };
-  useEffect(() => {
-    const getblogDetails = async () => {
-      const id = window.location.pathname.split("/").pop();
-      id === "undefined" ? "a" : id;
-      try {
-        setLoading(true);
-        await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "/items/" + id)
-          .then((response) => response.json())
-          .then((data) => {
-            let dataObject = data[0];
-            // localStorage.setItem("talesofsubapost", JSON.stringify(dataObject));
-            // setSingleblog(JSON.parse(localStorage.getItem("talesofsubapost")));
-            setSingleblog(dataObject);
-            return;
-          })
-          .catch((err) => {
-            console.log("error", err);
-          });
-        setLoading(false);
-      } catch (er) {
-        console.log("error", er);
-      }
-    };
-    getblogDetails();
-  }, []);
-
+  useEffect(() => {}, []);
   return (
-    <Layout pageTitle={singleblog.title} thumbnail={singleblog.thumbnail} description={singleblog.shortdescription}>
+    <>
+      {data.map((event) => (
+        <Layout pageTitle={data[0].title} thumbnail={data[0].thumbnail} description={data[0].description}></Layout>
+      ))}
       <Style />
       <HeaderOne />
       <MobileMenu />
       <SearchPopup />
       <PageBanner title="Blog Details" page="Blog Details" />
       {!loading ? (
-        <SidebarPageContainerTwo singleblog={singleblog} />
+        <SidebarPageContainerTwo singleblog={data[0]} />
       ) : (
         <p className="p-5">
           <h5>Please wait while we are loading...</h5>
@@ -67,7 +49,7 @@ const BlogSingle = () => {
         <br />
       </div>
       <MainFooter />
-    </Layout>
+    </>
   );
 };
 
