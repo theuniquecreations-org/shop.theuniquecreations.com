@@ -142,7 +142,7 @@ const BlogDetails = (singleblog) => {
         ) : (
           <h6>No Post Found</h6>
         )}
-        <div className="info-row clearfix"></div>
+        <div className="info-row clearfix d-none"></div>
 
         <div className="info-row clearfix">
           <div className="tags-info">

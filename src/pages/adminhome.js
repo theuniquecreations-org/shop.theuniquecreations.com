@@ -10,7 +10,7 @@ import React from "react";
 
 const AdminHome = () => {
   return (
-    <Layout pageTitle="Checkout Page">
+    <Layout pageTitle="Tales of SuBa Admin">
       <Style />
       <HeaderOne />
       <MobileMenu />

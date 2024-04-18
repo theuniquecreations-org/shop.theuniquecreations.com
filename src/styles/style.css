@@ -211,7 +211,13 @@ p {
 ::-ms-input-placeholder {
   color: inherit;
 }
-
+.p-datatable td{
+  padding: 10px !important;
+  
+}
+.p-datatable th {
+  padding: 10px !important;
+}
 .page-wrapper {
   position: relative;
   margin: 0 auto;
@@ -12077,9 +12083,53 @@ img.lazy-image.loaded {
   float: right;
 }
 
+blockquote {
+  font-size: 1.4em;
+  /* width: 60%; */
+  margin: 5px auto;
+  font-family: Open Sans;
+  font-style: italic;
+  color: #555555;
+  padding: 0.5em 5px 0.5em 50px;
+  border-left: 8px solid #ffaa17;
+  line-height: 1.6;
+  position: relative;
+  background: #f5f5f5;
+    border-radius: 5px;
+}
+
+blockquote::before {
+  font-family: Arial;
+  content: "\201C";
+  color: #ffaa17;
+  font-size: 2em;
+  position: absolute;
+  left: 10px;
+  top: -10px;
+}
+
+blockquote::after {
+  content: '';
+}
+
+blockquote span {
+  display: block;
+  color: #333333;
+  font-style: normal;
+  font-weight: bold;
+  margin-top: 1em;
+}
+
+
 .sidebar-page-container .post-control-two {
   position: relative;
   margin-bottom: 20px;
+}
+pre{
+  background-color: #3d3d3d;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .sidebar-page-container .post-control-two .control-col {
