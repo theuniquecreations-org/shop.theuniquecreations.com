@@ -30,7 +30,7 @@ const BlogSingle = ({ data }) => {
   return (
     <>
       {data.map((event) => (
-        <Layout pageTitle={data[0].title} thumbnail={data[0].thumbnail} description={data[0].description}></Layout>
+        <Layout pageTitle={data[0].title} thumbnail={data[0].thumbnail} description={data[0].shortdescription}></Layout>
       ))}
       <Style />
       <HeaderOne />
