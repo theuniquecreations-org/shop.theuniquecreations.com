@@ -12,6 +12,7 @@ import "react-modal-video/css/modal-video.min.css";
 import "tiny-slider/dist/tiny-slider.css";
 import { PrimeReactProvider } from "primereact/api";
 // extra css
+import "@/styles/expensetracker.css";
 import "@/styles/style.css";
 import "@/styles/hover.css";
 import "@/styles/responsive.css";
