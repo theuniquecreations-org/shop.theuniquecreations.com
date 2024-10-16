@@ -7,7 +7,11 @@ const ExpenseTracker = () => {
   const [error, setError] = useState(null);
   const [showMonthlyReport, setShowMonthlyReport] = useState(false); // Toggle monthly report view
   const [showGroupByCategory, setShowGroupByCategory] = useState(false); // Toggle group by category view
-
+  const formatDate = (dateString) => {
+    const options = { day: "2-digit", month: "short" }; // Format as "dd-MMM"
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", options);
+  };
   // Get today's date formatted as YYYY-MM-DD
   const getTodayDate = () => {
     const today = new Date();
@@ -18,7 +22,7 @@ const ExpenseTracker = () => {
   };
 
   // Predefined categories
-  const categories = ["Groceries", "Subscription", "Rent", "Travel", "Shopping", "Entertainment", "Healthcare", "Other"];
+  const categories = ["Groceries", "Subscription", "Rent", "Travel", "Saving/Investment", "Shopping", "Entertainment", "Healthcare", "Other"];
   const [form, setForm] = useState({
     description: "",
     amount: "",
@@ -143,7 +147,7 @@ const ExpenseTracker = () => {
       {/* Expense Form */}
       <form onSubmit={handleFormSubmit} className="grid">
         <input type="text" name="description" placeholder="Expense Description" value={form.description} onChange={handleInputChange} required />
-        <input type="number" name="amount" placeholder="Amount" value={form.amount} onChange={handleInputChange} min="0" required />
+        <input type="number" name="amount" placeholder="Amount" step="any" value={form.amount} onChange={handleInputChange} min="0" required />
         <select name="category" value={form.category} onChange={handleInputChange} required>
           {categories.map((category, index) => (
             <option key={index} value={category}>
@@ -227,13 +231,17 @@ const ExpenseTracker = () => {
       )}
 
       {/* Expense List */}
-      <h5>All Expenses</h5>
-      <div className="container">
+      <h5 className="mt-3">All Expenses</h5>
+      <div className="containe1">
         {expenses.map((expense, index) => (
           <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
             <div className="flex-grow-1 me-2">
-              <span className="text-muted">{expense.date}</span> <br />
-              {expense.description} - {expense.category}
+              <small>
+                <b>{formatDate(expense.date)}</b>
+              </small>{" "}
+              <small>
+                {expense.description} - {expense.category}
+              </small>
             </div>
             <div className="me-2">
               <strong>${expense.amount.toFixed(2)}</strong>
