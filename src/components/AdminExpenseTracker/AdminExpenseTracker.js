@@ -7,7 +7,11 @@ const ExpenseTracker = () => {
   const [error, setError] = useState(null);
   const [showMonthlyReport, setShowMonthlyReport] = useState(false); // Toggle monthly report view
   const [showGroupByCategory, setShowGroupByCategory] = useState(false); // Toggle group by category view
-
+  const formatDate = (dateString) => {
+    const options = { day: "2-digit", month: "short" }; // Format as "dd-MMM"
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", options);
+  };
   // Get today's date formatted as YYYY-MM-DD
   const getTodayDate = () => {
     const today = new Date();
@@ -232,8 +236,12 @@ const ExpenseTracker = () => {
         {expenses.map((expense, index) => (
           <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
             <div className="flex-grow-1 me-2">
-              <span className="text-muted">{expense.date}</span> <br />
-              {expense.description} - {expense.category}
+              <small>
+                <b>{formatDate(expense.date)}</b>
+              </small>{" "}
+              <small>
+                {expense.description} - {expense.category}
+              </small>
             </div>
             <div className="me-2">
               <strong>${expense.amount.toFixed(2)}</strong>
