@@ -7,10 +7,11 @@ import MainFooter from "@/components/MainFooter/MainFooter";
 import Style from "@/components/Reuseable/Style";
 import SearchPopup from "@/components/SearchPopup/SearchPopup";
 import React from "react";
+import image from "@/images/pr_source.png";
 
 const AdminHome = () => {
   return (
-    <Layout pageTitle="Tales of SuBa Admin">
+    <Layout pageTitle="Expense Tracker - Tales of SuBa" thumbnail={image}>
       <Style />
       <HeaderOne />
       <MobileMenu />
