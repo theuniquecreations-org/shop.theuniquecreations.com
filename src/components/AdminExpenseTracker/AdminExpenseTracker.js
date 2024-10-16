@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import uuid from "react-uuid";
 
 const ExpenseTracker = () => {
-  // Predefined categories
-  const categories = ["Groceries", "Subscription", "Rent", "Travel", "Shopping", "Entertainment", "Healthcare", "Other"];
+  const [expenses, setExpenses] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showMonthlyReport, setShowMonthlyReport] = useState(false); // Toggle monthly report view
+  const [showGroupByCategory, setShowGroupByCategory] = useState(false); // Toggle group by category view
+
   // Get today's date formatted as YYYY-MM-DD
   const getTodayDate = () => {
     const today = new Date();
@@ -12,17 +16,15 @@ const ExpenseTracker = () => {
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
+
+  // Predefined categories
+  const categories = ["Groceries", "Subscription", "Rent", "Travel", "Shopping", "Entertainment", "Healthcare", "Other"];
   const [form, setForm] = useState({
     description: "",
     amount: "",
     category: categories[0],
     date: getTodayDate(),
   });
-  const [expenses, setExpenses] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [showMonthlyReport, setShowMonthlyReport] = useState(false); // State to toggle monthly report view
-
   // Fetch expenses from the server
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -101,7 +103,6 @@ const ExpenseTracker = () => {
   // Calculate monthly totals for the report
   const calculateMonthlyReport = () => {
     const monthlyTotals = {};
-
     expenses.forEach((expense) => {
       const date = new Date(expense.date);
       const yearMonth = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
@@ -110,13 +111,27 @@ const ExpenseTracker = () => {
       }
       monthlyTotals[yearMonth] += expense.amount;
     });
-
     return monthlyTotals;
+  };
+
+  // Group expenses by category
+  const groupByCategory = () => {
+    const groupedExpenses = {};
+    expenses.forEach((expense) => {
+      const category = expense.category;
+      if (!groupedExpenses[category]) {
+        groupedExpenses[category] = [];
+      }
+      groupedExpenses[category].push(expense);
+    });
+    return groupedExpenses;
   };
 
   const monthlyReport = calculateMonthlyReport();
   const totalExpense = expenses.reduce((total, expense) => total + expense.amount, 0);
   const currentMonthExpense = expenses.filter((expense) => new Date(expense.date).getMonth() === new Date().getMonth()).reduce((total, expense) => total + expense.amount, 0);
+
+  const groupedExpenses = groupByCategory(); // Get the grouped expenses
 
   return (
     <div className="container">
@@ -149,8 +164,13 @@ const ExpenseTracker = () => {
       </h5>
 
       {/* Monthly Report Link */}
-      <button className="btn btn-info" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
+      <button className="btn btn-info me-2" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
         {showMonthlyReport ? "Hide Monthly Report" : "View Monthly Report"}
+      </button>
+
+      {/* Group by Category Link */}
+      <button className="btn btn-info" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
+        {showGroupByCategory ? "Hide Group by Category" : "Group by Category"}
       </button>
 
       {/* Monthly Report Grid */}
@@ -176,11 +196,41 @@ const ExpenseTracker = () => {
         </div>
       )}
 
+      {/* Grouped by Category Grid */}
+      {showGroupByCategory && (
+        <div className="mt-3">
+          <h5>Group by Category</h5>
+          {Object.keys(groupedExpenses).map((category, index) => (
+            <div key={index}>
+              <h6>{category}</h6>
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {groupedExpenses[category].map((expense, i) => (
+                    <tr key={i}>
+                      <td>{expense.date}</td>
+                      <td>{expense.description}</td>
+                      <td>${expense.amount.toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Expense List */}
       <h5>All Expenses</h5>
       <div className="container">
         {expenses.map((expense, index) => (
-          <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row  border-bottom">
+          <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
             <div className="flex-grow-1 me-2">
               <span className="text-muted">{expense.date}</span> <br />
               {expense.description} - {expense.category}
