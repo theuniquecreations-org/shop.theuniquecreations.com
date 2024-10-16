@@ -18,7 +18,7 @@ const ExpenseTracker = () => {
   };
 
   // Predefined categories
-  const categories = ["Groceries", "Subscription", "Rent", "Travel", "Shopping", "Entertainment", "Healthcare", "Other"];
+  const categories = ["Groceries", "Subscription", "Rent", "Travel", "Saving/Investment", "Shopping", "Entertainment", "Healthcare", "Other"];
   const [form, setForm] = useState({
     description: "",
     amount: "",
