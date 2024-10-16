@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import uuid from "react-uuid";
-
+import expenseSection from "@/data/expenseSection";
+import { Col, Image, Row } from "react-bootstrap";
+const { bin } = expenseSection;
 const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -191,7 +193,7 @@ const ExpenseTracker = () => {
             <tbody>
               {Object.keys(monthlyReport).map((month, index) => (
                 <tr key={index}>
-                  <td>{month}</td>
+                  <td>{formatDate(month)}</td>
                   <td>${monthlyReport[month].toFixed(2)}</td>
                 </tr>
               ))}
@@ -218,7 +220,7 @@ const ExpenseTracker = () => {
                 <tbody>
                   {groupedExpenses[category].map((expense, i) => (
                     <tr key={i}>
-                      <td>{expense.date}</td>
+                      <td>{formatDate(expense.date)}</td>
                       <td>{expense.description}</td>
                       <td>${expense.amount.toFixed(2)}</td>
                     </tr>
@@ -240,16 +242,19 @@ const ExpenseTracker = () => {
                 <b>{formatDate(expense.date)}</b>
               </small>{" "}
               <small>
-                {expense.description} - {expense.category}
+                {expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description} - {expense.category}
               </small>
             </div>
-            <div className="me-2">
-              <strong>${expense.amount.toFixed(2)}</strong>
+            <div className="me-1">
+              <small>
+                <strong>${expense.amount.toFixed(2)}</strong>
+              </small>
             </div>
             <div>
-              <button onClick={() => deleteExpense(expense.id)} className="btn btn-danger btn-sm" disabled={loading}>
+              <img onClick={() => deleteExpense(expense.id)} src={bin.src} width="20" disabled={loading} />
+              {/* <button onClick={() => deleteExpense(expense.id)} className="btn btn-danger btn-sm" disabled={loading}>
                 Delete
-              </button>
+              </button> */}
             </div>
           </div>
         ))}
