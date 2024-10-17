@@ -7,11 +7,14 @@ const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [formDate, setFormDate] = useState("");
   const [showMonthlyReport, setShowMonthlyReport] = useState(false); // Toggle monthly report view
   const [showGroupByCategory, setShowGroupByCategory] = useState(false); // Toggle group by category view
   const formatDate = (dateString) => {
     const options = { day: "2-digit", month: "short" }; // Format as "dd-MMM"
     const date = new Date(dateString);
+    // Add one day to correct for time zone issues
+    date.setDate(date.getDate() + 1);
     return date.toLocaleDateString("en-US", options);
   };
   // Get today's date formatted as YYYY-MM-DD
@@ -22,7 +25,7 @@ const ExpenseTracker = () => {
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-
+  const todaydate = getTodayDate();
   // Predefined categories
   const categories = ["Groceries", "Subscription", "Rent", "Travel", "Saving", "Shopping", "Entertainment", "Healthcare", "Other"];
   const [form, setForm] = useState({
@@ -54,6 +57,13 @@ const ExpenseTracker = () => {
       setForm({ ...form, [name]: 0 });
     } else {
       setForm({ ...form, [name]: value });
+    }
+    console.log(form);
+  };
+  const handleInputDateChange = (name, value) => {
+    if (name === "date") {
+      setForm({ ...form, ["date"]: value });
+      console.log(form);
     }
   };
 
@@ -87,6 +97,7 @@ const ExpenseTracker = () => {
       category: form.category,
       date: form.date,
     };
+    console.log("newExpense", newExpense);
     saveExpense(newExpense);
     setForm({ description: "", amount: "", category: categories[0], date: getTodayDate() });
   };
@@ -157,7 +168,7 @@ const ExpenseTracker = () => {
             </option>
           ))}
         </select>
-        <input type="date" name="date" value={form.date} onChange={handleInputChange} required />
+        <input type="date" name="date" defaultValue={todaydate} onChange={(e) => handleInputDateChange(e.target.name, e.target.value)} required />
         <button type="submit" disabled={loading}>
           {loading ? "Saving..." : "Add Expense"}
         </button>
