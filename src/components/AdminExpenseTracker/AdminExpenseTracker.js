@@ -170,13 +170,13 @@ const ExpenseTracker = () => {
       </h5>
 
       {/* Monthly Report Link */}
-      <button className="btn btn-info me-2" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
+      <button className="btn btn-info me-2 p-1" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
         {showMonthlyReport ? "Hide Monthly Report" : "View Monthly Report"}
       </button>
 
       {/* Group by Category Link */}
-      <button className="btn btn-info" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
-        {showGroupByCategory ? "Hide Group by Category" : "Group by Category"}
+      <button className="btn btn-info p-1" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
+        {showGroupByCategory ? "Hide Category Report" : "Show Category Report"}
       </button>
 
       {/* Monthly Report Grid */}
@@ -204,7 +204,7 @@ const ExpenseTracker = () => {
 
       {/* Grouped by Category Grid */}
       {showGroupByCategory && (
-        <div className="mt-3">
+        <div className="mt-1">
           <h5>Group by Category</h5>
           {Object.keys(groupedExpenses).map((category, index) => (
             <div key={index}>
@@ -221,7 +221,7 @@ const ExpenseTracker = () => {
                   {groupedExpenses[category].map((expense, i) => (
                     <tr key={i}>
                       <td>{formatDate(expense.date)}</td>
-                      <td>{expense.description}</td>
+                      <td>{expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description}</td>
                       <td>${expense.amount.toFixed(2)}</td>
                     </tr>
                   ))}
