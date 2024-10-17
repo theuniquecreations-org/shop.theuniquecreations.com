@@ -149,7 +149,7 @@ const ExpenseTracker = () => {
       {/* Expense Form */}
       <form onSubmit={handleFormSubmit} className="grid">
         <input type="text" name="description" placeholder="Expense Description" value={form.description} onChange={handleInputChange} required />
-        <input type="number" name="amount" placeholder="Amount" step="any" value={form.amount} onChange={handleInputChange} min="0" required />
+        <input type="number" name="amount" placeholder="Amount" step="any" value={form.amount} onChange={handleInputChange} min="0" inputMode="numeric" required />
         <select name="category" value={form.category} onChange={handleInputChange} required>
           {categories.map((category, index) => (
             <option key={index} value={category}>
