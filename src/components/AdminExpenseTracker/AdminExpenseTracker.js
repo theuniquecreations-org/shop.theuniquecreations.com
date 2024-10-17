@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import uuid from "react-uuid";
 import expenseSection from "@/data/expenseSection";
 import { Col, Image, Row } from "react-bootstrap";
-const { bin } = expenseSection;
+import bin from "@/images/bin.png";
+
 const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,7 @@ const ExpenseTracker = () => {
   };
   const todaydate = getTodayDate();
   // Predefined categories
-  const categories = ["Groceries", "Subscription", "Rent", "Travel", "Saving", "Shopping", "Entertainment", "Healthcare", "Other"];
+  const categories = ["Groceries", "Subscription", "Rent", "Fuel", "Gift", "Travel", "Saving", "Shopping", "Entertainment", "Healthcare", "Other"];
   const [form, setForm] = useState({
     description: "",
     amount: "",
@@ -59,12 +60,6 @@ const ExpenseTracker = () => {
       setForm({ ...form, [name]: value });
     }
     console.log(form);
-  };
-  const handleInputDateChange = (name, value) => {
-    if (name === "date") {
-      setForm({ ...form, ["date"]: value });
-      console.log(form);
-    }
   };
 
   // Save new expense to the server
@@ -151,126 +146,128 @@ const ExpenseTracker = () => {
   const groupedExpenses = groupByCategory(); // Get the grouped expenses
 
   return (
-    <div className="container">
-      <h4>Expense Tracker</h4>
-      <h5>
-        Current Month's Expense: <span className="text-primary">${currentMonthExpense.toFixed(2)}</span>
-      </h5>
+    <>
+      <div className="p-4 bg-light text-primary font-size-large border-bottom title">Expense Tracker</div>
+      <div className="container">
+        <h5>
+          Current Month's Expense: <span className="text-primary">${currentMonthExpense.toFixed(2)}</span>
+        </h5>
 
-      {/* Expense Form */}
-      <form onSubmit={handleFormSubmit} className="grid">
-        <input type="text" name="description" placeholder="Expense Description" value={form.description} onChange={handleInputChange} required />
-        <input type="number" name="amount" placeholder="Amount" step="any" value={form.amount} onChange={handleInputChange} min="0" inputMode="numeric" required />
-        <select name="category" value={form.category} onChange={handleInputChange} required>
-          {categories.map((category, index) => (
-            <option key={index} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-        <input type="date" name="date" defaultValue={todaydate} onChange={(e) => handleInputDateChange(e.target.name, e.target.value)} required />
-        <button type="submit" disabled={loading}>
-          {loading ? "Saving..." : "Add Expense"}
+        {/* Expense Form */}
+        <form onSubmit={handleFormSubmit} className="grid">
+          <input type="text" name="description" placeholder="Expense Description" value={form.description} onChange={handleInputChange} required />
+          <input type="number" name="amount" placeholder="Amount" step="any" value={form.amount} onChange={handleInputChange} min="0" inputMode="numeric" required />
+          <select name="category" value={form.category} onChange={handleInputChange} required>
+            {categories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          <input type="date" name="date" defaultValue={todaydate} onChange={handleInputChange} required />
+          <button type="submit" disabled={loading}>
+            {loading ? "Loading..." : "Add Expense"}
+          </button>
+        </form>
+        <div className="center">{error && <p style={{ color: "red" }}>{error}</p>}</div>
+
+        {/* Total Expenses */}
+        <h5>
+          Total Expense: <span className="text-primary">${totalExpense.toFixed(2)}</span>
+        </h5>
+
+        {/* Monthly Report Link */}
+        <button className="btn btn-info me-2 p-1" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
+          {showMonthlyReport ? "Hide Monthly Report" : "View Monthly Report"}
         </button>
-      </form>
-      <div className="center">{error && <p style={{ color: "red" }}>{error}</p>}</div>
 
-      {/* Total Expenses */}
-      <h5>
-        Total Expense: <span className="text-primary">${totalExpense.toFixed(2)}</span>
-      </h5>
+        {/* Group by Category Link */}
+        <button className="btn btn-info p-1" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
+          {showGroupByCategory ? "Hide Category Report" : "Show Category Report"}
+        </button>
 
-      {/* Monthly Report Link */}
-      <button className="btn btn-info me-2 p-1" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
-        {showMonthlyReport ? "Hide Monthly Report" : "View Monthly Report"}
-      </button>
-
-      {/* Group by Category Link */}
-      <button className="btn btn-info p-1" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
-        {showGroupByCategory ? "Hide Category Report" : "Show Category Report"}
-      </button>
-
-      {/* Monthly Report Grid */}
-      {showMonthlyReport && (
-        <div className="mt-3">
-          <h5>Monthly Report</h5>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Total Expense</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.keys(monthlyReport).map((month, index) => (
-                <tr key={index}>
-                  <td>{formatDate(month)}</td>
-                  <td>${monthlyReport[month].toFixed(2)}</td>
+        {/* Monthly Report Grid */}
+        {showMonthlyReport && (
+          <div className="mt-3">
+            <h5>Monthly Report</h5>
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Total Expense</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Grouped by Category Grid */}
-      {showGroupByCategory && (
-        <div className="mt-1">
-          <h5>Group by Category</h5>
-          {Object.keys(groupedExpenses).map((category, index) => (
-            <div key={index}>
-              <h6>{category}</h6>
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Amount</th>
+              </thead>
+              <tbody>
+                {Object.keys(monthlyReport).map((month, index) => (
+                  <tr key={index}>
+                    <td>{formatDate(month)}</td>
+                    <td>${monthlyReport[month].toFixed(2)}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {groupedExpenses[category].map((expense, i) => (
-                    <tr key={i}>
-                      <td>{formatDate(expense.date)}</td>
-                      <td>{expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description}</td>
-                      <td>${expense.amount.toFixed(2)}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))}
-        </div>
-      )}
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-      {/* Expense List */}
-      <h5 className="mt-3">All Expenses</h5>
-      <div className="containe1">
-        {expenses.map((expense, index) => (
-          <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
-            <div className="flex-grow-1 me-2">
-              <small>
-                <b>{formatDate(expense.date)}</b>
-              </small>{" "}
-              <small>
-                {expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description} - {expense.category}
-              </small>
-            </div>
-            <div className="me-1">
-              <small>
-                <strong>${expense.amount.toFixed(2)}</strong>
-              </small>
-            </div>
-            <div>
-              <img onClick={() => deleteExpense(expense.id)} src={bin.src} width="20" disabled={loading} />
-              {/* <button onClick={() => deleteExpense(expense.id)} className="btn btn-danger btn-sm" disabled={loading}>
+        {/* Grouped by Category Grid */}
+        {showGroupByCategory && (
+          <div className="mt-1">
+            <h5>Group by Category</h5>
+            {Object.keys(groupedExpenses).map((category, index) => (
+              <div key={index}>
+                <h6 className="categorytitle">{category}</h6>
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Description</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {groupedExpenses[category].map((expense, i) => (
+                      <tr key={i}>
+                        <td>{formatDate(expense.date)}</td>
+                        <td>{expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description}</td>
+                        <td>${expense.amount.toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Expense List */}
+        <h5 className="mt-3">All Expenses</h5>
+        <div className="containe1">
+          {expenses.map((expense, index) => (
+            <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
+              <div className="flex-grow-1 me-2">
+                <small>
+                  <b>{formatDate(expense.date)}</b>
+                </small>{" "}
+                <small>
+                  {expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description} - {expense.category}
+                </small>
+              </div>
+              <div className="me-1">
+                <small>
+                  <strong>${expense.amount.toFixed(2)}</strong>
+                </small>
+              </div>
+              <div>
+                <img onClick={() => deleteExpense(expense.id)} src={bin.src} width="20" disabled={loading} />
+                {/* <button onClick={() => deleteExpense(expense.id)} className="btn btn-danger btn-sm" disabled={loading}>
                 Delete
               </button> */}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
