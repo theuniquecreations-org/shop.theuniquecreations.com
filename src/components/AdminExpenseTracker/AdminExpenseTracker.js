@@ -11,6 +11,19 @@ const ExpenseTracker = () => {
   const [formDate, setFormDate] = useState("");
   const [showMonthlyReport, setShowMonthlyReport] = useState(false); // Toggle monthly report view
   const [showGroupByCategory, setShowGroupByCategory] = useState(false); // Toggle group by category view
+  ///pagination
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const expensesPerPage = 20; // Number of expenses to display per page
+  const pageNumbersToShow = 4;
+  const indexOfLastExpense = currentPage * expensesPerPage;
+  const indexOfFirstExpense = indexOfLastExpense - expensesPerPage;
+  const currentExpenses = expenses.slice(indexOfFirstExpense, indexOfLastExpense);
+  const totalPages = Math.ceil(expenses.length / expensesPerPage);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const startPage = Math.max(1, currentPage - Math.floor(pageNumbersToShow / 2));
+  const endPage = Math.min(totalPages, startPage + pageNumbersToShow - 1);
+
+  ///pagination
   const formatDate = (dateString) => {
     const options = { day: "2-digit", month: "short" }; // Format as "dd-MMM"
     const date = new Date(dateString);
@@ -147,14 +160,17 @@ const ExpenseTracker = () => {
 
   return (
     <>
-      <div className="p-4 bg-light text-primary font-size-large border-bottom title">Expense Tracker</div>
+      <div className="p-4 bg-light text-primary font-size-large title">Expense Tracker</div>
       <div className="container">
-        <h5>
-          Current Month's Expense: <span className="text-primary">${currentMonthExpense.toFixed(2)}</span>
-        </h5>
-
+        <div className="px-2">
+          <h5 className="align-center mb-0">
+            Current Month's Expense: <span className="text-primary">${currentMonthExpense.toFixed(2)}</span>
+          </h5>
+        </div>
         {/* Expense Form */}
+
         <form onSubmit={handleFormSubmit} className="grid">
+          Add Expense
           <input type="text" name="description" placeholder="Expense Description" value={form.description} onChange={handleInputChange} required />
           <input type="number" name="amount" placeholder="Amount" step="any" value={form.amount} onChange={handleInputChange} min="0" inputMode="numeric" required />
           <select name="category" value={form.category} onChange={handleInputChange} required>
@@ -170,22 +186,18 @@ const ExpenseTracker = () => {
           </button>
         </form>
         <div className="center">{error && <p style={{ color: "red" }}>{error}</p>}</div>
-
         {/* Total Expenses */}
         <h5>
           Total Expense: <span className="text-primary">${totalExpense.toFixed(2)}</span>
         </h5>
-
         {/* Monthly Report Link */}
         <button className="btn btn-info me-2 p-1" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
           {showMonthlyReport ? "Hide Monthly Report" : "View Monthly Report"}
         </button>
-
         {/* Group by Category Link */}
         <button className="btn btn-info p-1" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
           {showGroupByCategory ? "Hide Category Report" : "Show Category Report"}
         </button>
-
         {/* Monthly Report Grid */}
         {showMonthlyReport && (
           <div className="mt-3">
@@ -208,14 +220,13 @@ const ExpenseTracker = () => {
             </table>
           </div>
         )}
-
         {/* Grouped by Category Grid */}
         {showGroupByCategory && (
           <div className="mt-1">
-            <h5>Group by Category</h5>
+            <h5 className="mb-0">Group by Category</h5>
             {Object.keys(groupedExpenses).map((category, index) => (
               <div key={index}>
-                <h6 className="categorytitle">{category}</h6>
+                <h6 className="categorytitle mb-0">{category}</h6>
                 <table className="table table-striped">
                   <thead>
                     <tr>
@@ -238,11 +249,10 @@ const ExpenseTracker = () => {
             ))}
           </div>
         )}
-
         {/* Expense List */}
-        <h5 className="mt-3">All Expenses</h5>
+        <h5 className="mt-3 mb-0">All Expenses</h5>
         <div className="containe1">
-          {expenses.map((expense, index) => (
+          {currentExpenses.map((expense, index) => (
             <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
               <div className="flex-grow-1 me-2">
                 <small>
@@ -259,12 +269,23 @@ const ExpenseTracker = () => {
               </div>
               <div>
                 <img onClick={() => deleteExpense(expense.id)} src={bin.src} width="20" disabled={loading} />
-                {/* <button onClick={() => deleteExpense(expense.id)} className="btn btn-danger btn-sm" disabled={loading}>
-                Delete
-              </button> */}
               </div>
             </div>
           ))}
+        </div>
+        {/* Pagination Controls */}
+        <div className="pagination mt-3">
+          <button className="btn btn-secondary me-2" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+            Previous
+          </button>
+          {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map((number) => (
+            <button key={number} className={`btn ${currentPage === number ? "btn-primary" : "btn-outline-secondary"} me-2`} onClick={() => paginate(number)}>
+              {number}
+            </button>
+          ))}
+          <button className="btn btn-secondary" onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages}>
+            Next
+          </button>
         </div>
       </div>
     </>
