@@ -8,20 +8,18 @@ import Style from "@/components/Reuseable/Style";
 import SearchPopup from "@/components/SearchPopup/SearchPopup";
 import React from "react";
 import image from "@/images/pr_source.png";
+import icon from "@/images/subaapplogo.jpg";
 
 const AdminHome = () => {
   return (
-    <Layout pageTitle="Expense Tracker - Tales of SuBa" thumbnail={image.src}>
-      <Style />
-      <HeaderOne />
-      <MobileMenu />
-      <SearchPopup />
-
+    <Layout pageTitle="Expense Tracker - Tales of SuBa" thumbnail={image.src} icon={icon.src}>
+      {/* <Style /> */}
+      {/* <HeaderOne /> */}
+      {/* <MobileMenu /> */}
+      {/* <SearchPopup /> */}
       {/* <PageBanner title="Admin Expense Tracker" page="adminhome" parent="" parentHref="/" /> */}
-      <div className="p-5 bg-dark"></div>
-      <div className="p-2"></div>
       <AdminExpenseTracker />
-      <MainFooter />
+      {/* <MainFooter /> */}
     </Layout>
   );
 };
