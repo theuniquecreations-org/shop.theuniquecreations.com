@@ -165,14 +165,14 @@ const ExpenseTracker = () => {
 
   return (
     <>
-      <div className="px-3 py-1 text-primary font-size-large title shadow">
+      <div className="px-3 py-1 text-primary font-size-large title ">
         Expense Tracker <img src={subaa.src} width="50" />
       </div>
       <div className="container">
         <div className="px-2">
-          <h5 className="align-center mb-0">
+          <h6 className="text-center mb-0 border rounded p-1 bg-light">
             Current Month's Expense: <span className="text-primary">${currentMonthExpense.toFixed(2)}</span>
-          </h5>
+          </h6>
         </div>
         {/* Expense Form */}
 
