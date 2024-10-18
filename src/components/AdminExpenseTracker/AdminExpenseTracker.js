@@ -160,7 +160,7 @@ const ExpenseTracker = () => {
 
   return (
     <>
-      <div className="px-3 py-1 bg-light text-primary font-size-large title">
+      <div className="px-3 py-1 text-primary font-size-large title">
         Expense Tracker <img src={subaa.src} width="50" />
       </div>
       <div className="container">
