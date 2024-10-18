@@ -68,7 +68,7 @@ const ExpenseTracker = () => {
     };
     fetchExpenses();
   }, []);
-
+  const sortedExpenses = expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
   // Handling form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -269,7 +269,7 @@ const ExpenseTracker = () => {
 
         {/* Expense List */}
 
-        {expenses.map((expense, index) => (
+        {sortedExpenses.map((expense, index) => (
           <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
             <div className="flex-grow-1 me-2">
               <small>
