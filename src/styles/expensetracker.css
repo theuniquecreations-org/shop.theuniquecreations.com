@@ -6,6 +6,8 @@
 }
 .title{
     font-size: x-large;
+    background-color: #fae2a6;
+    color: #000 !important;
 }
 h1,
 h2 {

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Link as ScrollLink } from "react-scroll";
 import config from "../../config.json";
 
-const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thumbnail, description, icon }) => {
+const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thumbnail, description, icon, themecolor }) => {
   const defaulttitle = "Tales of SuBa | Books Review | Blogs";
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState(pageTitle);
@@ -40,6 +40,7 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
           content="Book Review, Romance Books, Fiction 
           Books, Bookreview, Good Story books, top book review, tales of suba, talesofsuba, tales of suba blogs"
         />
+        <meta name="theme-color" content={themecolor} />
         <link rel="apple-touch-icon" href={icon} />
         <meta charset="utf-8" />
         <meta name="description" content={description} />

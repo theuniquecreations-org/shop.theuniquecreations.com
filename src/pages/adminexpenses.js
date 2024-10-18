@@ -12,7 +12,7 @@ import icon from "@/images/subaapplogo.jpg";
 
 const AdminHome = () => {
   return (
-    <Layout pageTitle="Expense Tracker - Tales of SuBa" thumbnail={image.src} icon={icon.src}>
+    <Layout pageTitle="Expense Tracker - Tales of SuBa" thumbnail={image.src} icon={icon.src} themecolor="#fae2a6">
       {/* <Style /> */}
       {/* <HeaderOne /> */}
       {/* <MobileMenu /> */}
