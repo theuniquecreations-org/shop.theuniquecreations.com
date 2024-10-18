@@ -9,6 +9,11 @@
     background-color: #fae2a6;
     color: #000 !important;
 }
+.titlesplitequally {
+    font-size: x-large;
+    background-color: #f2b216;
+    color: #ffffff !important;
+}
 h1,
 h2 {
     text-align: center;
