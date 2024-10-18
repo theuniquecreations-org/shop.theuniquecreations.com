@@ -9,6 +9,7 @@ const ExpenseTracker = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [formDate, setFormDate] = useState("");
+  const [deleteEnabled, setDeleteEnabled] = useState(false);
   const [showMonthlyReport, setShowMonthlyReport] = useState(false); // Toggle monthly report view
   const [showGroupByCategory, setShowGroupByCategory] = useState(false); // Toggle group by category view
   ///pagination
@@ -48,6 +49,10 @@ const ExpenseTracker = () => {
     category: categories[0],
     date: getTodayDate(),
   });
+  const toggleDeleteButtons = () => {
+    setDeleteEnabled(!deleteEnabled); // Toggle between true and false
+  };
+
   // Fetch expenses from the server
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -160,7 +165,7 @@ const ExpenseTracker = () => {
 
   return (
     <>
-      <div className="px-3 py-1 text-primary font-size-large title">
+      <div className="px-3 py-1 text-primary font-size-large title shadow">
         Expense Tracker <img src={subaa.src} width="50" />
       </div>
       <div className="container">
@@ -172,9 +177,8 @@ const ExpenseTracker = () => {
         {/* Expense Form */}
 
         <form onSubmit={handleFormSubmit} className="grid">
-          Add Expense
           <input type="text" name="description" placeholder="Expense Description" value={form.description} onChange={handleInputChange} required />
-          <input type="number" name="amount" placeholder="Amount" step="any" value={form.amount} onChange={handleInputChange} min="0" inputMode="numeric" required />
+          <input type="number" name="amount" placeholder="Amount" step="any" value={form.amount} onChange={handleInputChange} min="0" inputMode="decimal" required />
           <select name="category" value={form.category} onChange={handleInputChange} required>
             {categories.map((category, index) => (
               <option key={index} value={category}>
@@ -184,7 +188,7 @@ const ExpenseTracker = () => {
           </select>
           <input type="date" name="date" defaultValue={todaydate} onChange={handleInputChange} required />
           <button type="submit" disabled={loading}>
-            {loading ? "Loading..." : "Add Expense"}
+            <h6 className="mb-0">{loading ? "Loading..." : "Add Expense"}</h6>
           </button>
         </form>
         <div className="center">{error && <p style={{ color: "red" }}>{error}</p>}</div>
@@ -253,28 +257,45 @@ const ExpenseTracker = () => {
         )}
         {/* Expense List */}
         <h5 className="mt-3 mb-0">All Expenses</h5>
-        <div className="containe1">
-          {currentExpenses.map((expense, index) => (
-            <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
-              <div className="flex-grow-1 me-2">
-                <small>
-                  <b>{formatDate(expense.date)}</b>
-                </small>{" "}
-                <small>
-                  {expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description} - {expense.category}
-                </small>
-              </div>
-              <div className="me-1">
-                <small>
-                  <strong>${expense.amount.toFixed(2)}</strong>
-                </small>
-              </div>
-              <div>
-                <img onClick={() => deleteExpense(expense.id)} src={bin.src} width="20" disabled={loading} />
-              </div>
-            </div>
-          ))}
+
+        {/* Add row with toggle button */}
+        <div className="d-flex justify-content-end align-items-center mb-1">
+          <div>
+            <button className="btn btn-danger p-1" onClick={toggleDeleteButtons}>
+              <small>{deleteEnabled ? "Disable Delete" : "Enable Delete"}</small>
+            </button>
+          </div>
         </div>
+
+        {/* Expense List */}
+
+        {expenses.map((expense, index) => (
+          <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
+            <div className="flex-grow-1 me-2">
+              <small>
+                <b>{formatDate(expense.date)}</b>
+              </small>{" "}
+              <small>
+                {expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description} - {expense.category}
+              </small>
+            </div>
+            <div className="me-1">
+              <small>
+                <strong>${expense.amount.toFixed(2)}</strong>
+              </small>
+            </div>
+            <div>
+              <img
+                onClick={() => deleteExpense(expense.id)}
+                src={bin.src}
+                width="20"
+                className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
+                style={{ cursor: deleteEnabled ? "pointer" : "not-allowed" }} // Change cursor based on state
+              />
+            </div>
+          </div>
+        ))}
+
         {/* Pagination Controls */}
         <div className="pagination mt-3">
           <button className="btn btn-secondary me-2" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
