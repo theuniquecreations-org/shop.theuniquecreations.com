@@ -3,7 +3,7 @@ import uuid from "react-uuid";
 import expenseSection from "@/data/expenseSection";
 import { Col, Image, Row } from "react-bootstrap";
 import bin from "@/images/bin.png";
-
+import subaa from "@/images/subaa.png";
 const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -160,7 +160,9 @@ const ExpenseTracker = () => {
 
   return (
     <>
-      <div className="p-4 bg-light text-primary font-size-large title">Expense Tracker</div>
+      <div className="px-3 py-1 bg-light text-primary font-size-large title">
+        Expense Tracker <img src={subaa.src} width="50" />
+      </div>
       <div className="container">
         <div className="px-2">
           <h5 className="align-center mb-0">
