@@ -23,8 +23,10 @@ const Login = ({ onLogin }) => {
 
   return (
     <>
-      <div className="px-3 py-1 text-primary font-size-large titlesplitequally ">
-        <span className="text-light">Split Equally</span>
+      <div className="px-3 py-1 text-primary1 font-size-large titlesplitequally ">
+        <span>
+          <h5 className="text-light mb-0">Split Equally</h5>
+        </span>
       </div>
       <div className="container">
         <h5>Login</h5>

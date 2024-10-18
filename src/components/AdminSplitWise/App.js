@@ -96,7 +96,7 @@ const App = () => {
         <span className="text-light">Split Equally</span> <img src={subaa.src} width="50" />
       </div>
       <div className="container">
-        <h6>Welcome, {loggedInUser}!</h6>
+        <h6 className="mb-0">Welcome, {loggedInUser}!</h6>
         <AddFriend onAddFriend={addFriend} />
         <AddExpense onAddExpense={addExpense} friends={friends} />
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
