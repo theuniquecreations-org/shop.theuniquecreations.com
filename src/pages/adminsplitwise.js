@@ -1,5 +1,5 @@
 import PageBanner from "@/components/BannerSection/PageBanner";
-import AdminSplitwise from "@/components/AdminSplitwise/Home";
+import AdminSplitwise from "@/components/AdminSplitWise/App";
 import HeaderOne from "@/components/header/HeaderOne";
 import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
