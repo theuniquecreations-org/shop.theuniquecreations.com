@@ -1,7 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const BalanceSummary = ({ friends, onSettleUp }) => {
+const BalanceSummary = ({ friends, onSettleUp, loggedInUser }) => {
   const [settleAmounts, setSettleAmounts] = useState({});
+  const [totalPay, setTotalPay] = useState(0); // Total amount the user needs to pay
+  const [totalReceive, setTotalReceive] = useState(0); // Total amount the user will receive
+
+  // Calculate total pay and total receive for the logged-in user
+  useEffect(() => {
+    let pay = 0;
+    let receive = 0;
+
+    friends.forEach((friend) => {
+      if (friend.balance < 0) {
+        pay += Math.abs(friend.balance); // You owe money to the friend
+      } else if (friend.balance > 0) {
+        receive += friend.balance; // Friend owes you money
+      }
+    });
+
+    setTotalPay(pay);
+    setTotalReceive(receive);
+  }, [friends]);
 
   // Handle input change for the partial settle-up amount
   const handleSettleAmountChange = (e, friendName) => {
@@ -23,30 +42,15 @@ const BalanceSummary = ({ friends, onSettleUp }) => {
 
   return (
     <div>
-      <h5>Balance Summary</h5>
-      <ul>
-        {friends.map((friend, index) => (
-          <li key={index}>
-            <span
-              style={{
-                color: friend.balance < 0 ? "red" : "green",
-                fontWeight: "normal",
-              }}
-            >
-              {friend.name}: {friend.balance < 0 ? `You need to pay $${Math.abs(friend.balance).toFixed(2)}` : `You will receive $${Math.abs(friend.balance).toFixed(2)}`}
-            </span>
-            {friend.balance !== 0 && (
-              <>
-                {/* Input field for partial settlement */}
-                <input type="number" value={settleAmounts[friend.name] || ""} onChange={(e) => handleSettleAmountChange(e, friend.name)} placeholder="Enter amount" min="0" className="mx-2 border rounded px-2" />
-                <button className="px-2" onClick={() => handleSettleUpClick(friend.name)}>
-                  Settle Up
-                </button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+      <h5 className="mb-0">Balance Summary</h5>
+
+      {/* Show the total amounts the logged-in user needs to pay or receive */}
+      <div className="mb-4">
+        <strong>Total you need to pay:</strong>
+        <span className="text-danger">${totalPay.toFixed(2)}</span>
+        <br />
+        <strong>Total you will receive:</strong> <span className="text-success">${totalReceive.toFixed(2)}</span>
+      </div>
     </div>
   );
 };
