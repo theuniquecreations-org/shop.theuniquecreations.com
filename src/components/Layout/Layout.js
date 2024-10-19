@@ -45,7 +45,10 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
         <meta charset="utf-8" />
         <meta name="description" content={description} />
         <meta name="og:description" content={description} />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-7F27M995N4"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
       </Head>
       <Preloader className={preloaderClass} loading={loading} bg={preloader} />
       <main id="wrapper" style={{ opacity: loading ? 0 : 1 }} className={`page-wrapper ${mainClass}`}>
