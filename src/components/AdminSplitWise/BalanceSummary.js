@@ -42,14 +42,26 @@ const BalanceSummary = ({ friends, onSettleUp, loggedInUser }) => {
 
   return (
     <div>
-      <h5 className="mb-0">Balance Summary</h5>
+      <h5 className="mb-3">Balance Summary</h5>
 
-      {/* Show the total amounts the logged-in user needs to pay or receive */}
-      <div className="mb-4">
-        <strong>Total you need to pay:</strong>
-        <span className="text-danger">${totalPay.toFixed(2)}</span>
-        <br />
-        <strong>Total you will receive:</strong> <span className="text-success">${totalReceive.toFixed(2)}</span>
+      {/* Total amount you need to pay and receive in a grid format */}
+      <div className="row mb-4">
+        <div className="col-6 text-center">
+          <div className="card border-danger">
+            <div className="card-body">
+              <strong>Total you need to pay:</strong>
+              <p className="text-danger">${totalPay.toFixed(2)}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-6 text-center">
+          <div className="card border-success">
+            <div className="card-body">
+              <strong>Total you will receive:</strong>
+              <p className="text-success">${totalReceive.toFixed(2)}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

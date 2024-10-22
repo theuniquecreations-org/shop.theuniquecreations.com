@@ -13,6 +13,7 @@ const App = () => {
   const [showAddFriend, setShowAddFriend] = useState(false); // Toggle visibility of Add Friend
   const [selectedFriend, setSelectedFriend] = useState(null); // Store the selected friend
   const [showAddExpense, setShowAddExpense] = useState(false); // Toggle visibility of Add Expense form
+  const [showExpenseList, setShowExpenseList] = useState(false); // Toggle visibility of Expense List
   const [settleUpAmounts, setSettleUpAmounts] = useState({}); // Track settle-up amounts for each friend
   const [showSettleUp, setShowSettleUp] = useState(false); // Toggle visibility of Settle Up modal
   const [friendToSettle, setFriendToSettle] = useState(null); // Store the selected friend for settling up
@@ -110,10 +111,25 @@ const App = () => {
     });
   };
 
-  // Open Settle Up modal
+  // Open Settle Up modal and pre-fill amount owed or owed by the friend
   const openSettleUpModal = (friendName) => {
-    setFriendToSettle(friendName); // Set the friend for settling up
+    const friend = friends.find((f) => f.name === friendName);
+    const balance = Math.abs(friend.balance); // Get absolute value of balance (owed or owed to)
+    setFriendToSettle(friendName);
+    setSettleUpAmounts({ ...settleUpAmounts, [friendName]: balance.toFixed(2) }); // Pre-fill the input with balance
     setShowSettleUp(true); // Show the modal
+  };
+
+  // Toggle Expense List sliding up
+  const toggleExpenseList = () => {
+    setShowExpenseList(!showExpenseList);
+  };
+
+  // Close Expense List when clicking outside (optional)
+  const closeExpenseListOnClickOutside = (e) => {
+    if (e.target.classList.contains("slide-up-expense-list")) {
+      setShowExpenseList(false);
+    }
   };
 
   // If not logged in, show the login form
@@ -152,13 +168,12 @@ const App = () => {
               </span>
               <div>
                 {/* Add Expense Button */}
-                <button className="btn btn-sm btn-warning" onClick={() => handleFriendSelection(friend.name)}>
-                  Add Expense
-                </button>
-
+                <button className="btn btn-sm btn-warning ml-1" onClick={() => handleFriendSelection(friend.name)}>
+                  Add
+                </button>{" "}
                 {/* Settle Up Button */}
                 <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.name)}>
-                  Settle Up
+                  Settle
                 </button>
               </div>
             </li>
@@ -166,52 +181,119 @@ const App = () => {
         </ul>
 
         {/* Add Expense Modal */}
-        <div className={`modal ${showAddExpense ? "d-block" : ""}`} tabIndex="-1" role="dialog">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Add Expense for {selectedFriend}</h5>
-                <button type="button" className="close" onClick={() => setShowAddExpense(false)}>
-                  <span>&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">{showAddExpense && <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} />}</div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowAddExpense(false)}>
-                  Close
-                </button>
+        {showAddExpense && (
+          <div className="modal-overlay">
+            <div className="modal-container">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Add Expense for {selectedFriend}</h5>
+                </div>
+                <div className="modal-body">
+                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} />
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={() => setShowAddExpense(false)}>
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Settle Up Modal */}
-        <div className={`modal ${showSettleUp ? "d-block" : ""}`} tabIndex="-1" role="dialog">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Settle Up with {friendToSettle}</h5>
-                <button type="button" className="close" onClick={() => setShowSettleUp(false)}>
-                  <span>&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <input type="number" className="form-control" placeholder="Enter amount" value={settleUpAmounts[friendToSettle] || ""} onChange={handleSettleAmountChange} />
-              </div>
-              <div className="modal-footer">
+        {showSettleUp && (
+          <div className="modal-overlay">
+            <div className="modal-container">
+              <div className="modal-content grid">
+                <div className="modal-header">
+                  <h5 className="modal-title">Settle Up with {friendToSettle}</h5>
+                </div>
+                <div className="modal-body">
+                  <input type="number" className="form-control" placeholder="Enter amount" value={settleUpAmounts[friendToSettle] || ""} onChange={handleSettleAmountChange} />
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-warning w-100" onClick={handleSettleUp}>
+                    Confirm Settle Up
+                  </button>
+                </div>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowSettleUp(false)}>
                   Close
                 </button>
-                <button type="button" className="btn btn-warning" onClick={handleSettleUp}>
-                  Confirm Settle Up
-                </button>
               </div>
             </div>
           </div>
+        )}
+
+        {/* Expense List Sliding Up from Bottom */}
+        <div className="text-center">
+          <button className="btn btn-warning mt-3" onClick={toggleExpenseList}>
+            {showExpenseList ? "Hide Expense List" : "View Expense List"}
+          </button>
         </div>
 
-        <ExpenseList expenses={expenses} />
+        <div className={`slide-up-expense-list ${showExpenseList ? "show" : ""}`} onClick={closeExpenseListOnClickOutside}>
+          <div className="container p-3">
+            <div className="d-flex justify-content-between align-items-center">
+              <h5 className="mb-3">Expense List</h5>
+              <button className="btn btn-secondary btn-sm" onClick={toggleExpenseList}>
+                Close
+              </button>
+            </div>
+            <ExpenseList expenses={expenses} />
+          </div>
+        </div>
       </div>
+
+      {/* Styles for the modals and slide-up */}
+      <style jsx>{`
+        /* Modal Overlay for Background Fade */
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5); /* Faded background */
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1050;
+        }
+
+        /* Modal Container for centering */
+        .modal-container {
+          background: white;
+          padding: 20px;
+          width: 100%;
+          max-width: 500px;
+          border-radius: 8px;
+          box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        /* Slide-up Expense List */
+        .slide-up-expense-list {
+          position: fixed;
+          bottom: -100%;
+          left: 0;
+          width: 100%;
+          background: white;
+          height: 70%;
+          transition: bottom 0.3s ease-in-out;
+          box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
+          z-index: 1050;
+        }
+
+        .slide-up-expense-list.show {
+          bottom: 0;
+        }
+      `}</style>
     </>
   );
 };

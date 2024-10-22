@@ -2,6 +2,7 @@ import Layout from "@/components/Layout/Layout";
 import React from "react";
 import image from "@/images/pr_source.png"; // Main page image
 import icon from "@/images/subaapplogo.jpg"; // Icon image for the app
+import icon1 from "@/images/splitequal.png"; // Icon image for the app
 
 const AdminHome = () => {
   return (
@@ -10,13 +11,13 @@ const AdminHome = () => {
         {/* iPhone-like app icons */}
         <div style={styles.iconContainer}>
           <a href="/adminexpenses" style={styles.appIconLink}>
-            <img src={icon.src} alt="Expense Tracker" style={styles.appIcon} />
+            <img src={image.src} alt="Expense Tracker" style={styles.appIcon} />
             <p style={styles.appText}>Expense Tracker</p>
           </a>
         </div>
         <div style={styles.iconContainer}>
           <a href="/adminsplitwise" style={styles.appIconLink}>
-            <img src={icon.src} alt="Split Equal" style={styles.appIcon} />
+            <img src={icon1.src} alt="Split Equal" style={styles.appIcon} />
             <p style={styles.appText}>Split Equal</p>
           </a>
         </div>
