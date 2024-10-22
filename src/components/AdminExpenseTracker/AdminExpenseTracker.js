@@ -42,7 +42,7 @@ const ExpenseTracker = () => {
   };
   const todaydate = getTodayDate();
   // Predefined categories
-  const categories = ["Groceries", "Subscription", "Rent", "Fuel", "Gift", "Travel", "Saving", "Shopping", "Entertainment", "Healthcare", "Other"];
+  const categories = ["Groceries", "Subscription", "Rent", "Fuel", "Food", "Gift", "Travel", "Saving", "Shopping", "Entertainment", "Healthcare", "Other"];
   const [form, setForm] = useState({
     description: "",
     amount: "",
@@ -179,14 +179,15 @@ const ExpenseTracker = () => {
         <form onSubmit={handleFormSubmit} className="grid">
           <input type="text" name="description" placeholder="Expense Description" value={form.description} onChange={handleInputChange} required />
           <input type="number" name="amount" placeholder="Amount" step="any" value={form.amount} onChange={handleInputChange} min="0" inputMode="decimal" required />
-          <select name="category" value={form.category} onChange={handleInputChange} required>
+          <select name="category" className="form-control" value={form.category} onChange={handleInputChange} required>
             {categories.map((category, index) => (
               <option key={index} value={category}>
                 {category}
               </option>
             ))}
           </select>
-          <input type="date" name="date" defaultValue={todaydate} onChange={handleInputChange} required />
+          <input type="date" name="date" className="form-control" defaultValue={todaydate} onChange={handleInputChange} required />
+
           <button type="submit" disabled={loading}>
             <h6 className="mb-0">{loading ? "Loading..." : "Add Expense"}</h6>
           </button>
@@ -197,17 +198,17 @@ const ExpenseTracker = () => {
           Total Expense: <span className="text-primary">${totalExpense.toFixed(2)}</span>
         </h5>
         {/* Monthly Report Link */}
-        <button className="btn btn-info me-2 p-1" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
+        <button className="btn btn-warning me-2 p-1" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
           {showMonthlyReport ? "Hide Monthly Report" : "View Monthly Report"}
         </button>
         {/* Group by Category Link */}
-        <button className="btn btn-info p-1" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
+        <button className="btn btn-warning p-1" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
           {showGroupByCategory ? "Hide Category Report" : "Show Category Report"}
         </button>
         {/* Monthly Report Grid */}
         {showMonthlyReport && (
           <div className="mt-3">
-            <h5>Monthly Report</h5>
+            <h5 className="mb-0">Monthly Report</h5>
             <table className="table table-striped">
               <thead>
                 <tr>
@@ -302,7 +303,7 @@ const ExpenseTracker = () => {
             Previous
           </button>
           {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map((number) => (
-            <button key={number} className={`btn ${currentPage === number ? "btn-primary" : "btn-outline-secondary"} me-2`} onClick={() => paginate(number)}>
+            <button key={number} className={`btn ${currentPage === number ? "btn-warning" : "btn-outline-secondary"} me-2`} onClick={() => paginate(number)}>
               {number}
             </button>
           ))}
