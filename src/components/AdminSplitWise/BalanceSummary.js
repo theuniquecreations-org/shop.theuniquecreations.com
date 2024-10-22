@@ -42,7 +42,7 @@ const BalanceSummary = ({ friends, onSettleUp, loggedInUser }) => {
 
   return (
     <div>
-      <h5 className="mb-0">Balance Summary</h5>
+      <h6 className="mb-0">Balance Summary</h6>
 
       {/* Total amount you need to pay and receive in a grid format */}
       <div className="row mb-4">

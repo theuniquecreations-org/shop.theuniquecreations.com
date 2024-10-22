@@ -161,7 +161,7 @@ const App = () => {
         </div>
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
         {/* Display friend list with balance and option to select a friend */}
-        <h5 className="mb-0">Friend List</h5>
+        <h6 className="mb-0">Friend List</h6>
         <ul className="list-group mb-4">
           {friends.map((friend, index) => (
             <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
@@ -213,7 +213,7 @@ const App = () => {
             <div className="modal-container">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Add Expense for {selectedFriend}</h5>
+                  <h6 className="modal-title">Add Expense for {selectedFriend}</h6>
                 </div>
                 <div className="modal-body">
                   <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} />
@@ -234,7 +234,7 @@ const App = () => {
             <div className="modal-container">
               <div className="modal-content grid">
                 <div className="modal-header">
-                  <h5 className="modal-title">Settle Up with {friendToSettle}</h5>
+                  <h6 className="modal-title">Settle Up with {friendToSettle}</h6>
                 </div>
                 <div className="modal-body">
                   <input type="number" className="form-control" placeholder="Enter amount" value={settleUpAmounts[friendToSettle] || ""} onChange={handleSettleAmountChange} />
@@ -262,7 +262,7 @@ const App = () => {
         <div className={`slide-up-expense-list ${showExpenseList ? "show" : ""}`} onClick={closeExpenseListOnClickOutside}>
           <div className="container p-3">
             <div className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-3">Expense List</h5>
+              <h6 className="mb-3">Expense List</h6>
               <button className="btn btn-secondary btn-sm" onClick={toggleExpenseList}>
                 Close
               </button>
