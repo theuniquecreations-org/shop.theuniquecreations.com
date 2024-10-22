@@ -22,31 +22,48 @@ const App = () => {
   const [friendToSettle, setFriendToSettle] = useState(null); // Store the selected friend for settling up
   const [showRegister, setShowRegister] = useState(false);
 
-  // Load session data and friends/expenses from localStorage on login
+  // Function to retrieve data from localStorage
+  const getDataFromStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
+
+  // Function to save data to localStorage
+  const saveDataToStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+
+  // Load session data and friends/expenses from shared storage on login
   useEffect(() => {
     const sessionUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (sessionUser) {
       setLoggedInUser(sessionUser.email);
-      setLoggedInUserName(sessionUser.name); // Set the user's name
-      // Load the correct data for the logged-in user
-      const storedFriends = JSON.parse(localStorage.getItem(`${sessionUser.email}_friends`));
-      const storedExpenses = JSON.parse(localStorage.getItem(`${sessionUser.email}_expenses`));
-      setFriends(storedFriends || []);
-      setExpenses(storedExpenses || []);
-    }
-  }, [loggedInUser]); // Load when logged-in user changes
+      setLoggedInUserName(sessionUser.name);
 
-  // Save user data to localStorage when friends or expenses change
+      // Retrieve the common users data
+      const users = getDataFromStorage("users");
+
+      // Find the logged-in user's data
+      const user = users.find((user) => user.email === sessionUser.email);
+
+      if (user) {
+        setFriends(user.friends || []);
+        setExpenses(user.expenses || []);
+      }
+    }
+  }, [loggedInUser]);
+
+  // Save user data (friends and expenses) to common storage whenever they change
   useEffect(() => {
     if (loggedInUser) {
-      localStorage.setItem(`${loggedInUser}_friends`, JSON.stringify(friends));
-      localStorage.setItem(`${loggedInUser}_expenses`, JSON.stringify(expenses));
+      // Get the common users data
+      const users = getDataFromStorage("users");
+
+      // Update the logged-in user's friends and expenses in the common data
+      const updatedUsers = users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
+
+      // Save the updated users data to localStorage
+      saveDataToStorage("users", updatedUsers);
     }
   }, [friends, expenses, loggedInUser]);
 
   // Add a new friend (includes both name and email)
   const addFriend = (friend) => {
-    // Update the friends state with the new friend object
     setFriends([...friends, { ...friend, balance: 0 }]); // Add the new friend and initialize balance to 0
     setShowAddFriend(false); // Close modal after adding friend
   };
@@ -58,21 +75,18 @@ const App = () => {
     const updatedFriends = friends.map((friend) => {
       if (friend.name === expense.friend) {
         if (expense.type === "split") {
-          // Split equally: Each person owes half
           friend.balance += expense.amount / 2; // The friend owes half
         } else if (expense.type === "you-paid-full") {
-          // You paid the full amount: The friend owes the full amount
           friend.balance += expense.amount; // The friend owes the full amount
         } else if (expense.type === "friend-paid-full") {
-          // Friend paid the full amount: You owe the full amount
           friend.balance -= expense.amount; // You owe the full amount
         } else if (expense.type === "friend-paid-split") {
-          // Friend paid and split equally: You owe half
           friend.balance -= expense.amount / 2; // You owe half
         }
       }
       return friend;
     });
+
     setFriends(updatedFriends);
     setShowAddExpense(false); // Close modal after adding expense
   };
@@ -83,22 +97,17 @@ const App = () => {
     if (!isNaN(settleAmount) && settleAmount > 0) {
       const updatedFriends = friends.map((friend) => {
         if (friend.name === friendToSettle) {
-          // If the balance is positive, the friend owes you money, so you reduce the balance
           if (friend.balance > 0) {
             friend.balance -= settleAmount;
-          }
-          // If the balance is negative, you owe the friend, so you reduce the debt (i.e., increase the balance)
-          else if (friend.balance < 0) {
+          } else if (friend.balance < 0) {
             friend.balance += settleAmount;
           }
         }
         return friend;
       });
 
-      // Get the current date
       const currentDate = new Date().toLocaleDateString();
 
-      // Log the settle-up transaction in expenses
       setExpenses([
         ...expenses,
         {
@@ -106,28 +115,35 @@ const App = () => {
           description: `Settle Up with ${friendToSettle}`,
           amount: settleAmount,
           type: "settle",
-          date: currentDate, // Add the current date here
+          date: currentDate,
         },
       ]);
 
       setFriends(updatedFriends);
-      setSettleUpAmounts({ ...settleUpAmounts, [friendToSettle]: "" }); // Clear the input field
-      setShowSettleUp(false); // Close the modal after settle up
+      setSettleUpAmounts({ ...settleUpAmounts, [friendToSettle]: "" });
+      setShowSettleUp(false);
     }
   };
 
-  // Handle user login (store both email and name)
+  // Handle user login (validate against shared storage)
   const handleLogin = (email, name) => {
+    const users = getDataFromStorage("users");
+
+    const existingUser = users.find((user) => user.email === email);
+    if (!existingUser) {
+      alert("Invalid login. Please register.");
+      return;
+    }
+
     setLoggedInUser(email);
     setLoggedInUserName(name);
-    localStorage.setItem("loggedInUser", JSON.stringify({ email, name })); // Save both email and name to localStorage
+    localStorage.setItem("loggedInUser", JSON.stringify({ email, name }));
   };
 
   // Handle user logout with confirmation
   const handleLogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      localStorage.removeItem("loggedInUser"); // Remove the session from localStorage
+    if (window.confirm("Are you sure you want to log out?")) {
+      localStorage.removeItem("loggedInUser");
       setLoggedInUser(null);
       setLoggedInUserName("");
       setFriends([]);
@@ -138,7 +154,7 @@ const App = () => {
   // Handle friend selection for adding expense
   const handleFriendSelection = (friendName) => {
     setSelectedFriend(friendName);
-    setShowAddExpense(true); // Show the modal for Add Expense
+    setShowAddExpense(true);
   };
 
   // Handle settle-up input changes
@@ -149,15 +165,26 @@ const App = () => {
     });
   };
 
-  // Open Settle Up modal
-  const openSettleUpModal = (friendName) => {
-    const friend = friends.find((f) => f.name === friendName);
-    const balance = Math.abs(friend.balance); // Get absolute value of balance (owed or owed to)
-    setFriendToSettle(friendName);
-    setSettleUpAmounts({ ...settleUpAmounts, [friendName]: balance.toFixed(2) }); // Pre-fill the input with balance
-    setShowSettleUp(true); // Show the modal
+  const handleRegister = (email, name) => {
+    const users = getDataFromStorage("users");
+    const existingUser = users.find((user) => user.email === email);
+
+    if (existingUser) {
+      alert("User already exists. Please log in.");
+      return;
+    }
+
+    const newUser = { email, name, friends: [], expenses: [] };
+    users.push(newUser);
+    saveDataToStorage("users", users);
+
+    setShowRegister(false);
+    alert("✅ Registered successfully. Please log in.");
   };
 
+  if (!loggedInUser) {
+    return showRegister ? <Register onRegister={handleRegister} onToggleToLogin={() => setShowRegister(false)} /> : <Login onLogin={handleLogin} onToggleToRegister={() => setShowRegister(true)} />;
+  }
   // Toggle Expense List sliding up
   const toggleExpenseList = () => {
     setShowExpenseList(!showExpenseList);
@@ -169,17 +196,6 @@ const App = () => {
       setShowExpenseList(false);
     }
   };
-
-  const handleRegister = (email, name) => {
-    setShowRegister(false);
-    alert("✅ Registered Sucessfully. Please log in!");
-    //setLoggedInUser({ email, name });
-    // Logic for handling registration and auto-login
-  };
-
-  if (!loggedInUser) {
-    return showRegister ? <Register onRegister={handleRegister} onToggleToLogin={() => setShowRegister(false)} /> : <Login onLogin={handleLogin} onToggleToRegister={() => setShowRegister(true)} />;
-  }
 
   return (
     <>
