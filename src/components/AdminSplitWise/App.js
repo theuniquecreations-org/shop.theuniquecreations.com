@@ -11,7 +11,7 @@ import logout from "@/images/logout.png";
 const App = () => {
   const [friends, setFriends] = useState([]);
   const [expenses, setExpenses] = useState([]);
-  const [loggedInUser, setLoggedInUser] = useState(null); // Track the logged-in user
+  const [loggedInUser, setLoggedInUser] = useState(null); // Track the logged-in user's email
   const [loggedInUserName, setLoggedInUserName] = useState(""); // Store the user's name
   const [showAddFriend, setShowAddFriend] = useState(false); // Toggle visibility of Add Friend
   const [selectedFriend, setSelectedFriend] = useState(null); // Store the selected friend
@@ -21,18 +21,20 @@ const App = () => {
   const [showSettleUp, setShowSettleUp] = useState(false); // Toggle visibility of Settle Up modal
   const [friendToSettle, setFriendToSettle] = useState(null); // Store the selected friend for settling up
   const [showRegister, setShowRegister] = useState(false);
-  // Load session data and friends/expenses from localStorage
+
+  // Load session data and friends/expenses from localStorage on login
   useEffect(() => {
-    const sessionUser = localStorage.getItem("loggedInUser");
+    const sessionUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (sessionUser) {
-      setLoggedInUser(sessionUser);
+      setLoggedInUser(sessionUser.email);
       setLoggedInUserName(sessionUser.name); // Set the user's name
-      const storedFriends = JSON.parse(localStorage.getItem(`${sessionUser}_friends`));
-      const storedExpenses = JSON.parse(localStorage.getItem(`${sessionUser}_expenses`));
+      // Load the correct data for the logged-in user
+      const storedFriends = JSON.parse(localStorage.getItem(`${sessionUser.email}_friends`));
+      const storedExpenses = JSON.parse(localStorage.getItem(`${sessionUser.email}_expenses`));
       setFriends(storedFriends || []);
       setExpenses(storedExpenses || []);
     }
-  }, []);
+  }, [loggedInUser]); // Load when logged-in user changes
 
   // Save user data to localStorage when friends or expenses change
   useEffect(() => {
@@ -127,8 +129,9 @@ const App = () => {
     if (confirmLogout) {
       localStorage.removeItem("loggedInUser"); // Remove the session from localStorage
       setLoggedInUser(null);
-      //setFriends([]);
-      //setExpenses([]);
+      setLoggedInUserName("");
+      setFriends([]);
+      setExpenses([]);
     }
   };
 
@@ -166,8 +169,11 @@ const App = () => {
       setShowExpenseList(false);
     }
   };
+
   const handleRegister = (email, name) => {
-    setLoggedInUser({ email, name });
+    setShowRegister(false);
+    alert("✅ Registered Sucessfully. Please log in!");
+    //setLoggedInUser({ email, name });
     // Logic for handling registration and auto-login
   };
 
