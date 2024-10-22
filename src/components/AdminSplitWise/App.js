@@ -161,7 +161,7 @@ const App = () => {
         </div>
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
         {/* Display friend list with balance and option to select a friend */}
-        <h5>Friend List</h5>
+        <h5 className="mb-0">Friend List</h5>
         <ul className="list-group mb-4">
           {friends.map((friend, index) => (
             <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
