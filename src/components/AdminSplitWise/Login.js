@@ -1,23 +1,20 @@
 import React, { useState } from "react";
 
-const Login = ({ onLogin }) => {
-  const [username, setUsername] = useState("");
+const Login = ({ onLogin, onToggleToRegister }) => {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // Dummy users for testing (you can later replace this with an API call)
-    const users = {
-      subha: { username: "subha", password: "subha" },
-      bala: { username: "bala", password: "bala" },
-    };
+    // Fetch the stored user data from localStorage
+    const storedUser = JSON.parse(localStorage.getItem(email));
 
-    if (users[username] && users[username].password === password) {
-      onLogin(username); // Notify App of successful login
+    if (storedUser && storedUser.password === password) {
+      onLogin(storedUser.email, storedUser.name); // Pass email and name to onLogin callback
     } else {
-      setError("Invalid username or password");
+      setError("Invalid email or password");
     }
   };
 
@@ -29,12 +26,18 @@ const Login = ({ onLogin }) => {
         </span>
       </div>
       <div className="container">
-        <h5>Login</h5>
+        <h5 className="mb-0">Login</h5>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleLogin} className="grid">
-          <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <button type="submit">Login</button>
+          <p>
+            Don't have an account?{" "}
+            <button type="button" className="btn btn-outline-warning" onClick={onToggleToRegister}>
+              Register here
+            </button>
+          </p>{" "}
         </form>
       </div>
     </>

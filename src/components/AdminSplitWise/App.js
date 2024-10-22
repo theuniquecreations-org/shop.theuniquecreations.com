@@ -3,6 +3,7 @@ import AddFriend from "./AddFriend";
 import AddExpense from "./AddExpense";
 import ExpenseList from "./ExpenseList";
 import BalanceSummary from "./BalanceSummary";
+import Register from "./Register";
 import Login from "./Login"; // Import the login component
 import subaa from "@/images/subaa.png";
 import logout from "@/images/logout.png";
@@ -11,6 +12,7 @@ const App = () => {
   const [friends, setFriends] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null); // Track the logged-in user
+  const [loggedInUserName, setLoggedInUserName] = useState(""); // Store the user's name
   const [showAddFriend, setShowAddFriend] = useState(false); // Toggle visibility of Add Friend
   const [selectedFriend, setSelectedFriend] = useState(null); // Store the selected friend
   const [showAddExpense, setShowAddExpense] = useState(false); // Toggle visibility of Add Expense form
@@ -18,12 +20,13 @@ const App = () => {
   const [settleUpAmounts, setSettleUpAmounts] = useState({}); // Track settle-up amounts for each friend
   const [showSettleUp, setShowSettleUp] = useState(false); // Toggle visibility of Settle Up modal
   const [friendToSettle, setFriendToSettle] = useState(null); // Store the selected friend for settling up
-
+  const [showRegister, setShowRegister] = useState(false);
   // Load session data and friends/expenses from localStorage
   useEffect(() => {
     const sessionUser = localStorage.getItem("loggedInUser");
     if (sessionUser) {
       setLoggedInUser(sessionUser);
+      setLoggedInUserName(sessionUser.name); // Set the user's name
       const storedFriends = JSON.parse(localStorage.getItem(`${sessionUser}_friends`));
       const storedExpenses = JSON.parse(localStorage.getItem(`${sessionUser}_expenses`));
       setFriends(storedFriends || []);
@@ -39,9 +42,10 @@ const App = () => {
     }
   }, [friends, expenses, loggedInUser]);
 
-  // Add a new friend
-  const addFriend = (friendName) => {
-    setFriends([...friends, { name: friendName, balance: 0 }]);
+  // Add a new friend (includes both name and email)
+  const addFriend = (friend) => {
+    // Update the friends state with the new friend object
+    setFriends([...friends, { ...friend, balance: 0 }]); // Add the new friend and initialize balance to 0
     setShowAddFriend(false); // Close modal after adding friend
   };
 
@@ -110,10 +114,11 @@ const App = () => {
     }
   };
 
-  // Handle user login
-  const handleLogin = (username) => {
-    setLoggedInUser(username);
-    localStorage.setItem("loggedInUser", username); // Save session to localStorage
+  // Handle user login (store both email and name)
+  const handleLogin = (email, name) => {
+    setLoggedInUser(email);
+    setLoggedInUserName(name);
+    localStorage.setItem("loggedInUser", JSON.stringify({ email, name })); // Save both email and name to localStorage
   };
 
   // Handle user logout with confirmation
@@ -122,8 +127,8 @@ const App = () => {
     if (confirmLogout) {
       localStorage.removeItem("loggedInUser"); // Remove the session from localStorage
       setLoggedInUser(null);
-      setFriends([]);
-      setExpenses([]);
+      //setFriends([]);
+      //setExpenses([]);
     }
   };
 
@@ -161,10 +166,13 @@ const App = () => {
       setShowExpenseList(false);
     }
   };
+  const handleRegister = (email, name) => {
+    setLoggedInUser({ email, name });
+    // Logic for handling registration and auto-login
+  };
 
-  // If not logged in, show the login form
   if (!loggedInUser) {
-    return <Login onLogin={handleLogin} />;
+    return showRegister ? <Register onRegister={handleRegister} onToggleToLogin={() => setShowRegister(false)} /> : <Login onLogin={handleLogin} onToggleToRegister={() => setShowRegister(true)} />;
   }
 
   return (
@@ -190,7 +198,7 @@ const App = () => {
 
       <div className="container mt-1">
         <div align="right">
-          <p className="mb-0">Welcome, {loggedInUser}!</p>
+          <p className="mb-0">Welcome, {loggedInUserName}!</p>
         </div>
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
         {/* Display friend list with balance and option to select a friend */}
