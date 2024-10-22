@@ -5,6 +5,7 @@ import ExpenseList from "./ExpenseList";
 import BalanceSummary from "./BalanceSummary";
 import Login from "./Login"; // Import the login component
 import subaa from "@/images/subaa.png";
+import logout from "@/images/logout.png";
 
 const App = () => {
   const [friends, setFriends] = useState([]);
@@ -18,15 +19,17 @@ const App = () => {
   const [showSettleUp, setShowSettleUp] = useState(false); // Toggle visibility of Settle Up modal
   const [friendToSettle, setFriendToSettle] = useState(null); // Store the selected friend for settling up
 
-  // Load user data from localStorage
+  // Load session data and friends/expenses from localStorage
   useEffect(() => {
-    if (loggedInUser) {
-      const storedFriends = JSON.parse(localStorage.getItem(`${loggedInUser}_friends`));
-      const storedExpenses = JSON.parse(localStorage.getItem(`${loggedInUser}_expenses`));
+    const sessionUser = localStorage.getItem("loggedInUser");
+    if (sessionUser) {
+      setLoggedInUser(sessionUser);
+      const storedFriends = JSON.parse(localStorage.getItem(`${sessionUser}_friends`));
+      const storedExpenses = JSON.parse(localStorage.getItem(`${sessionUser}_expenses`));
       setFriends(storedFriends || []);
       setExpenses(storedExpenses || []);
     }
-  }, [loggedInUser]);
+  }, []);
 
   // Save user data to localStorage when friends or expenses change
   useEffect(() => {
@@ -99,6 +102,18 @@ const App = () => {
   // Handle user login
   const handleLogin = (username) => {
     setLoggedInUser(username);
+    localStorage.setItem("loggedInUser", username); // Save session to localStorage
+  };
+
+  // Handle user logout with confirmation
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+    if (confirmLogout) {
+      localStorage.removeItem("loggedInUser"); // Remove the session from localStorage
+      setLoggedInUser(null);
+      setFriends([]);
+      setExpenses([]);
+    }
   };
 
   // Handle friend selection for adding expense
@@ -143,15 +158,22 @@ const App = () => {
 
   return (
     <>
-      {/* Navigation with toggle button for Add Friend */}
+      {/* Navigation with Add Friend and Logout */}
       <nav className="navbar navbar-light titlesplitequally">
         <div className="container-fluid">
           <a className="navbar-brand text-white" href="#">
             <img src={subaa.src} alt="Logo" width="50" /> Split Equally
           </a>
-          <button className="btn btn-primary btn-warning border" onClick={() => setShowAddFriend(true)}>
-            Add Friend
-          </button>
+          <div>
+            <button className="btn btn-primary btn-warning border" onClick={() => setShowAddFriend(true)}>
+              Add Friend
+            </button>{" "}
+          </div>
+          <div>
+            <a className="navbar-brand text-white" href="#" onClick={handleLogout}>
+              <img src={logout.src} alt="Logo" width="30" />
+            </a>
+          </div>
         </div>
       </nav>
 
@@ -163,27 +185,29 @@ const App = () => {
         {/* Display friend list with balance and option to select a friend */}
         <h6 className="mb-0">Friend List</h6>
         <ul className="list-group mb-4">
-          {friends.map((friend, index) => (
-            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-              <small>
-                {friend.name.toUpperCase()}: {friend.balance == 0 ? "No Balance" : friend.balance < 0 ? <span className="text-danger">You owe ${Math.abs(friend.balance)}</span> : <span className="text-success">Owes you ${Math.abs(friend.balance)}</span>}
-              </small>
-              <div>
-                {/* Add Expense Button */}
-                <button className="btn btn-sm btn-warning ml-1" onClick={() => handleFriendSelection(friend.name)}>
-                  Add
-                </button>{" "}
-                {/* Settle Up Button */}
-                {friend.balance == 0 ? (
-                  ""
-                ) : (
-                  <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.name)}>
-                    Settle
-                  </button>
-                )}
-              </div>
-            </li>
-          ))}
+          {friends.length != 0
+            ? friends.map((friend, index) => (
+                <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                  <small>
+                    {friend.name.toUpperCase()}: {friend.balance == 0 ? "No Balance" : friend.balance < 0 ? <span className="text-danger">You owe ${Math.abs(friend.balance)}</span> : <span className="text-success">Owes you ${Math.abs(friend.balance)}</span>}
+                  </small>
+                  <div>
+                    {/* Add Expense Button */}
+                    <button className="btn btn-sm btn-warning ml-1" onClick={() => handleFriendSelection(friend.name)}>
+                      Add
+                    </button>{" "}
+                    {/* Settle Up Button */}
+                    {friend.balance == 0 ? (
+                      ""
+                    ) : (
+                      <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.name)}>
+                        Settle
+                      </button>
+                    )}
+                  </div>
+                </li>
+              ))
+            : "Please add friends to split the bill."}
         </ul>
 
         {/* Add Friend Modal */}
