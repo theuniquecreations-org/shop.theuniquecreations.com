@@ -3,8 +3,8 @@ import React, { useState } from "react";
 const ExpenseList = ({ expenses }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filter the expenses based on the search term
-  const filteredExpenses = expenses.filter((expense) => expense.description.toLowerCase().includes(searchTerm.toLowerCase()) || expense.friend.toLowerCase().includes(searchTerm.toLowerCase()));
+  // Filter and sort the expenses by date (latest first)
+  const filteredExpenses = expenses.filter((expense) => expense.description.toLowerCase().includes(searchTerm.toLowerCase()) || expense.friend.toLowerCase().includes(searchTerm.toLowerCase())).sort((a, b) => new Date(a.date) - new Date(b.date)); // Sort by latest date
 
   return (
     <div className="container1">
@@ -14,7 +14,7 @@ const ExpenseList = ({ expenses }) => {
       </div>
       <hr />
       {/* Scrollable Expense List */}
-      <div className="expense-list-scrollable ">
+      <div className="expense-list-scrollable">
         <ul className="list-unstyled p-1">
           {filteredExpenses.length > 0 ? (
             filteredExpenses.map((expense, index) => (
@@ -50,7 +50,6 @@ const ExpenseList = ({ expenses }) => {
         .expense-list-scrollable {
           max-height: 600px; /* Set the height to make it scrollable */
           overflow-y: auto; /* Enable vertical scrolling */
-          /*border: 1px solid #e3e3e3;  Add a light border for the scrollable area */
           padding-right: 8px; /* Avoid hiding content behind the scrollbar */
         }
 

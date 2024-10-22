@@ -77,10 +77,20 @@ const App = () => {
     if (!isNaN(settleAmount) && settleAmount > 0) {
       const updatedFriends = friends.map((friend) => {
         if (friend.name === friendToSettle) {
-          friend.balance -= settleAmount;
+          // If the balance is positive, the friend owes you money, so you reduce the balance
+          if (friend.balance > 0) {
+            friend.balance -= settleAmount;
+          }
+          // If the balance is negative, you owe the friend, so you reduce the debt (i.e., increase the balance)
+          else if (friend.balance < 0) {
+            friend.balance += settleAmount;
+          }
         }
         return friend;
       });
+
+      // Get the current date
+      const currentDate = new Date().toLocaleDateString();
 
       // Log the settle-up transaction in expenses
       setExpenses([
@@ -90,6 +100,7 @@ const App = () => {
           description: `Settle Up with ${friendToSettle}`,
           amount: settleAmount,
           type: "settle",
+          date: currentDate, // Add the current date here
         },
       ]);
 
@@ -261,7 +272,7 @@ const App = () => {
                   <h6 className="modal-title">Settle Up with {friendToSettle}</h6>
                 </div>
                 <div className="modal-body">
-                  <input type="number" className="form-control" placeholder="Enter amount" value={settleUpAmounts[friendToSettle] || ""} onChange={handleSettleAmountChange} />
+                  <input type="number" className="form-control" placeholder="Enter amount" value={settleUpAmounts[friendToSettle] || ""} onChange={handleSettleAmountChange} step="any" min="0" inputMode="decimal" />
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-warning w-100" onClick={handleSettleUp}>
@@ -279,7 +290,7 @@ const App = () => {
         {/* Expense List Sliding Up from Bottom */}
         <div className="text-center">
           <button className="btn btn-warning mt-3" onClick={toggleExpenseList}>
-            {showExpenseList ? "Hide Expense List" : "View Expense List"}
+            {showExpenseList ? "Hide Expense History" : "View Expense History"}
           </button>
         </div>
 

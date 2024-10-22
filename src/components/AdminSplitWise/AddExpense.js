@@ -52,7 +52,7 @@ const AddExpense = ({ onAddExpense, friends, selectedFriend }) => {
       <input type="text" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} className="form-control mt-2" />
 
       {/* Amount input */}
-      <input type="number" placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} className="form-control mt-2" />
+      <input type="number" placeholder="Amount" value={amount} onChange={(e) => setAmount(e.target.value)} className="form-control mt-2" step="any" min="0" inputMode="decimal" required />
 
       {/* Date field */}
       <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="form-control mt-2" />
