@@ -152,13 +152,12 @@ const App = () => {
               </span>
               <div>
                 {/* Add Expense Button */}
-                <button className="btn btn-sm btn-warning" onClick={() => handleFriendSelection(friend.name)}>
-                  Add Expense
-                </button>
-
+                <button className="btn btn-sm btn-warning ml-1" onClick={() => handleFriendSelection(friend.name)}>
+                  Add
+                </button>{" "}
                 {/* Settle Up Button */}
                 <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.name)}>
-                  Settle Up
+                  Settle
                 </button>
               </div>
             </li>
