@@ -39,6 +39,7 @@ const App = () => {
   // Add a new friend
   const addFriend = (friendName) => {
     setFriends([...friends, { name: friendName, balance: 0 }]);
+    setShowAddFriend(false); // Close modal after adding friend
   };
 
   // Add a new expense
@@ -48,14 +49,17 @@ const App = () => {
     const updatedFriends = friends.map((friend) => {
       if (friend.name === expense.friend) {
         if (expense.type === "split") {
-          // Split equally: each person owes half
-          friend.balance += expense.amount / 2;
-        } else if (expense.type === "owe") {
-          // You owe: you owe the full amount
-          friend.balance += expense.amount;
-        } else if (expense.type === "friend-owes") {
-          // Friend owes: your friend owes the full amount
-          friend.balance -= expense.amount;
+          // Split equally: Each person owes half
+          friend.balance += expense.amount / 2; // The friend owes half
+        } else if (expense.type === "you-paid-full") {
+          // You paid the full amount: The friend owes the full amount
+          friend.balance += expense.amount; // The friend owes the full amount
+        } else if (expense.type === "friend-paid-full") {
+          // Friend paid the full amount: You owe the full amount
+          friend.balance -= expense.amount; // You owe the full amount
+        } else if (expense.type === "friend-paid-split") {
+          // Friend paid and split equally: You owe half
+          friend.balance -= expense.amount / 2; // You owe half
         }
       }
       return friend;
@@ -111,7 +115,7 @@ const App = () => {
     });
   };
 
-  // Open Settle Up modal and pre-fill amount owed or owed by the friend
+  // Open Settle Up modal
   const openSettleUpModal = (friendName) => {
     const friend = friends.find((f) => f.name === friendName);
     const balance = Math.abs(friend.balance); // Get absolute value of balance (owed or owed to)
@@ -145,8 +149,8 @@ const App = () => {
           <a className="navbar-brand text-white" href="#">
             <img src={subaa.src} alt="Logo" width="50" /> Split Equally
           </a>
-          <button className="btn btn-primary btn-warning border" onClick={() => setShowAddFriend(!showAddFriend)}>
-            {showAddFriend ? "Hide Add Friend" : "Add Friend"}
+          <button className="btn btn-primary btn-warning border" onClick={() => setShowAddFriend(true)}>
+            Add Friend
           </button>
         </div>
       </nav>
@@ -155,30 +159,53 @@ const App = () => {
         <div align="right">
           <p className="mb-0">Welcome, {loggedInUser}!</p>
         </div>
-        {/* Conditionally render Add Friend form */}
-        {showAddFriend && <AddFriend onAddFriend={addFriend} />}
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
         {/* Display friend list with balance and option to select a friend */}
-        <h5>Friend List</h5>
+        <h6 className="mb-0">Friend List</h6>
         <ul className="list-group mb-4">
           {friends.map((friend, index) => (
             <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-              <span>
-                {friend.name}: {friend.balance < 0 ? `You owe $${Math.abs(friend.balance)}` : `Owes you $${Math.abs(friend.balance)}`}
-              </span>
+              <small>
+                {friend.name.toUpperCase()}: {friend.balance == 0 ? "No Balance" : friend.balance < 0 ? <span className="text-danger">You owe ${Math.abs(friend.balance)}</span> : <span className="text-success">Owes you ${Math.abs(friend.balance)}</span>}
+              </small>
               <div>
                 {/* Add Expense Button */}
                 <button className="btn btn-sm btn-warning ml-1" onClick={() => handleFriendSelection(friend.name)}>
                   Add
                 </button>{" "}
                 {/* Settle Up Button */}
-                <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.name)}>
-                  Settle
-                </button>
+                {friend.balance == 0 ? (
+                  ""
+                ) : (
+                  <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.name)}>
+                    Settle
+                  </button>
+                )}
               </div>
             </li>
           ))}
         </ul>
+
+        {/* Add Friend Modal */}
+        {showAddFriend && (
+          <div className="modal-overlay">
+            <div className="modal-container">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Add a New Friend</h5>
+                </div>
+                <div className="modal-body">
+                  <AddFriend onAddFriend={addFriend} />
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={() => setShowAddFriend(false)}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Add Expense Modal */}
         {showAddExpense && (
@@ -186,7 +213,7 @@ const App = () => {
             <div className="modal-container">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title">Add Expense for {selectedFriend}</h5>
+                  <h6 className="modal-title">Add Expense for {selectedFriend}</h6>
                 </div>
                 <div className="modal-body">
                   <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} />
@@ -207,7 +234,7 @@ const App = () => {
             <div className="modal-container">
               <div className="modal-content grid">
                 <div className="modal-header">
-                  <h5 className="modal-title">Settle Up with {friendToSettle}</h5>
+                  <h6 className="modal-title">Settle Up with {friendToSettle}</h6>
                 </div>
                 <div className="modal-body">
                   <input type="number" className="form-control" placeholder="Enter amount" value={settleUpAmounts[friendToSettle] || ""} onChange={handleSettleAmountChange} />
@@ -235,7 +262,7 @@ const App = () => {
         <div className={`slide-up-expense-list ${showExpenseList ? "show" : ""}`} onClick={closeExpenseListOnClickOutside}>
           <div className="container p-3">
             <div className="d-flex justify-content-between align-items-center">
-              <h5 className="mb-3">Expense List</h5>
+              <h6 className="mb-3">Expense List</h6>
               <button className="btn btn-secondary btn-sm" onClick={toggleExpenseList}>
                 Close
               </button>
@@ -284,7 +311,7 @@ const App = () => {
           left: 0;
           width: 100%;
           background: white;
-          height: 70%;
+          height: 90%;
           transition: bottom 0.3s ease-in-out;
           box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
           z-index: 1050;
