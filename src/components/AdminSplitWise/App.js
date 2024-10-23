@@ -3,6 +3,7 @@ import AddFriend from "./AddFriend";
 import AddExpense from "./AddExpense";
 import ExpenseList from "./ExpenseList";
 import BalanceSummary from "./BalanceSummary";
+import Register from "./Register";
 import Login from "./Login"; // Import the login component
 import subaa from "@/images/subaa.png";
 import logout from "@/images/logout.png";
@@ -10,127 +11,163 @@ import logout from "@/images/logout.png";
 const App = () => {
   const [friends, setFriends] = useState([]);
   const [expenses, setExpenses] = useState([]);
-  const [loggedInUser, setLoggedInUser] = useState(null); // Track the logged-in user
+  const [loggedInUser, setLoggedInUser] = useState(null); // Track the logged-in user's email
+  const [loggedInUserName, setLoggedInUserName] = useState(""); // Store the user's name
   const [showAddFriend, setShowAddFriend] = useState(false); // Toggle visibility of Add Friend
   const [selectedFriend, setSelectedFriend] = useState(null); // Store the selected friend
+  const [selectedFriendEmail, setSelectedFriendEmail] = useState(null); // Store the selected friend
   const [showAddExpense, setShowAddExpense] = useState(false); // Toggle visibility of Add Expense form
   const [showExpenseList, setShowExpenseList] = useState(false); // Toggle visibility of Expense List
   const [settleUpAmounts, setSettleUpAmounts] = useState({}); // Track settle-up amounts for each friend
   const [showSettleUp, setShowSettleUp] = useState(false); // Toggle visibility of Settle Up modal
   const [friendToSettle, setFriendToSettle] = useState(null); // Store the selected friend for settling up
+  const [showRegister, setShowRegister] = useState(false);
+  const [friendToSettleName, setFriendToSettleName] = useState(""); // Store friend's name
+  // Function to retrieve data from localStorage
+  const getDataFromStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
+  // Function to save data to localStorage
+  const saveDataToStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
-  // Load session data and friends/expenses from localStorage
+  // Load session data and friends/expenses from shared storage on login
   useEffect(() => {
-    const sessionUser = localStorage.getItem("loggedInUser");
+    const sessionUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (sessionUser) {
-      setLoggedInUser(sessionUser);
-      const storedFriends = JSON.parse(localStorage.getItem(`${sessionUser}_friends`));
-      const storedExpenses = JSON.parse(localStorage.getItem(`${sessionUser}_expenses`));
-      setFriends(storedFriends || []);
-      setExpenses(storedExpenses || []);
-    }
-  }, []);
+      setLoggedInUser(sessionUser.email);
+      setLoggedInUserName(sessionUser.name);
 
-  // Save user data to localStorage when friends or expenses change
+      // Retrieve the common users data
+      const users = getDataFromStorage("users");
+
+      // Find the logged-in user's data
+      const user = users.find((user) => user.email === sessionUser.email);
+
+      if (user) {
+        setFriends(user.friends || []);
+        setExpenses(user.expenses || []);
+      }
+    }
+  }, [loggedInUser]);
+
+  // Save user data (friends and expenses) to common storage whenever they change
   useEffect(() => {
     if (loggedInUser) {
-      localStorage.setItem(`${loggedInUser}_friends`, JSON.stringify(friends));
-      localStorage.setItem(`${loggedInUser}_expenses`, JSON.stringify(expenses));
+      // Get the common users data
+      const users = getDataFromStorage("users");
+
+      // Update the logged-in user's friends and expenses in the common data
+      const updatedUsers = users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
+
+      // Save the updated users data to localStorage
+      saveDataToStorage("users", updatedUsers);
     }
   }, [friends, expenses, loggedInUser]);
 
-  // Add a new friend
-  const addFriend = (friendName) => {
-    setFriends([...friends, { name: friendName, balance: 0 }]);
+  // Add a new friend (includes both name and email)
+  const addFriend = (friend) => {
+    setFriends([...friends, { ...friend, balance: 0 }]); // Add the new friend and initialize balance to 0
     setShowAddFriend(false); // Close modal after adding friend
   };
 
-  // Add a new expense
   const addExpense = (expense) => {
     setExpenses([...expenses, expense]);
 
     const updatedFriends = friends.map((friend) => {
-      if (friend.name === expense.friend) {
+      if (friend.email === expense.friendEmail) {
         if (expense.type === "split") {
-          // Split equally: Each person owes half
           friend.balance += expense.amount / 2; // The friend owes half
         } else if (expense.type === "you-paid-full") {
-          // You paid the full amount: The friend owes the full amount
           friend.balance += expense.amount; // The friend owes the full amount
         } else if (expense.type === "friend-paid-full") {
-          // Friend paid the full amount: You owe the full amount
           friend.balance -= expense.amount; // You owe the full amount
         } else if (expense.type === "friend-paid-split") {
-          // Friend paid and split equally: You owe half
           friend.balance -= expense.amount / 2; // You owe half
         }
       }
       return friend;
     });
-    setFriends(updatedFriends);
-    setShowAddExpense(false); // Close modal after adding expense
+
+    const updatedFriendsForUser = updatedFriends.map((friend) => {
+      if (friend.email === loggedInUser) {
+        if (expense.type === "split") {
+          friend.balance -= expense.amount / 2; // The user owes half
+        } else if (expense.type === "you-paid-full") {
+          friend.balance -= expense.amount; // The user owes the full amount
+        } else if (expense.type === "friend-paid-full") {
+          friend.balance += expense.amount; // The friend owes the full amount
+        } else if (expense.type === "friend-paid-split") {
+          friend.balance += expense.amount / 2; // The friend owes half
+        }
+      }
+      return friend;
+    });
+
+    setFriends(updatedFriendsForUser);
+    setShowAddExpense(false);
   };
 
-  // Settle Up: Adjust the balance by a partial amount for a specific friend and log the transaction
   const handleSettleUp = () => {
     const settleAmount = parseFloat(settleUpAmounts[friendToSettle] || 0);
     if (!isNaN(settleAmount) && settleAmount > 0) {
       const updatedFriends = friends.map((friend) => {
-        if (friend.name === friendToSettle) {
-          // If the balance is positive, the friend owes you money, so you reduce the balance
+        if (friend.email === friendToSettle) {
           if (friend.balance > 0) {
             friend.balance -= settleAmount;
-          }
-          // If the balance is negative, you owe the friend, so you reduce the debt (i.e., increase the balance)
-          else if (friend.balance < 0) {
+          } else if (friend.balance < 0) {
             friend.balance += settleAmount;
           }
         }
         return friend;
       });
 
-      // Get the current date
       const currentDate = new Date().toLocaleDateString();
 
-      // Log the settle-up transaction in expenses
       setExpenses([
         ...expenses,
         {
-          friend: friendToSettle,
-          description: `Settle Up with ${friendToSettle}`,
+          friend: friendToSettleName,
+          description: `Settle Up with ${friendToSettleName}`,
           amount: settleAmount,
           type: "settle",
-          date: currentDate, // Add the current date here
+          date: currentDate,
         },
       ]);
 
       setFriends(updatedFriends);
-      setSettleUpAmounts({ ...settleUpAmounts, [friendToSettle]: "" }); // Clear the input field
-      setShowSettleUp(false); // Close the modal after settle up
+      setSettleUpAmounts({ ...settleUpAmounts, [friendToSettle]: "" });
+      setShowSettleUp(false);
     }
   };
+  // Handle user login (validate against shared storage)
+  const handleLogin = (email, name) => {
+    const users = getDataFromStorage("users");
 
-  // Handle user login
-  const handleLogin = (username) => {
-    setLoggedInUser(username);
-    localStorage.setItem("loggedInUser", username); // Save session to localStorage
+    const existingUser = users.find((user) => user.email === email);
+    if (!existingUser) {
+      alert("Invalid login. Please register.");
+      return;
+    }
+
+    setLoggedInUser(email);
+    setLoggedInUserName(name);
+    localStorage.setItem("loggedInUser", JSON.stringify({ email, name }));
   };
 
   // Handle user logout with confirmation
   const handleLogout = () => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      localStorage.removeItem("loggedInUser"); // Remove the session from localStorage
+    if (window.confirm("Are you sure you want to log out?")) {
+      localStorage.removeItem("loggedInUser");
       setLoggedInUser(null);
+      setLoggedInUserName("");
       setFriends([]);
       setExpenses([]);
     }
   };
 
   // Handle friend selection for adding expense
-  const handleFriendSelection = (friendName) => {
+  const handleFriendSelection = (friendEmail, friendName) => {
     setSelectedFriend(friendName);
-    setShowAddExpense(true); // Show the modal for Add Expense
+    setSelectedFriendEmail(friendEmail);
+    setShowAddExpense(true);
   };
 
   // Handle settle-up input changes
@@ -141,15 +178,26 @@ const App = () => {
     });
   };
 
-  // Open Settle Up modal
-  const openSettleUpModal = (friendName) => {
-    const friend = friends.find((f) => f.name === friendName);
-    const balance = Math.abs(friend.balance); // Get absolute value of balance (owed or owed to)
-    setFriendToSettle(friendName);
-    setSettleUpAmounts({ ...settleUpAmounts, [friendName]: balance.toFixed(2) }); // Pre-fill the input with balance
-    setShowSettleUp(true); // Show the modal
+  const handleRegister = (email, name) => {
+    const users = getDataFromStorage("users");
+    const existingUser = users.find((user) => user.email === email);
+
+    if (existingUser) {
+      alert("User already exists. Please log in.");
+      return;
+    }
+
+    const newUser = { email, name, friends: [], expenses: [] };
+    users.push(newUser);
+    saveDataToStorage("users", users);
+
+    setShowRegister(false);
+    alert("✅ Registered successfully. Please log in.");
   };
 
+  if (!loggedInUser) {
+    return showRegister ? <Register onRegister={handleRegister} onToggleToLogin={() => setShowRegister(false)} /> : <Login onLogin={handleLogin} onToggleToRegister={() => setShowRegister(true)} />;
+  }
   // Toggle Expense List sliding up
   const toggleExpenseList = () => {
     setShowExpenseList(!showExpenseList);
@@ -162,10 +210,15 @@ const App = () => {
     }
   };
 
-  // If not logged in, show the login form
-  if (!loggedInUser) {
-    return <Login onLogin={handleLogin} />;
-  }
+  const openSettleUpModal = (friendEmail, friendName) => {
+    const friend = friends.find((f) => f.email === friendEmail);
+    const balance = Math.abs(friend.balance); // Get absolute value of balance (owed or owed to)
+
+    setFriendToSettle(friendEmail); // Store friend email to be settled with
+    setFriendToSettleName(friendName); // Store the friend's name for display in modal
+    setSettleUpAmounts({ ...settleUpAmounts, [friendEmail]: balance.toFixed(2) }); // Pre-fill the input with balance
+    setShowSettleUp(true); // Show the modal
+  };
 
   return (
     <>
@@ -190,7 +243,7 @@ const App = () => {
 
       <div className="container mt-1">
         <div align="right">
-          <p className="mb-0">Welcome, {loggedInUser}!</p>
+          <p className="mb-0">Welcome, {loggedInUserName}!</p>
         </div>
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
         {/* Display friend list with balance and option to select a friend */}
@@ -204,14 +257,14 @@ const App = () => {
                   </small>
                   <div>
                     {/* Add Expense Button */}
-                    <button className="btn btn-sm btn-warning ml-1" onClick={() => handleFriendSelection(friend.name)}>
+                    <button className="btn btn-sm btn-warning ml-1" onClick={() => handleFriendSelection(friend.email, friend.name)}>
                       Add
                     </button>{" "}
                     {/* Settle Up Button */}
                     {friend.balance == 0 ? (
                       ""
                     ) : (
-                      <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.name)}>
+                      <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.email, friend.name)}>
                         Settle
                       </button>
                     )}
@@ -251,7 +304,7 @@ const App = () => {
                   <h6 className="modal-title">Add Expense for {selectedFriend}</h6>
                 </div>
                 <div className="modal-body">
-                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} />
+                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} selectedFriendEmail={selectedFriendEmail} />
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" onClick={() => setShowAddExpense(false)}>
