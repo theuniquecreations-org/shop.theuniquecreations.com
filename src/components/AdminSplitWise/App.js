@@ -7,6 +7,7 @@ import Register from "./Register";
 import Login from "./Login"; // Import the login component
 import subaa from "@/images/subaa.png";
 import logout from "@/images/logout.png";
+import { getDataFromServer, fetchUsers, onAddFriendService, onUpdateFriendService } from "./APIService";
 
 const App = () => {
   const [friends, setFriends] = useState([]);
@@ -29,43 +30,66 @@ const App = () => {
   const saveDataToStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
   // Load session data and friends/expenses from shared storage on login
-  useEffect(() => {
+  useEffect(async () => {
     const sessionUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (sessionUser) {
       setLoggedInUser(sessionUser.email);
       setLoggedInUserName(sessionUser.name);
 
       // Retrieve the common users data
-      const users = getDataFromStorage("users");
-
+      //const users = getDataFromStorage("users");
+      //const users = await getDataFromServer("users");
       // Find the logged-in user's data
-      const user = users.find((user) => user.email === sessionUser.email);
-
-      if (user) {
-        setFriends(user.friends || []);
-        setExpenses(user.expenses || []);
-      }
+      //const user = users.find((user) => user.email === sessionUser.email);
+      // console.log("friends", user);
+      // if (user) {
+      //   setFriends(user.friends || []);
+      //   setExpenses(user.expenses || []);
+      // }
     }
   }, [loggedInUser]);
 
   // Save user data (friends and expenses) to common storage whenever they change
-  useEffect(() => {
+  useEffect(async () => {
     if (loggedInUser) {
       // Get the common users data
-      const users = getDataFromStorage("users");
-
+      //const users = getDataFromStorage("users");
+      const users = await getDataFromServer("users");
+      console.log("local users", loggedInUser);
       // Update the logged-in user's friends and expenses in the common data
-      const updatedUsers = users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
-
+      //const updatedUsers = users && users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
+      const user = users.find((user) => user.email === loggedInUser);
+      const updatedUsers = { ...user, friends, expenses };
+      //console.log("friends", user);
+      if (user) {
+        setFriends(user.friends || []);
+        setExpenses(user.expenses || []);
+      }
+      //console.log("updatedUsers", updatedUsers);
+      //return;
       // Save the updated users data to localStorage
-      saveDataToStorage("users", updatedUsers);
+      //if (!showAddFriend) await onUpdateFriendService(updatedUsers);
     }
-  }, [friends, expenses, loggedInUser]);
+  }, [loggedInUser]);
 
-  // Add a new friend (includes both name and email)
-  const addFriend = (friend) => {
-    setFriends([...friends, { ...friend, balance: 0 }]); // Add the new friend and initialize balance to 0
-    setShowAddFriend(false); // Close modal after adding friend
+  const addFriend = async (friend) => {
+    // Update the friends array with the new friend immediately
+    const updatedFriends = [...friends, { ...friend, balance: 0 }];
+    // Update the state with the new friends array (asynchronously)
+    setFriends(updatedFriends);
+    // Fetch the logged-in user's data from the server
+    const users = await getDataFromServer(loggedInUser);
+    const user = users.find((user) => user.email === loggedInUser);
+    if (user) {
+      // Create updated user object with new friends and existing expenses
+      const updatedUsers = { ...user, friends: updatedFriends, expenses: user.expenses || [] };
+      console.log("updatedUsers", updatedUsers);
+      // Call the service to update the user with the new friends list
+      await onUpdateFriendService(updatedUsers);
+      setShowAddFriend(false); // Close the modal after adding friend
+    } else {
+      console.error("User not found");
+    }
   };
 
   const addExpense = (expense) => {
@@ -140,13 +164,6 @@ const App = () => {
   // Handle user login (validate against shared storage)
   const handleLogin = (email, name) => {
     const users = getDataFromStorage("users");
-
-    const existingUser = users.find((user) => user.email === email);
-    if (!existingUser) {
-      alert("Invalid login. Please register.");
-      return;
-    }
-
     setLoggedInUser(email);
     setLoggedInUserName(name);
     localStorage.setItem("loggedInUser", JSON.stringify({ email, name }));
@@ -162,14 +179,12 @@ const App = () => {
       setExpenses([]);
     }
   };
-
   // Handle friend selection for adding expense
   const handleFriendSelection = (friendEmail, friendName) => {
     setSelectedFriend(friendName);
     setSelectedFriendEmail(friendEmail);
     setShowAddExpense(true);
   };
-
   // Handle settle-up input changes
   const handleSettleAmountChange = (e) => {
     setSettleUpAmounts({
@@ -178,19 +193,16 @@ const App = () => {
     });
   };
 
-  const handleRegister = (email, name) => {
-    const users = getDataFromStorage("users");
-    const existingUser = users.find((user) => user.email === email);
-
-    if (existingUser) {
-      alert("User already exists. Please log in.");
-      return;
-    }
-
+  const handleRegister = async (email, name) => {
+    //const users = getDataFromStorage("users");
+    //const users = await fetchUsers(email);
+    //console.log("Registered user", users);
+    // const existingUser = users.find((user) => user.email === email);
+    //console.log("Registered existingUser", existingUser);
     const newUser = { email, name, friends: [], expenses: [] };
-    users.push(newUser);
-    saveDataToStorage("users", users);
-
+    // users.push(newUser);
+    // console.log("Registered user", users);
+    await onAddFriendService(newUser);
     setShowRegister(false);
     alert("✅ Registered successfully. Please log in.");
   };
@@ -243,7 +255,9 @@ const App = () => {
 
       <div className="container mt-1">
         <div align="right">
-          <p className="mb-0">Welcome, {loggedInUserName}!</p>
+          <p className="mb-0">
+            <small>Welcome, {loggedInUserName}!</small>
+          </p>
         </div>
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
         {/* Display friend list with balance and option to select a friend */}

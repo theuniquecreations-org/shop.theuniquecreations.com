@@ -1,17 +1,20 @@
 import React, { useState } from "react";
+import { saveUser, fetchUsers } from "./APIService";
 
 const Login = ({ onLogin, onToggleToRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Fetch the stored user data from localStorage
-    const storedUser = JSON.parse(localStorage.getItem(email));
-
+    setLoading(true);
+    const storedUser = await fetchUsers(email);
+    console.log("storedUser", storedUser.password);
     if (storedUser && storedUser.password === password) {
+      setLoading(false);
+      console.log("log in user");
       onLogin(storedUser.email, storedUser.name); // Pass email and name to onLogin callback
     } else {
       setError("Invalid email or password");
@@ -31,7 +34,7 @@ const Login = ({ onLogin, onToggleToRegister }) => {
         <form onSubmit={handleLogin} className="grid">
           <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          <button type="submit">Login</button>
+          <button type="submit">{loading ? "Please Wait..." : "Login"}</button>
           <p>
             Don't have an account?{" "}
             <button type="button" className="btn btn-outline-warning" onClick={onToggleToRegister}>

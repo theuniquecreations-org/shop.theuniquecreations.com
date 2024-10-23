@@ -1,24 +1,29 @@
 import React, { useState } from "react";
+import { saveUser, fetchUsers } from "./APIService";
 
 const Register = ({ onRegister, onToggleToLogin }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-
-    // Check if the user already exists
-    if (localStorage.getItem(email)) {
+    setLoading(true);
+    //Check if the user already exists
+    const user = await fetchUsers(email);
+    if (user && user.length !== 0) {
       setError("User already exists with this email");
+      //alert("User already exists. Please log in.");
+      setLoading(false);
       return;
     }
-
     // Store the user's data in localStorage
     const newUser = { email, name, password };
-    localStorage.setItem(email, JSON.stringify(newUser));
-
+    //localStorage.setItem(email, JSON.stringify(newUser));
+    await saveUser(newUser); // service call to save user
+    setLoading(false);
     // Call onRegister to log in after successful registration
     onRegister(email, name);
   };
@@ -35,10 +40,10 @@ const Register = ({ onRegister, onToggleToLogin }) => {
         <h6 className="mb-0">Register</h6>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleRegister} className="grid">
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} required />
           <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          <button type="submit">Register</button>
+          <button type="submit">{loading ? "Please Wait..." : "Register"}</button>
           <p>
             Have an account?{" "}
             <button type="button" className="btn btn-outline-warning" onClick={onToggleToLogin}>
