@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-const AddExpense = ({ onAddExpense, friends, selectedFriend }) => {
-  const [friend, setFriend] = useState(selectedFriend || "");
+const AddExpense = ({ onAddExpense, friends, selectedFriend, selectedFriendEmail }) => {
+  const [friend, setFriend] = useState(selectedFriend || ""); // Initialize with selected friend
+  const [friendEmail, setFriendEmail] = useState(selectedFriendEmail || ""); // Initialize with selected friend email
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [expenseType, setExpenseType] = useState("split");
@@ -18,17 +19,19 @@ const AddExpense = ({ onAddExpense, friends, selectedFriend }) => {
     setDate(getTodayDate()); // Set default date to today
   }, []);
 
-  // Update the selected friend if the prop changes
+  // Update the selected friend and friendEmail if the prop changes
   useEffect(() => {
     setFriend(selectedFriend);
-  }, [selectedFriend]);
+    setFriendEmail(selectedFriendEmail);
+  }, [selectedFriend, selectedFriendEmail]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (friend === "" || amount === "" || description === "" || date === "") return;
+    if (friend === "" || friendEmail === "" || amount === "" || description === "" || date === "") return;
 
     const expense = {
-      friend,
+      friend, // Friend's name
+      friendEmail, // Friend's email (for balance updates)
       description,
       amount: parseFloat(amount),
       type: expenseType,
@@ -37,6 +40,7 @@ const AddExpense = ({ onAddExpense, friends, selectedFriend }) => {
 
     onAddExpense(expense);
     setFriend("");
+    setFriendEmail("");
     setDescription("");
     setAmount("");
     setExpenseType("split");
@@ -45,8 +49,8 @@ const AddExpense = ({ onAddExpense, friends, selectedFriend }) => {
 
   return (
     <form onSubmit={handleSubmit} className="grid">
-      {/* Friend name - disabled */}
-      <input type="text" value={friend} className="form-control" disabled />
+      {/* Friend name and email - disabled */}
+      <input type="text" value={friend + " - " + friendEmail} className="form-control" disabled />
 
       {/* Description input */}
       <input type="text" placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} className="form-control mt-2" />

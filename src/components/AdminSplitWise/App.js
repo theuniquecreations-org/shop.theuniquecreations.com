@@ -15,16 +15,16 @@ const App = () => {
   const [loggedInUserName, setLoggedInUserName] = useState(""); // Store the user's name
   const [showAddFriend, setShowAddFriend] = useState(false); // Toggle visibility of Add Friend
   const [selectedFriend, setSelectedFriend] = useState(null); // Store the selected friend
+  const [selectedFriendEmail, setSelectedFriendEmail] = useState(null); // Store the selected friend
   const [showAddExpense, setShowAddExpense] = useState(false); // Toggle visibility of Add Expense form
   const [showExpenseList, setShowExpenseList] = useState(false); // Toggle visibility of Expense List
   const [settleUpAmounts, setSettleUpAmounts] = useState({}); // Track settle-up amounts for each friend
   const [showSettleUp, setShowSettleUp] = useState(false); // Toggle visibility of Settle Up modal
   const [friendToSettle, setFriendToSettle] = useState(null); // Store the selected friend for settling up
   const [showRegister, setShowRegister] = useState(false);
-
+  const [friendToSettleName, setFriendToSettleName] = useState(""); // Store friend's name
   // Function to retrieve data from localStorage
   const getDataFromStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
-
   // Function to save data to localStorage
   const saveDataToStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
@@ -68,12 +68,11 @@ const App = () => {
     setShowAddFriend(false); // Close modal after adding friend
   };
 
-  // Add a new expense
   const addExpense = (expense) => {
     setExpenses([...expenses, expense]);
 
     const updatedFriends = friends.map((friend) => {
-      if (friend.name === expense.friend) {
+      if (friend.email === expense.friendEmail) {
         if (expense.type === "split") {
           friend.balance += expense.amount / 2; // The friend owes half
         } else if (expense.type === "you-paid-full") {
@@ -87,16 +86,30 @@ const App = () => {
       return friend;
     });
 
-    setFriends(updatedFriends);
-    setShowAddExpense(false); // Close modal after adding expense
+    const updatedFriendsForUser = updatedFriends.map((friend) => {
+      if (friend.email === loggedInUser) {
+        if (expense.type === "split") {
+          friend.balance -= expense.amount / 2; // The user owes half
+        } else if (expense.type === "you-paid-full") {
+          friend.balance -= expense.amount; // The user owes the full amount
+        } else if (expense.type === "friend-paid-full") {
+          friend.balance += expense.amount; // The friend owes the full amount
+        } else if (expense.type === "friend-paid-split") {
+          friend.balance += expense.amount / 2; // The friend owes half
+        }
+      }
+      return friend;
+    });
+
+    setFriends(updatedFriendsForUser);
+    setShowAddExpense(false);
   };
 
-  // Settle Up: Adjust the balance by a partial amount for a specific friend and log the transaction
   const handleSettleUp = () => {
     const settleAmount = parseFloat(settleUpAmounts[friendToSettle] || 0);
     if (!isNaN(settleAmount) && settleAmount > 0) {
       const updatedFriends = friends.map((friend) => {
-        if (friend.name === friendToSettle) {
+        if (friend.email === friendToSettle) {
           if (friend.balance > 0) {
             friend.balance -= settleAmount;
           } else if (friend.balance < 0) {
@@ -111,8 +124,8 @@ const App = () => {
       setExpenses([
         ...expenses,
         {
-          friend: friendToSettle,
-          description: `Settle Up with ${friendToSettle}`,
+          friend: friendToSettleName,
+          description: `Settle Up with ${friendToSettleName}`,
           amount: settleAmount,
           type: "settle",
           date: currentDate,
@@ -124,7 +137,6 @@ const App = () => {
       setShowSettleUp(false);
     }
   };
-
   // Handle user login (validate against shared storage)
   const handleLogin = (email, name) => {
     const users = getDataFromStorage("users");
@@ -152,8 +164,9 @@ const App = () => {
   };
 
   // Handle friend selection for adding expense
-  const handleFriendSelection = (friendName) => {
+  const handleFriendSelection = (friendEmail, friendName) => {
     setSelectedFriend(friendName);
+    setSelectedFriendEmail(friendEmail);
     setShowAddExpense(true);
   };
 
@@ -197,6 +210,16 @@ const App = () => {
     }
   };
 
+  const openSettleUpModal = (friendEmail, friendName) => {
+    const friend = friends.find((f) => f.email === friendEmail);
+    const balance = Math.abs(friend.balance); // Get absolute value of balance (owed or owed to)
+
+    setFriendToSettle(friendEmail); // Store friend email to be settled with
+    setFriendToSettleName(friendName); // Store the friend's name for display in modal
+    setSettleUpAmounts({ ...settleUpAmounts, [friendEmail]: balance.toFixed(2) }); // Pre-fill the input with balance
+    setShowSettleUp(true); // Show the modal
+  };
+
   return (
     <>
       {/* Navigation with Add Friend and Logout */}
@@ -234,14 +257,14 @@ const App = () => {
                   </small>
                   <div>
                     {/* Add Expense Button */}
-                    <button className="btn btn-sm btn-warning ml-1" onClick={() => handleFriendSelection(friend.name)}>
+                    <button className="btn btn-sm btn-warning ml-1" onClick={() => handleFriendSelection(friend.email, friend.name)}>
                       Add
                     </button>{" "}
                     {/* Settle Up Button */}
                     {friend.balance == 0 ? (
                       ""
                     ) : (
-                      <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.name)}>
+                      <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.email, friend.name)}>
                         Settle
                       </button>
                     )}
@@ -281,7 +304,7 @@ const App = () => {
                   <h6 className="modal-title">Add Expense for {selectedFriend}</h6>
                 </div>
                 <div className="modal-body">
-                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} />
+                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} selectedFriendEmail={selectedFriendEmail} />
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" onClick={() => setShowAddExpense(false)}>
