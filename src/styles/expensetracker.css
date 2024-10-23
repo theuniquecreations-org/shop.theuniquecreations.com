@@ -4,7 +4,16 @@
     margin: 0 auto;
     padding: 20px;
 }
-
+.title{
+    font-size: x-large;
+    background-color: #fae2a6;
+    color: #000 !important;
+}
+.titlesplitequally {
+    font-size: x-large;
+    background-color: #f2b216;
+    color: #ffffff !important;
+}
 h1,
 h2 {
     text-align: center;
@@ -56,6 +65,10 @@ form button:hover {
     margin-bottom: 20px;
     padding: 10px;
     border-top: 2px solid #000;
+}
+.categorytitle
+{
+    color: #d99400;
 }
 
 /* Strong Text */

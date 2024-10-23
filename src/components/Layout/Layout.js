@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Link as ScrollLink } from "react-scroll";
 import config from "../../config.json";
 
-const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thumbnail, description }) => {
+const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thumbnail, description, icon, themecolor }) => {
   const defaulttitle = "Tales of SuBa | Books Review | Blogs";
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState(pageTitle);
@@ -40,10 +40,15 @@ const Layout = ({ children, pageTitle, preloader, mainClass, preloaderClass, thu
           content="Book Review, Romance Books, Fiction 
           Books, Bookreview, Good Story books, top book review, tales of suba, talesofsuba, tales of suba blogs"
         />
+        <meta name="theme-color" content={themecolor} />
+        <link rel="apple-touch-icon" href={icon} />
         <meta charset="utf-8" />
         <meta name="description" content={description} />
         <meta name="og:description" content={description} />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-7F27M995N4"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
       </Head>
       <Preloader className={preloaderClass} loading={loading} bg={preloader} />
       <main id="wrapper" style={{ opacity: loading ? 0 : 1 }} className={`page-wrapper ${mainClass}`}>

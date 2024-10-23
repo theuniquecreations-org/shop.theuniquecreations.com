@@ -1,5 +1,5 @@
 import PageBanner from "@/components/BannerSection/PageBanner";
-import AdminExpenseTracker from "@/components/AdminExpenseTracker/AdminExpenseTracker";
+import AdminSplitwise from "@/components/AdminSplitWise/App";
 import HeaderOne from "@/components/header/HeaderOne";
 import MobileMenu from "@/components/header/MobileMenu";
 import Layout from "@/components/Layout/Layout";
@@ -12,13 +12,13 @@ import icon from "@/images/subaapplogo.jpg";
 
 const AdminHome = () => {
   return (
-    <Layout pageTitle="Expense Tracker - Tales of SuBa" thumbnail={image.src} icon={icon.src} themecolor="#fae2a6">
+    <Layout pageTitle="Splitwise - Tales of SuBa" thumbnail={image.src} icon={icon.src} themecolor="#f2b216">
       {/* <Style /> */}
       {/* <HeaderOne /> */}
       {/* <MobileMenu /> */}
       {/* <SearchPopup /> */}
       {/* <PageBanner title="Admin Expense Tracker" page="adminhome" parent="" parentHref="/" /> */}
-      <AdminExpenseTracker />
+      <AdminSplitwise />
       {/* <MainFooter /> */}
     </Layout>
   );
