@@ -153,45 +153,44 @@ const App = () => {
 
   const addExpense = async (expense, friendName, loggedInUserName) => {
     // Update the local expenses list
-    setLoading(true);
     const updatedExpenses = [...expenses, expense];
     setExpenses(updatedExpenses);
 
-    // Update the friend's balances based on the expense type
+    // Update the friend's balances based on the expense type for the logged-in user (Subha)
     const updatedFriends = friends.map((friend) => {
       if (friend.email === expense.friendEmail) {
         if (expense.type === "split") {
           // Bala owes half to Subha
           friend.balance -= expense.amount / 2;
         } else if (expense.type === "you-paid-full") {
-          // Bala paid the full amount, Subha owes Bala the full amount
-          friend.balance += expense.amount;
-        } else if (expense.type === "friend-paid-full") {
           // Subha paid the full amount, Bala owes Subha the full amount
           friend.balance -= expense.amount;
+        } else if (expense.type === "friend-paid-full") {
+          // Bala paid the full amount, Subha owes Bala
+          friend.balance += expense.amount;
         } else if (expense.type === "friend-paid-split") {
-          // Subha paid half, Bala owes half
-          friend.balance -= expense.amount / 2;
+          // Bala paid half, Subha owes half
+          friend.balance += expense.amount / 2;
         }
       }
       return friend;
     });
 
-    // Update the logged-in user's balance (Bala)
+    // Update the logged-in user's balance (Subha in this case)
     const updatedFriendsForUser = updatedFriends.map((friend) => {
       if (friend.email === loggedInUser) {
         if (expense.type === "split") {
-          // Bala owes half, so his balance decreases
+          // Bala owes half, so Subha's balance increases
           friend.balance += expense.amount / 2;
         } else if (expense.type === "you-paid-full") {
-          // Bala paid the full amount, so Subha owes Bala (balance increases)
-          friend.balance -= expense.amount;
+          // Subha paid the full amount, so Bala owes Subha (balance decreases for Bala)
+          friend.balance += expense.amount; // Subha should receive money from Bala
         } else if (expense.type === "friend-paid-full") {
-          // Subha paid the full amount, so Bala owes the full amount (balance increases)
-          friend.balance += expense.amount;
+          // Bala paid the full amount, so Subha owes Bala (balance decreases for Subha)
+          friend.balance -= expense.amount;
         } else if (expense.type === "friend-paid-split") {
-          // Subha paid half, Bala owes half (balance decreases)
-          friend.balance += expense.amount / 2;
+          // Bala paid half, Subha owes half (balance increases for Subha)
+          friend.balance -= expense.amount / 2;
         }
       }
       return friend;
@@ -199,7 +198,7 @@ const App = () => {
 
     setFriends(updatedFriendsForUser);
 
-    // Fetch the current logged-in user's data from the server
+    // Fetch the current logged-in user's data (Subha) from the server
     const users = await getDataFromServer(loggedInUser);
     const user = users.find((user) => user.email === loggedInUser);
 
@@ -222,20 +221,18 @@ const App = () => {
       console.error("User not found");
     }
 
-    // Now check if the friend exists (Subha)
+    // Now check if the friend (Bala) exists and update their balance
     const friendusers = await getDataFromServer(expense.friendEmail);
     let friendUser = friendusers.find((user) => user.email === expense.friendEmail);
-    console.log("friendemail", expense.friendEmail);
-    console.log("friendUser", friendUser);
 
     if (friendUser) {
-      // If the friend exists, update their balance and expenses
+      // If the friend (Bala) exists, update their balance and expenses
       const updatedFriendUser = {
         ...friendUser,
         friends: friendUser.friends.map((f) => {
           if (f.email === loggedInUser) {
-            // Update the balance by adding to the existing balance instead of replacing it
-            const updatedBalance = f.balance + expense.amount; // Subha needs to receive money from Bala
+            // Correct logic: Bala owes Subha, so update the balance correctly
+            const updatedBalance = f.balance - expense.amount; // Bala owes Subha
             return { ...f, balance: updatedBalance };
           }
           return f;
@@ -247,38 +244,36 @@ const App = () => {
         setLoading(true);
         await onUpdateFriendService(updatedFriendUser);
         setLoading(false);
-        console.log("Friend's expense and balance updated successfully.");
+        console.log("Friend's (Bala's) expense and balance updated successfully.");
       } catch (error) {
-        console.error("Failed to update friend's expense on the server:", error);
+        console.error("Failed to update friend's (Bala's) expense on the server:", error);
       }
     } else {
-      // If the friend does not exist, create a new user for the friend
+      // If the friend (Bala) does not exist, create a new user for the friend
       const newFriendUser = {
         email: expense.friendEmail,
         name: friendName, // Add the friend's name
         friends: [
           {
             email: user.email,
-            name: loggedInUserName, // Add the logged-in user's name as the friend
-            balance: expense.amount, // Subha should receive money from Bala
+            name: loggedInUserName, // Add Subha's name as the friend
+            balance: -expense.amount, // Bala owes Subha
           },
         ],
         expenses: [expense], // Add the expense to the friend's expense list
       };
 
       try {
-        console.log("Creating new user for the friend", newFriendUser);
+        console.log("Creating new user for the friend (Bala)", newFriendUser);
         setLoading(true);
-        await onAddFriendService(newFriendUser); // Create a new user for the friend
+        await onAddFriendService(newFriendUser); // Create a new user for the friend (Bala)
         setLoading(false);
-        console.log("Friend created successfully.");
+        console.log("Friend (Bala) created successfully.");
       } catch (error) {
-        console.error("Failed to create new friend on the server:", error);
+        console.error("Failed to create new friend (Bala) on the server:", error);
       }
     }
-    setLoading(false);
   };
-
   const handleSettleUp = async () => {
     const settleAmount = parseFloat(settleUpAmounts[friendToSettle] || 0);
 
