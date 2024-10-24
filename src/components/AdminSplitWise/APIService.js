@@ -62,7 +62,7 @@ export const onUpdateFriendService = async (user) => {
 export const getDataFromServer = async (email) => {
   try {
     console.log(email);
-    const response = await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "itemsbytype/usersfriend");
+    const response = await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "items/email/" + email);
     ///items/{column}/{value}
     const data = await response.json();
     // Filter the user by email

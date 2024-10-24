@@ -7,6 +7,7 @@ import Register from "./Register";
 import Login from "./Login"; // Import the login component
 import subaa from "@/images/subaa.png";
 import logout from "@/images/logout.png";
+import home from "@/images/home.png";
 import { getDataFromServer, fetchUsers, onAddFriendService, onUpdateFriendService } from "./APIService";
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
   const [friendToSettle, setFriendToSettle] = useState(null); // Store the selected friend for settling up
   const [showRegister, setShowRegister] = useState(false);
   const [friendToSettleName, setFriendToSettleName] = useState(""); // Store friend's name
+  const [loading, setLoading] = useState(false);
   // Function to retrieve data from localStorage
   const getDataFromStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
   // Function to save data to localStorage
@@ -54,13 +56,13 @@ const App = () => {
     if (loggedInUser) {
       // Get the common users data
       //const users = getDataFromStorage("users");
-      const users = await getDataFromServer("users");
-      console.log("local users", loggedInUser);
+      const users = await getDataFromServer(loggedInUser);
+
       // Update the logged-in user's friends and expenses in the common data
       //const updatedUsers = users && users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
       const user = users.find((user) => user.email === loggedInUser);
       const updatedUsers = { ...user, friends, expenses };
-      //console.log("friends", user);
+      console.log("local users", updatedUsers);
       if (user) {
         setFriends(user.friends || []);
         setExpenses(user.expenses || []);
@@ -73,28 +75,82 @@ const App = () => {
   }, [loggedInUser]);
 
   const addFriend = async (friend) => {
+    // Check if the friend is already added by email
+    const existingFriend = friends.find((f) => f.email === friend.email);
+
+    if (existingFriend) {
+      // Show an error message if the friend is already in the list
+      alert("This friend is already added.");
+      return; // Exit the function to prevent further execution
+    }
+
     // Update the friends array with the new friend immediately
     const updatedFriends = [...friends, { ...friend, balance: 0 }];
+
     // Update the state with the new friends array (asynchronously)
     setFriends(updatedFriends);
+
     // Fetch the logged-in user's data from the server
     const users = await getDataFromServer(loggedInUser);
     const user = users.find((user) => user.email === loggedInUser);
+
     if (user) {
       // Create updated user object with new friends and existing expenses
-      const updatedUsers = { ...user, friends: updatedFriends, expenses: user.expenses || [] };
-      console.log("updatedUsers", updatedUsers);
-      // Call the service to update the user with the new friends list
-      await onUpdateFriendService(updatedUsers);
-      setShowAddFriend(false); // Close the modal after adding friend
+      const updatedUser = { ...user, friends: updatedFriends, expenses: user.expenses || [] };
+      console.log("updatedUser", updatedUser);
+
+      try {
+        // Call the service to update the user with the new friends list
+        await onUpdateFriendService(updatedUser);
+        setShowAddFriend(false); // Close the modal after adding friend
+      } catch (error) {
+        console.error("Failed to update friend on the server:", error);
+      }
     } else {
       console.error("User not found");
     }
   };
 
-  const addExpense = (expense) => {
-    setExpenses([...expenses, expense]);
+  const removeFriend = async (friendEmail) => {
+    // Show a confirmation dialog
+    const confirmRemoval = window.confirm("Are you sure you want to remove this friend?");
 
+    if (!confirmRemoval) {
+      return; // Exit if the user cancels the action
+    }
+
+    // Filter out the friend with the given email
+    const updatedFriends = friends.filter((friend) => friend.email !== friendEmail);
+
+    // Update the local state
+    setFriends(updatedFriends);
+
+    // Fetch the logged-in user's data from the server
+    const users = await getDataFromServer(loggedInUser);
+    const user = users.find((user) => user.email === loggedInUser);
+
+    if (user) {
+      // Create updated user object with new friends list and existing expenses
+      const updatedUser = { ...user, friends: updatedFriends, expenses: user.expenses || [] };
+
+      try {
+        // Call the service to update the user with the new friends list
+        await onUpdateFriendService(updatedUser);
+        console.log("Friend removed successfully on the server.");
+      } catch (error) {
+        console.error("Failed to remove friend on the server:", error);
+      }
+    } else {
+      console.error("User not found");
+    }
+  };
+
+  const addExpense = async (expense) => {
+    // Update the local expenses list
+    const updatedExpenses = [...expenses, expense];
+    setExpenses(updatedExpenses);
+
+    // Update the friend's balances based on the expense type
     const updatedFriends = friends.map((friend) => {
       if (friend.email === expense.friendEmail) {
         if (expense.type === "split") {
@@ -110,6 +166,7 @@ const App = () => {
       return friend;
     });
 
+    // Update the logged-in user's balance
     const updatedFriendsForUser = updatedFriends.map((friend) => {
       if (friend.email === loggedInUser) {
         if (expense.type === "split") {
@@ -126,12 +183,36 @@ const App = () => {
     });
 
     setFriends(updatedFriendsForUser);
-    setShowAddExpense(false);
+
+    // Fetch the current logged-in user's data from the server
+    const users = await getDataFromServer(loggedInUser);
+    const user = users.find((user) => user.email === loggedInUser);
+
+    if (user) {
+      // Create an updated user object with the new friends and updated expenses
+      const updatedUser = { ...user, friends: updatedFriendsForUser, expenses: updatedExpenses };
+
+      try {
+        // Send the updated user data (friends and expenses) to the server
+        console.log(updatedUser);
+        setLoading(true);
+        await onUpdateFriendService(updatedUser);
+        setLoading(false);
+        setShowAddExpense(false); // Close the expense modal
+        console.log("Expense updated successfully on the server.");
+      } catch (error) {
+        console.error("Failed to update expense on the server:", error);
+      }
+    } else {
+      console.error("User not found");
+    }
   };
 
-  const handleSettleUp = () => {
+  const handleSettleUp = async () => {
     const settleAmount = parseFloat(settleUpAmounts[friendToSettle] || 0);
+
     if (!isNaN(settleAmount) && settleAmount > 0) {
+      // Update the balances for the friend being settled up with
       const updatedFriends = friends.map((friend) => {
         if (friend.email === friendToSettle) {
           if (friend.balance > 0) {
@@ -143,9 +224,11 @@ const App = () => {
         return friend;
       });
 
+      // Get the current date for the expense
       const currentDate = new Date().toLocaleDateString();
 
-      setExpenses([
+      // Add the settle-up entry to the expenses
+      const updatedExpenses = [
         ...expenses,
         {
           friend: friendToSettleName,
@@ -154,11 +237,32 @@ const App = () => {
           type: "settle",
           date: currentDate,
         },
-      ]);
+      ];
 
+      // Update local state with new friends and expenses
       setFriends(updatedFriends);
+      setExpenses(updatedExpenses);
       setSettleUpAmounts({ ...settleUpAmounts, [friendToSettle]: "" });
       setShowSettleUp(false);
+
+      // Fetch the current logged-in user's data from the server
+      const users = await getDataFromServer(loggedInUser);
+      const user = users.find((user) => user.email === loggedInUser);
+
+      if (user) {
+        // Create the updated user object with new friends and expenses
+        const updatedUser = { ...user, friends: updatedFriends, expenses: updatedExpenses };
+
+        try {
+          // Call the service to update the user with the new data
+          await onUpdateFriendService(updatedUser);
+          console.log("Settle up updated successfully on the server.");
+        } catch (error) {
+          console.error("Failed to update settle-up on the server:", error);
+        }
+      } else {
+        console.error("User not found");
+      }
     }
   };
   // Handle user login (validate against shared storage)
@@ -237,8 +341,13 @@ const App = () => {
       {/* Navigation with Add Friend and Logout */}
       <nav className="navbar navbar-light titlesplitequally">
         <div className="container-fluid">
+          <div>
+            <a className="navbar-brand text-white" href="/adminapphome">
+              <img src={home.src} alt="Logo" className="" width="30" />
+            </a>
+          </div>
           <a className="navbar-brand text-white" href="#">
-            <img src={subaa.src} alt="Logo" width="50" /> Split Equally
+            <h5 className="mb-0 text-white">Split Equally</h5>
           </a>
           <div>
             <button className="btn btn-primary btn-warning border" onClick={() => setShowAddFriend(true)}>
@@ -247,7 +356,7 @@ const App = () => {
           </div>
           <div>
             <a className="navbar-brand text-white" href="#" onClick={handleLogout}>
-              <img src={logout.src} alt="Logo" width="30" />
+              <img src={logout.src} alt="Logo" width="25" />
             </a>
           </div>
         </div>
@@ -276,7 +385,9 @@ const App = () => {
                     </button>{" "}
                     {/* Settle Up Button */}
                     {friend.balance == 0 ? (
-                      ""
+                      <button className="btn btn-sm btn-danger ml-2" onClick={() => removeFriend(friend.email)}>
+                        Remove
+                      </button>
                     ) : (
                       <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.email, friend.name)}>
                         Settle

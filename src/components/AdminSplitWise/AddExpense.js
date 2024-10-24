@@ -13,7 +13,6 @@ const AddExpense = ({ onAddExpense, friends, selectedFriend, selectedFriendEmail
     const today = new Date();
     return today.toISOString().split("T")[0];
   };
-
   // Set the date to today's date when the component loads
   useEffect(() => {
     setDate(getTodayDate()); // Set default date to today
