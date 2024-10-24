@@ -7,7 +7,7 @@ const AddExpense = ({ onAddExpense, friends, selectedFriend, selectedFriendEmail
   const [amount, setAmount] = useState("");
   const [expenseType, setExpenseType] = useState("split");
   const [date, setDate] = useState(""); // New state for date
-
+  const [loading, setLoading] = useState(false);
   // Function to get today's date in YYYY-MM-DD format
   const getTodayDate = () => {
     const today = new Date();
@@ -69,7 +69,7 @@ const AddExpense = ({ onAddExpense, friends, selectedFriend, selectedFriendEmail
       </select>
 
       <button type="submit" className="btn btn-warning mt-3">
-        Add Expense
+        {loading ? "Please wait..." : "Add Expense"}
       </button>
     </form>
   );

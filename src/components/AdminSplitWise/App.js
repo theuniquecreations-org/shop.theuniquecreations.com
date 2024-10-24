@@ -8,11 +8,14 @@ import Login from "./Login"; // Import the login component
 import subaa from "@/images/subaa.png";
 import logout from "@/images/logout.png";
 import home from "@/images/home.png";
+import bin from "@/images/bin.png";
+
 import { getDataFromServer, fetchUsers, onAddFriendService, onUpdateFriendService } from "./APIService";
 
 const App = () => {
   const [friends, setFriends] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [deleteEnabled, setDeleteEnabled] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null); // Track the logged-in user's email
   const [loggedInUserName, setLoggedInUserName] = useState(""); // Store the user's name
   const [showAddFriend, setShowAddFriend] = useState(false); // Toggle visibility of Add Friend
@@ -110,7 +113,9 @@ const App = () => {
       console.error("User not found");
     }
   };
-
+  const toggleDeleteButtons = () => {
+    setDeleteEnabled(!deleteEnabled); // Toggle between true and false
+  };
   const removeFriend = async (friendEmail) => {
     // Show a confirmation dialog
     const confirmRemoval = window.confirm("Are you sure you want to remove this friend?");
@@ -143,10 +148,12 @@ const App = () => {
     } else {
       console.error("User not found");
     }
+    setDeleteEnabled(false);
   };
 
-  const addExpense = async (expense) => {
+  const addExpense = async (expense, friendName, loggedInUserName) => {
     // Update the local expenses list
+    setLoading(true);
     const updatedExpenses = [...expenses, expense];
     setExpenses(updatedExpenses);
 
@@ -154,29 +161,37 @@ const App = () => {
     const updatedFriends = friends.map((friend) => {
       if (friend.email === expense.friendEmail) {
         if (expense.type === "split") {
-          friend.balance += expense.amount / 2; // The friend owes half
+          // Bala owes half to Subha
+          friend.balance -= expense.amount / 2;
         } else if (expense.type === "you-paid-full") {
-          friend.balance += expense.amount; // The friend owes the full amount
+          // Bala paid the full amount, Subha owes Bala the full amount
+          friend.balance += expense.amount;
         } else if (expense.type === "friend-paid-full") {
-          friend.balance -= expense.amount; // You owe the full amount
+          // Subha paid the full amount, Bala owes Subha the full amount
+          friend.balance -= expense.amount;
         } else if (expense.type === "friend-paid-split") {
-          friend.balance -= expense.amount / 2; // You owe half
+          // Subha paid half, Bala owes half
+          friend.balance -= expense.amount / 2;
         }
       }
       return friend;
     });
 
-    // Update the logged-in user's balance
+    // Update the logged-in user's balance (Bala)
     const updatedFriendsForUser = updatedFriends.map((friend) => {
       if (friend.email === loggedInUser) {
         if (expense.type === "split") {
-          friend.balance -= expense.amount / 2; // The user owes half
+          // Bala owes half, so his balance decreases
+          friend.balance += expense.amount / 2;
         } else if (expense.type === "you-paid-full") {
-          friend.balance -= expense.amount; // The user owes the full amount
+          // Bala paid the full amount, so Subha owes Bala (balance increases)
+          friend.balance -= expense.amount;
         } else if (expense.type === "friend-paid-full") {
-          friend.balance += expense.amount; // The friend owes the full amount
+          // Subha paid the full amount, so Bala owes the full amount (balance increases)
+          friend.balance += expense.amount;
         } else if (expense.type === "friend-paid-split") {
-          friend.balance += expense.amount / 2; // The friend owes half
+          // Subha paid half, Bala owes half (balance decreases)
+          friend.balance += expense.amount / 2;
         }
       }
       return friend;
@@ -206,6 +221,62 @@ const App = () => {
     } else {
       console.error("User not found");
     }
+
+    // Now check if the friend exists (Subha)
+    const friendusers = await getDataFromServer(expense.friendEmail);
+    let friendUser = friendusers.find((user) => user.email === expense.friendEmail);
+    console.log("friendemail", expense.friendEmail);
+    console.log("friendUser", friendUser);
+
+    if (friendUser) {
+      // If the friend exists, update their balance and expenses
+      const updatedFriendUser = {
+        ...friendUser,
+        friends: friendUser.friends.map((f) => {
+          if (f.email === loggedInUser) {
+            // Update the balance by adding to the existing balance instead of replacing it
+            const updatedBalance = f.balance + expense.amount; // Subha needs to receive money from Bala
+            return { ...f, balance: updatedBalance };
+          }
+          return f;
+        }),
+        expenses: [...(friendUser.expenses || []), expense], // Add the expense to the friend's expense list
+      };
+
+      try {
+        setLoading(true);
+        await onUpdateFriendService(updatedFriendUser);
+        setLoading(false);
+        console.log("Friend's expense and balance updated successfully.");
+      } catch (error) {
+        console.error("Failed to update friend's expense on the server:", error);
+      }
+    } else {
+      // If the friend does not exist, create a new user for the friend
+      const newFriendUser = {
+        email: expense.friendEmail,
+        name: friendName, // Add the friend's name
+        friends: [
+          {
+            email: user.email,
+            name: loggedInUserName, // Add the logged-in user's name as the friend
+            balance: expense.amount, // Subha should receive money from Bala
+          },
+        ],
+        expenses: [expense], // Add the expense to the friend's expense list
+      };
+
+      try {
+        console.log("Creating new user for the friend", newFriendUser);
+        setLoading(true);
+        await onAddFriendService(newFriendUser); // Create a new user for the friend
+        setLoading(false);
+        console.log("Friend created successfully.");
+      } catch (error) {
+        console.error("Failed to create new friend on the server:", error);
+      }
+    }
+    setLoading(false);
   };
 
   const handleSettleUp = async () => {
@@ -370,7 +441,19 @@ const App = () => {
         </div>
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
         {/* Display friend list with balance and option to select a friend */}
-        <h6 className="mb-0">Friend List</h6>
+
+        {/* Add row with toggle button */}
+        <div className="d-flex justify-content-between align-items-center mb-1">
+          <div>
+            {" "}
+            <h6 className="mb-0">Friend List</h6>
+          </div>
+          <div>
+            <button className="btn btn-sm btn-danger p-1" onClick={toggleDeleteButtons}>
+              <small>{deleteEnabled ? "Disable Delete" : "Enable Delete"}</small>
+            </button>
+          </div>
+        </div>
         <ul className="list-group mb-4">
           {friends.length != 0
             ? friends.map((friend, index) => (
@@ -384,10 +467,16 @@ const App = () => {
                       Add
                     </button>{" "}
                     {/* Settle Up Button */}
-                    {friend.balance == 0 ? (
-                      <button className="btn btn-sm btn-danger ml-2" onClick={() => removeFriend(friend.email)}>
-                        Remove
-                      </button>
+                    {friend.balance == 0 && deleteEnabled ? (
+                      <img
+                        onClick={() => removeFriend(friend.email)}
+                        src={bin.src}
+                        width="20"
+                        className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
+                        style={{ cursor: deleteEnabled ? "pointer" : "not-allowed" }} // Change cursor based on state
+                      />
+                    ) : friend.balance == 0 ? (
+                      ""
                     ) : (
                       <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.email, friend.name)}>
                         Settle
