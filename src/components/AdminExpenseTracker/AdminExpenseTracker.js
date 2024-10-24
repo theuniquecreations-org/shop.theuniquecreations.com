@@ -4,6 +4,7 @@ import expenseSection from "@/data/expenseSection";
 import { Col, Image, Row } from "react-bootstrap";
 import bin from "@/images/bin.png";
 import subaa from "@/images/subaa.png";
+import home from "@/images/home.png";
 const ExpenseTracker = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -165,9 +166,20 @@ const ExpenseTracker = () => {
 
   return (
     <>
-      <div className="px-3 py-1 text-primary font-size-large title ">
-        Expense Tracker <img src={subaa.src} width="50" />
-      </div>
+      <nav className="navbar navbar-light title">
+        <div className="container-fluid ">
+          <div>
+            <a className="navbar-brand text-white" href="/adminapphome">
+              <img src={home.src} alt="Logo" className="" width="30" />
+            </a>
+          </div>
+          <h5 className="mb-0 text-secondary">Split Equally</h5>
+          <div>
+            <img src={subaa.src} width="50" />
+          </div>
+        </div>
+      </nav>
+
       <div className="container">
         <div className="px-2">
           <h6 className="text-center mb-0 border rounded p-1 bg-light">
