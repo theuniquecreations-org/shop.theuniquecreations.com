@@ -212,7 +212,7 @@ const App = () => {
         // Ensure Subha's balance is the inverse of Bala's balance
         const updatedFriendUser = {
           ...friendUser,
-          name: friendName, // Ensure Subha's name is set
+          name: expense.friend, // Ensure Subha's name is set
           friends: friendUser.friends.map((f) => {
             if (f.email === loggedInUser) {
               // Invert the balance for Subha (Bala's negative becomes Subha's positive)
