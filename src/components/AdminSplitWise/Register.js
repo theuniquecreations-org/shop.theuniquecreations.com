@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { saveUser, fetchUsers } from "./APIService";
-
+import home from "@/images/home.png";
 const Register = ({ onRegister, onToggleToLogin }) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -30,18 +30,27 @@ const Register = ({ onRegister, onToggleToLogin }) => {
 
   return (
     <>
-      {" "}
-      <div className="px-3 py-1 text-primary1 font-size-large titlesplitequally ">
-        <span>
-          <h5 className="text-light mb-0">Split Equally</h5>
-        </span>
-      </div>
+      <nav className="navbar navbar-light titlesplitequally">
+        <div className="container-fluid">
+          <div>
+            <a className="navbar-brand text-white" href="/adminapphome">
+              <img src={home.src} alt="Logo" className="" width="30" />
+            </a>
+          </div>
+          <a className="navbar-brand text-white" href="#">
+            <h5 className="mb-0 text-white">Split Equally</h5>
+          </a>
+        </div>
+      </nav>
       <div className="container">
         <h6 className="mb-0">Register</h6>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleRegister} className="grid">
+          {" "}
+          Name <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+          Email
           <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} required />
-          <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+          Password
           <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <button type="submit">{loading ? "Please Wait..." : "Register"}</button>
           <p>
