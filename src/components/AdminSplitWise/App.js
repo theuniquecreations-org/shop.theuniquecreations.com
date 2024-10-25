@@ -152,126 +152,127 @@ const App = () => {
   };
 
   const addExpense = async (expense, friendName, loggedInUserName) => {
-    // Update the local expenses list
-    const updatedExpenses = [...expenses, expense];
-    setExpenses(updatedExpenses);
+    try {
+      // Update the local expenses list
+      const updatedExpenses = [...expenses, expense];
+      setExpenses(updatedExpenses);
 
-    // Update the friend's balances based on the expense type for the logged-in user (Bala in this case)
-    const updatedFriends = friends.map((friend) => {
-      if (friend.email === expense.friendEmail) {
-        if (expense.type === "split") {
-          // Bala owes half to Subha
-          friend.balance -= expense.amount / 2;
-        } else if (expense.type === "you-paid-full") {
-          // Bala paid the full amount, so Subha owes Bala the full amount
-          friend.balance += expense.amount; // Subha owes Bala
-        } else if (expense.type === "friend-paid-full") {
-          // Subha paid the full amount, so Bala owes Subha
-          friend.balance -= expense.amount;
-        } else if (expense.type === "friend-paid-split") {
-          // Subha paid half, Bala owes half
-          friend.balance -= expense.amount / 2;
-        }
-      }
-      return friend;
-    });
-
-    // Update the logged-in user's balance (Bala in this case)
-    const updatedFriendsForUser = updatedFriends.map((friend) => {
-      if (friend.email === loggedInUser) {
-        if (expense.type === "split") {
-          // Bala owes half, so his balance decreases
-          friend.balance += expense.amount / 2;
-        } else if (expense.type === "you-paid-full") {
-          // Bala paid the full amount, so Subha owes Bala (balance increases for Bala)
-          friend.balance -= expense.amount; // Bala should receive money from Subha
-        } else if (expense.type === "friend-paid-full") {
-          // Subha paid the full amount, so Bala owes Subha (balance increases for Bala)
-          friend.balance += expense.amount;
-        } else if (expense.type === "friend-paid-split") {
-          // Subha paid half, Bala owes half (balance decreases)
-          friend.balance += expense.amount / 2;
-        }
-      }
-      return friend;
-    });
-
-    setFriends(updatedFriendsForUser);
-
-    // Fetch the current logged-in user's data (Bala) from the server
-    const users = await getDataFromServer(loggedInUser);
-    const user = users.find((user) => user.email === loggedInUser);
-
-    if (user) {
-      // Create an updated user object with the new friends and updated expenses
-      const updatedUser = { ...user, friends: updatedFriendsForUser, expenses: updatedExpenses };
-
-      try {
-        // Send the updated user data (friends and expenses) to the server
-        console.log(updatedUser);
-        setLoading(true);
-        await onUpdateFriendService(updatedUser);
-        setLoading(false);
-        setShowAddExpense(false); // Close the expense modal
-        console.log("Expense updated successfully on the server.");
-      } catch (error) {
-        console.error("Failed to update expense on the server:", error);
-      }
-    } else {
-      console.error("User not found");
-    }
-
-    // Now check if the friend (Subha) exists and update their balance
-    const friendusers = await getDataFromServer(expense.friendEmail);
-    let friendUser = friendusers.find((user) => user.email === expense.friendEmail);
-
-    if (friendUser) {
-      // If the friend (Subha) exists, update their balance and expenses
-      const updatedFriendUser = {
-        ...friendUser,
-        friends: friendUser.friends.map((f) => {
-          if (f.email === loggedInUser) {
-            // Correct logic: Bala owes Subha, so update the balance correctly
-            const updatedBalance = f.balance - expense.amount; // Bala owes Subha
-            return { ...f, balance: updatedBalance };
+      // Update the friend's balances for the logged-in user (e.g., Bala)
+      const updatedFriends = friends.map((friend) => {
+        if (friend.email === expense.friendEmail) {
+          // Determine the balance change based on the type of expense
+          if (expense.type === "split") {
+            friend.balance -= expense.amount / 2;
+            friend.tag = "owe"; // Bala owes Subha
+          } else if (expense.type === "you-paid-full") {
+            friend.balance += expense.amount;
+            friend.tag = "owes"; // Subha owes Bala
+          } else if (expense.type === "friend-paid-full") {
+            friend.balance -= expense.amount;
+            friend.tag = "owe"; // Bala owes Subha
+          } else if (expense.type === "friend-paid-split") {
+            friend.balance -= expense.amount / 2;
+            friend.tag = "owe"; // Bala owes Subha
           }
-          return f;
-        }),
-        expenses: [...(friendUser.expenses || []), expense], // Add the expense to the friend's expense list
+        }
+        return friend;
+      });
+
+      setFriends(updatedFriends); // Update Bala's local state
+
+      // Fetch the current logged-in user's data (Bala) from the server
+      const users = await getDataFromServer(loggedInUser);
+      const user = users.find((user) => user.email === loggedInUser);
+      console.log("bala", user.name);
+      if (!user) {
+        console.error("User not found");
+        return;
+      }
+
+      // Create an updated user object for Bala (logged-in user)
+      const updatedUser = {
+        ...user,
+        friends: updatedFriends, // Bala's updated friends list
+        expenses: updatedExpenses, // Bala's updated expenses
       };
 
-      try {
-        setLoading(true);
-        await onUpdateFriendService(updatedFriendUser);
-        setLoading(false);
-        console.log("Friend's (Subha's) expense and balance updated successfully.");
-      } catch (error) {
-        console.error("Failed to update friend's (Subha's) expense on the server:", error);
-      }
-    } else {
-      // If the friend (Subha) does not exist, create a new user for the friend
-      const newFriendUser = {
-        email: expense.friendEmail,
-        name: friendName, // Add the friend's name
-        friends: [
-          {
+      // Update Bala's data first
+      setLoading(true);
+      await onUpdateFriendService(updatedUser); // Update Bala's data on the server
+
+      // Fetch the friend (Subha) to update their balance as well
+      const friendUsers = await getDataFromServer(expense.friendEmail);
+      let friendUser = friendUsers.find((friend) => friend.email === expense.friendEmail);
+
+      if (friendUser) {
+        console.log("Friend user fetched successfully:", friendUser);
+
+        // Ensure Subha's balance is the inverse of Bala's balance
+        const updatedFriendUser = {
+          ...friendUser,
+          friends: friendUser.friends.map((f) => {
+            if (f.email === loggedInUser) {
+              // Invert the balance for Subha (Bala's negative becomes Subha's positive)
+              const loggedInUserFriend = updatedFriends.find((uf) => uf.email === expense.friendEmail);
+              console.log("loggedInUserFriend", loggedInUserFriend);
+
+              if (!loggedInUserFriend) {
+                console.error("Logged-in user not found in updated friends list.");
+                return f;
+              }
+
+              const invertedBalance = loggedInUserFriend.balance * -1;
+              const updatedTag = f.tag === "owe" ? "owes" : "owe"; // Reverse the tag
+
+              return { ...f, balance: invertedBalance, tag: updatedTag }; // Update Subha's balance and tag
+            }
+            return f;
+          }),
+          expenses: [...(friendUser.expenses || []), expense], // Add the expense to Subha's expense list
+        };
+
+        // If the logged-in user is not already in Subha's friends list, add them
+        if (!updatedFriendUser.friends.some((f) => f.email === loggedInUser)) {
+          updatedFriendUser.friends.push({
             email: user.email,
-            name: loggedInUserName, // Add Bala's name as the friend
-            balance: -expense.amount, // Bala owes Subha
-          },
-        ],
-        expenses: [expense], // Add the expense to the friend's expense list
-      };
+            name: user.name,
+            balance: updatedFriends.find((uf) => uf.email === expense.friendEmail).balance * -1, // Invert Bala's balance for Subha
+            tag: "owe",
+          });
+        }
 
-      try {
-        console.log("Creating new user for the friend (Subha)", newFriendUser);
-        setLoading(true);
-        await onAddFriendService(newFriendUser); // Create a new user for the friend (Subha)
-        setLoading(false);
-        console.log("Friend (Subha) created successfully.");
-      } catch (error) {
-        console.error("Failed to create new friend (Subha) on the server:", error);
+        console.log("Updated Friend User Object: ", updatedFriendUser);
+
+        // Update Subha's data after Bala's update completes
+        await onUpdateFriendService(updatedFriendUser); // Update Subha's data on the server
+      } else {
+        console.log("Friend not found, creating a new friend profile for Subha.");
+
+        // If the friend (Subha) does not exist, create a new profile for Subha
+        const newFriendUser = {
+          email: expense.friendEmail,
+          name: friendName, // Add Subha's name
+          friends: [
+            {
+              email: user.email,
+              name: user.name, // Add Bala's name as the friend
+              balance: updatedFriends.find((uf) => uf.email === expense.friendEmail).balance * -1, // Invert Bala's balance for Subha
+              tag: "owe", // Bala owes Subha
+            },
+          ],
+          expenses: [expense], // Add the expense to Subha's expense list
+        };
+
+        await onAddFriendService(newFriendUser); // Create Subha's profile
+        console.log("New friend (Subha) created successfully.");
       }
+
+      setLoading(false);
+      setShowAddExpense(false); // Close the expense modal
+      console.log("Expense and balances updated successfully for both users.");
+    } catch (error) {
+      console.error("Error while updating expense and balances:", error);
+      setLoading(false);
     }
   };
   const handleSettleUp = async () => {
@@ -454,7 +455,7 @@ const App = () => {
             ? friends.map((friend, index) => (
                 <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                   <small>
-                    {friend.name.toUpperCase()}: {friend.balance == 0 ? "No Balance" : friend.balance < 0 ? <span className="text-danger">You owe ${Math.abs(friend.balance)}</span> : <span className="text-success">Owes you ${Math.abs(friend.balance)}</span>}
+                    {friend && friend.name && friend.name.toUpperCase()}: {friend.balance == 0 ? "No Balance" : friend.balance < 0 ? <span className="text-danger">You owe ${Math.abs(friend.balance)}</span> : <span className="text-success">Owes you ${Math.abs(friend.balance)}</span>}
                   </small>
                   <div>
                     {/* Add Expense Button */}
