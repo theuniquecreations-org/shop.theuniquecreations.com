@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import uuid from "react-uuid";
 import expenseSection from "@/data/expenseSection";
-import { Col, Image, Row } from "react-bootstrap";
+
+import { Col, Image, Row, Modal, Button } from "react-bootstrap";
 import bin from "@/images/bin.png";
 import subaa from "@/images/subaa.png";
 import home from "@/images/home.png";
@@ -13,6 +14,8 @@ const ExpenseTracker = () => {
   const [deleteEnabled, setDeleteEnabled] = useState(false);
   const [showMonthlyReport, setShowMonthlyReport] = useState(false); // Toggle monthly report view
   const [showGroupByCategory, setShowGroupByCategory] = useState(false); // Toggle group by category view
+  const [showExpensesModal, setShowExpensesModal] = useState(false); // Modal visibility state
+
   ///pagination
   const [currentPage, setCurrentPage] = useState(1); // Current page state
   const expensesPerPage = 15; // Number of expenses to display per page
@@ -211,120 +214,147 @@ const ExpenseTracker = () => {
         <h5>
           Total Expense: <span className="text-primary">${totalExpense.toFixed(2)}</span>
         </h5>
-        {/* Monthly Report Link */}
-        <button className="btn btn-warning me-2 p-1" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
-          {showMonthlyReport ? "Hide Monthly Report" : "View Monthly Report"}
-        </button>
-        {/* Group by Category Link */}
-        <button className="btn btn-warning p-1" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
-          {showGroupByCategory ? "Hide Category Report" : "Show Category Report"}
-        </button>
+
+        <div className="d-flex justify-content-between align-items-center mb-2">
+          {/* Monthly Report Link */}
+          <button className="btn btn-warning me-2 p-1 m-1" onClick={() => setShowMonthlyReport(!showMonthlyReport)}>
+            {showMonthlyReport ? "Monthly Report" : "Monthly Report"}
+          </button>
+          {/* Group by Category Link */}
+          <button className="btn btn-warning p-1 m-1" onClick={() => setShowGroupByCategory(!showGroupByCategory)}>
+            {showGroupByCategory ? "Category Report" : "Category Report"}
+          </button>
+          <button className="btn btn-warning p-1 m-1" onClick={() => setShowExpensesModal(true)}>
+            View All Expenses
+          </button>
+        </div>
         {/* Monthly Report Grid */}
-        {showMonthlyReport && (
-          <div className="mt-3">
-            <h5 className="mb-0">Monthly Report</h5>
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>Month</th>
-                  <th>Total Expense</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.keys(monthlyReport).map((month, index) => (
-                  <tr key={index}>
-                    <td>{formatDate(month)}</td>
-                    <td>${monthlyReport[month].toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {/* Grouped by Category Grid */}
-        {showGroupByCategory && (
-          <div className="mt-1">
-            <h5 className="mb-0">Group by Category</h5>
-            {Object.keys(groupedExpenses).map((category, index) => (
-              <div key={index}>
-                <h6 className="categorytitle mb-0">{category}</h6>
-                <table className="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Description</th>
-                      <th>Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {groupedExpenses[category].map((expense, i) => (
-                      <tr key={i}>
-                        <td>{formatDate(expense.date)}</td>
-                        <td>{expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description}</td>
-                        <td>${expense.amount.toFixed(2)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </div>
-        )}
-        {/* Expense List */}
-        <h5 className="mt-3 mb-0">All Expenses</h5>
-
-        {/* Add row with toggle button */}
-        <div className="d-flex justify-content-end align-items-center mb-1">
-          <div>
-            <button className="btn btn-danger p-1" onClick={toggleDeleteButtons}>
-              <small>{deleteEnabled ? "Disable Delete" : "Enable Delete"}</small>
-            </button>
-          </div>
-        </div>
-
-        {/* Expense List */}
-
-        {currentExpenses.map((expense, index) => (
-          <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
-            <div className="flex-grow-1 me-2">
-              <small>
-                <b>{formatDate(expense.date)}</b>
-              </small>{" "}
-              <small>
-                {expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description} - {expense.category}
-              </small>
-            </div>
-            <div className="me-1">
-              <small>
-                <strong>${expense.amount.toFixed(2)}</strong>
-              </small>
-            </div>
+        <Modal show={showMonthlyReport} onHide={() => setShowMonthlyReport(false)} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Monthly Report</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
             <div>
-              <img
-                onClick={() => deleteExpense(expense.id)}
-                src={bin.src}
-                width="20"
-                className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
-                style={{ cursor: deleteEnabled ? "pointer" : "not-allowed" }} // Change cursor based on state
-              />
+              {showMonthlyReport && (
+                <div className="mt-3">
+                  <table className="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Month</th>
+                        <th>Total Expense</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.keys(monthlyReport).map((month, index) => (
+                        <tr key={index}>
+                          <td>{formatDate(month)}</td>
+                          <td>${monthlyReport[month].toFixed(2)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}{" "}
             </div>
-          </div>
-        ))}
+          </Modal.Body>
+        </Modal>
+        <Modal show={showGroupByCategory} onHide={() => setShowGroupByCategory(false)} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Group by Category</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {/* Grouped by Category Grid */}
+            <div>
+              {showGroupByCategory && (
+                <div className="mt-1">
+                  {Object.keys(groupedExpenses).map((category, index) => (
+                    <div key={index}>
+                      <h6 className="categorytitle mb-0">{category}</h6>
+                      <table className="table table-striped">
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {groupedExpenses[category].map((expense, i) => (
+                            <tr key={i}>
+                              <td>{formatDate(expense.date)}</td>
+                              <td>{expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description}</td>
+                              <td>${expense.amount.toFixed(2)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ))}
+                </div>
+              )}{" "}
+            </div>
+          </Modal.Body>
+        </Modal>
 
-        {/* Pagination Controls */}
-        <div className="pagination mt-3">
-          <button className="btn btn-secondary me-2" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
-            Previous
-          </button>
-          {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map((number) => (
-            <button key={number} className={`btn ${currentPage === number ? "btn-warning" : "btn-outline-secondary"} me-2`} onClick={() => paginate(number)}>
-              {number}
-            </button>
-          ))}
-          <button className="btn btn-secondary" onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages}>
-            Next
-          </button>
-        </div>
+        {/* Expense List */}
+        <Modal show={showExpensesModal} onHide={() => setShowExpensesModal(false)} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>All Expenses</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div>
+              {/* Add row with toggle button */}
+              <div className="d-flex justify-content-end align-items-center mb-1">
+                <div>
+                  <button className="btn btn-danger p-1" onClick={toggleDeleteButtons}>
+                    <small>{deleteEnabled ? "Disable Delete" : "Enable Delete"}</small>
+                  </button>
+                </div>
+              </div>
+              {/* Expense List */}
+              {currentExpenses.map((expense, index) => (
+                <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
+                  <div className="flex-grow-1 me-2">
+                    <small>
+                      <b>{formatDate(expense.date)}</b>
+                    </small>{" "}
+                    <small>
+                      {expense.description.length > 12 ? expense.description.substring(0, 12) + ".." : expense.description} - {expense.category}
+                    </small>
+                  </div>
+                  <div className="me-1">
+                    <small>
+                      <strong>${expense.amount.toFixed(2)}</strong>
+                    </small>
+                  </div>
+                  <div>
+                    <img
+                      onClick={() => deleteExpense(expense.id)}
+                      src={bin.src}
+                      width="20"
+                      className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
+                      style={{ cursor: deleteEnabled ? "pointer" : "not-allowed" }} // Change cursor based on state
+                    />
+                  </div>
+                </div>
+              ))}
+              {/* Pagination Controls */}
+              <div className="pagination mt-3">
+                <button className="btn btn-secondary me-2" onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+                  Previous
+                </button>
+                {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map((number) => (
+                  <button key={number} className={`btn ${currentPage === number ? "btn-warning" : "btn-outline-secondary"} me-2`} onClick={() => paginate(number)}>
+                    {number}
+                  </button>
+                ))}
+                <button className="btn btn-secondary" onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages}>
+                  Next
+                </button>
+              </div>{" "}
+            </div>
+          </Modal.Body>
+        </Modal>
       </div>
     </>
   );
