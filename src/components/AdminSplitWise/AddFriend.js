@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { onAddFriendService } from "./APIService";
 
 const AddFriend = ({ onAddFriend }) => {
   const [friendName, setFriendName] = useState("");
   const [friendEmail, setFriendEmail] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (friendName.trim() === "" || friendEmail.trim() === "") {
@@ -14,6 +15,7 @@ const AddFriend = ({ onAddFriend }) => {
 
     // Pass friend name and email back to the parent component
     onAddFriend({ name: friendName, email: friendEmail });
+    //await onAddFriendService({ name: friendName, email: friendEmail, friends: [], expenses: [] });
     setFriendName("");
     setFriendEmail("");
   };
@@ -21,7 +23,7 @@ const AddFriend = ({ onAddFriend }) => {
   return (
     <form onSubmit={handleSubmit} className="grid px-0">
       <input type="text" placeholder="Friend's name" value={friendName} onChange={(e) => setFriendName(e.target.value)} required />
-      <input type="email" placeholder="Friend's email" value={friendEmail} onChange={(e) => setFriendEmail(e.target.value)} required />
+      <input type="email" placeholder="Friend's email" value={friendEmail} onChange={(e) => setFriendEmail(e.target.value.toLowerCase())} required />
       <button type="submit">Add Friend</button>
     </form>
   );

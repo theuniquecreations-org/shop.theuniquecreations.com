@@ -7,10 +7,15 @@ import Register from "./Register";
 import Login from "./Login"; // Import the login component
 import subaa from "@/images/subaa.png";
 import logout from "@/images/logout.png";
+import home from "@/images/home.png";
+import bin from "@/images/bin.png";
+import close from "@/images/delete.png";
+import { getDataFromServer, fetchUsers, onAddFriendService, onUpdateFriendService } from "./APIService";
 
 const App = () => {
   const [friends, setFriends] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [deleteEnabled, setDeleteEnabled] = useState(true);
   const [loggedInUser, setLoggedInUser] = useState(null); // Track the logged-in user's email
   const [loggedInUserName, setLoggedInUserName] = useState(""); // Store the user's name
   const [showAddFriend, setShowAddFriend] = useState(false); // Toggle visibility of Add Friend
@@ -23,91 +28,263 @@ const App = () => {
   const [friendToSettle, setFriendToSettle] = useState(null); // Store the selected friend for settling up
   const [showRegister, setShowRegister] = useState(false);
   const [friendToSettleName, setFriendToSettleName] = useState(""); // Store friend's name
+  const [loading, setLoading] = useState(false);
   // Function to retrieve data from localStorage
   const getDataFromStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
   // Function to save data to localStorage
   const saveDataToStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
   // Load session data and friends/expenses from shared storage on login
-  useEffect(() => {
+  useEffect(async () => {
     const sessionUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (sessionUser) {
       setLoggedInUser(sessionUser.email);
       setLoggedInUserName(sessionUser.name);
 
       // Retrieve the common users data
-      const users = getDataFromStorage("users");
-
+      //const users = getDataFromStorage("users");
+      //const users = await getDataFromServer("users");
       // Find the logged-in user's data
-      const user = users.find((user) => user.email === sessionUser.email);
-
-      if (user) {
-        setFriends(user.friends || []);
-        setExpenses(user.expenses || []);
-      }
+      //const user = users.find((user) => user.email === sessionUser.email);
+      // console.log("friends", user);
+      // if (user) {
+      //   setFriends(user.friends || []);
+      //   setExpenses(user.expenses || []);
+      // }
     }
   }, [loggedInUser]);
 
   // Save user data (friends and expenses) to common storage whenever they change
-  useEffect(() => {
+  useEffect(async () => {
     if (loggedInUser) {
       // Get the common users data
-      const users = getDataFromStorage("users");
+      //const users = getDataFromStorage("users");
+      const users = await getDataFromServer(loggedInUser);
 
       // Update the logged-in user's friends and expenses in the common data
-      const updatedUsers = users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
-
+      //const updatedUsers = users && users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
+      const user = users.find((user) => user.email === loggedInUser);
+      const updatedUsers = { ...user, friends, expenses };
+      console.log("local users", user);
+      if (user) {
+        setFriends(user.friends || []);
+        setExpenses(user.expenses || []);
+      }
+      //console.log("updatedUsers", updatedUsers);
+      //return;
       // Save the updated users data to localStorage
-      saveDataToStorage("users", updatedUsers);
+      //if (!showAddFriend) await onUpdateFriendService(updatedUsers);
     }
-  }, [friends, expenses, loggedInUser]);
+  }, [loggedInUser]);
 
-  // Add a new friend (includes both name and email)
-  const addFriend = (friend) => {
-    setFriends([...friends, { ...friend, balance: 0 }]); // Add the new friend and initialize balance to 0
-    setShowAddFriend(false); // Close modal after adding friend
+  const addFriend = async (friend) => {
+    // Check if the friend is already added by email
+    const existingFriend = friends.find((f) => f.email === friend.email);
+
+    if (existingFriend) {
+      // Show an error message if the friend is already in the list
+      alert("This friend is already added.");
+      return; // Exit the function to prevent further execution
+    }
+
+    // Update the friends array with the new friend immediately
+    const updatedFriends = [...friends, { ...friend, balance: 0 }];
+
+    // Update the state with the new friends array (asynchronously)
+    setFriends(updatedFriends);
+
+    // Fetch the logged-in user's data from the server
+    const users = await getDataFromServer(loggedInUser);
+    const user = users.find((user) => user.email === loggedInUser);
+
+    if (user) {
+      // Create updated user object with new friends and existing expenses
+      const updatedUser = { ...user, friends: updatedFriends, expenses: user.expenses || [] };
+      console.log("updatedUser", updatedUser);
+
+      try {
+        // Call the service to update the user with the new friends list
+        await onUpdateFriendService(updatedUser);
+        setShowAddFriend(false); // Close the modal after adding friend
+      } catch (error) {
+        console.error("Failed to update friend on the server:", error);
+      }
+    } else {
+      console.error("User not found");
+    }
+  };
+  const toggleDeleteButtons = () => {
+    setDeleteEnabled(!deleteEnabled); // Toggle between true and false
+  };
+  const removeFriend = async (friendEmail) => {
+    // Show a confirmation dialog
+    const confirmRemoval = window.confirm("Are you sure you want to remove this friend?");
+
+    if (!confirmRemoval) {
+      return; // Exit if the user cancels the action
+    }
+
+    // Filter out the friend with the given email
+    const updatedFriends = friends.filter((friend) => friend.email !== friendEmail);
+
+    // Update the local state
+    setFriends(updatedFriends);
+
+    // Fetch the logged-in user's data from the server
+    const users = await getDataFromServer(loggedInUser);
+    const user = users.find((user) => user.email === loggedInUser);
+
+    if (user) {
+      // Create updated user object with new friends list and existing expenses
+      const updatedUser = { ...user, friends: updatedFriends, expenses: user.expenses || [] };
+
+      try {
+        // Call the service to update the user with the new friends list
+        await onUpdateFriendService(updatedUser);
+        console.log("Friend removed successfully on the server.");
+      } catch (error) {
+        console.error("Failed to remove friend on the server:", error);
+      }
+    } else {
+      console.error("User not found");
+    }
+    setDeleteEnabled(false);
   };
 
-  const addExpense = (expense) => {
-    setExpenses([...expenses, expense]);
+  const addExpense = async (expense, friendName, loggedInUserName) => {
+    try {
+      // Update the local expenses list
+      setLoading(true);
+      var loggedInUserName;
+      const updatedExpenses = [...expenses, expense];
+      setExpenses(updatedExpenses);
 
-    const updatedFriends = friends.map((friend) => {
-      if (friend.email === expense.friendEmail) {
-        if (expense.type === "split") {
-          friend.balance += expense.amount / 2; // The friend owes half
-        } else if (expense.type === "you-paid-full") {
-          friend.balance += expense.amount; // The friend owes the full amount
-        } else if (expense.type === "friend-paid-full") {
-          friend.balance -= expense.amount; // You owe the full amount
-        } else if (expense.type === "friend-paid-split") {
-          friend.balance -= expense.amount / 2; // You owe half
+      // Update the friend's balances for the logged-in user (e.g., Bala)
+      const updatedFriends = friends.map((friend) => {
+        if (friend.email === expense.friendEmail) {
+          // Determine the balance change based on the type of expense
+          if (expense.type === "split") {
+            friend.balance -= expense.amount / 2;
+            friend.tag = "owe"; // Bala owes Subha
+          } else if (expense.type === "you-paid-full") {
+            friend.balance += expense.amount;
+            friend.tag = "owes"; // Subha owes Bala
+          } else if (expense.type === "friend-paid-full") {
+            friend.balance -= expense.amount;
+            friend.tag = "owe"; // Bala owes Subha
+          } else if (expense.type === "friend-paid-split") {
+            friend.balance -= expense.amount / 2;
+            friend.tag = "owe"; // Bala owes Subha
+          }
         }
-      }
-      return friend;
-    });
+        return friend;
+      });
 
-    const updatedFriendsForUser = updatedFriends.map((friend) => {
-      if (friend.email === loggedInUser) {
-        if (expense.type === "split") {
-          friend.balance -= expense.amount / 2; // The user owes half
-        } else if (expense.type === "you-paid-full") {
-          friend.balance -= expense.amount; // The user owes the full amount
-        } else if (expense.type === "friend-paid-full") {
-          friend.balance += expense.amount; // The friend owes the full amount
-        } else if (expense.type === "friend-paid-split") {
-          friend.balance += expense.amount / 2; // The friend owes half
+      setFriends(updatedFriends); // Update Bala's local state
+
+      // Fetch the current logged-in user's data (Bala) from the server
+      const users = await getDataFromServer(loggedInUser);
+      const user = users.find((user) => user.email === loggedInUser);
+      loggedInUserName = user.name;
+      console.log("bala", loggedInUserName);
+      if (!user) {
+        console.error("User not found");
+        return;
+      }
+
+      // Create an updated user object for Bala (logged-in user)
+      const updatedUser = {
+        ...user,
+        friends: updatedFriends, // Bala's updated friends list
+        expenses: updatedExpenses, // Bala's updated expenses
+      };
+
+      // Update Bala's data first
+      setLoading(true);
+      await onUpdateFriendService(updatedUser); // Update Bala's data on the server
+
+      // Fetch the friend (Subha) to update their balance as well
+      const friendUsers = await getDataFromServer(expense.friendEmail);
+      let friendUser = friendUsers.find((friend) => friend.email === expense.friendEmail);
+
+      if (friendUser) {
+        console.log("Friend user fetched successfully:", friendUser);
+
+        // Ensure Subha's balance is the inverse of Bala's balance
+        const updatedFriendUser = {
+          ...friendUser,
+          name: expense.friend, // Ensure Subha's name is set
+          friends: friendUser.friends.map((f) => {
+            if (f.email === loggedInUser) {
+              // Invert the balance for Subha (Bala's negative becomes Subha's positive)
+              const loggedInUserFriend = updatedFriends.find((uf) => uf.email === expense.friendEmail);
+              console.log("loggedInUserFriend", loggedInUserFriend);
+
+              if (!loggedInUserFriend) {
+                console.error("Logged-in user not found in updated friends list.");
+                return f;
+              }
+
+              const invertedBalance = loggedInUserFriend.balance * -1;
+              const updatedTag = f.tag === "owe" ? "owes" : "owe"; // Reverse the tag
+
+              return { ...f, balance: invertedBalance, tag: updatedTag, name: loggedInUserName }; // Add Bala's name and balance to Subha's friend list
+            }
+            return f;
+          }),
+          expenses: [...(friendUser.expenses || []), expense], // Add the expense to Subha's expense list
+        };
+
+        // If the logged-in user is not already in Subha's friends list, add them
+        if (!updatedFriendUser.friends.some((f) => f.email === loggedInUser)) {
+          updatedFriendUser.friends.push({
+            email: loggedInUser,
+            name: loggedInUserName, // Add Bala's name
+            balance: updatedFriends.find((uf) => uf.email === expense.friendEmail).balance * -1, // Invert Bala's balance for Subha
+            tag: "owe",
+          });
         }
-      }
-      return friend;
-    });
 
-    setFriends(updatedFriendsForUser);
-    setShowAddExpense(false);
+        console.log("Updated Friend User Object: ", updatedFriendUser);
+
+        // Update Subha's data after Bala's update completes
+        await onUpdateFriendService(updatedFriendUser); // Update Subha's data on the server
+      } else {
+        console.log("Friend not found, creating a new friend profile for Subha.");
+
+        // If the friend (Subha) does not exist, create a new profile for Subha
+        const newFriendUser = {
+          email: expense.friendEmail,
+          name: friendName, // Add Subha's name
+          friends: [
+            {
+              email: user.email,
+              name: loggedInUserName, // Add Bala's name as the friend
+              balance: updatedFriends.find((uf) => uf.email === expense.friendEmail).balance * -1, // Invert Bala's balance for Subha
+              tag: "owe", // Bala owes Subha
+            },
+          ],
+          expenses: [expense], // Add the expense to Subha's expense list
+        };
+
+        await onAddFriendService(newFriendUser); // Create Subha's profile
+        console.log("New friend (Subha) created successfully.");
+      }
+
+      setLoading(false);
+      setShowAddExpense(false); // Close the expense modal
+      console.log("Expense and balances updated successfully for both users.");
+      setLoading(false);
+    } catch (error) {
+      console.error("Error while updating expense and balances:", error);
+      setLoading(false);
+    }
   };
-
-  const handleSettleUp = () => {
+  const handleSettleUp = async () => {
     const settleAmount = parseFloat(settleUpAmounts[friendToSettle] || 0);
+
     if (!isNaN(settleAmount) && settleAmount > 0) {
+      // Update the balances for the friend being settled up with
       const updatedFriends = friends.map((friend) => {
         if (friend.email === friendToSettle) {
           if (friend.balance > 0) {
@@ -119,9 +296,11 @@ const App = () => {
         return friend;
       });
 
+      // Get the current date for the expense
       const currentDate = new Date().toLocaleDateString();
 
-      setExpenses([
+      // Add the settle-up entry to the expenses
+      const updatedExpenses = [
         ...expenses,
         {
           friend: friendToSettleName,
@@ -130,23 +309,37 @@ const App = () => {
           type: "settle",
           date: currentDate,
         },
-      ]);
+      ];
 
+      // Update local state with new friends and expenses
       setFriends(updatedFriends);
+      setExpenses(updatedExpenses);
       setSettleUpAmounts({ ...settleUpAmounts, [friendToSettle]: "" });
       setShowSettleUp(false);
+
+      // Fetch the current logged-in user's data from the server
+      const users = await getDataFromServer(loggedInUser);
+      const user = users.find((user) => user.email === loggedInUser);
+
+      if (user) {
+        // Create the updated user object with new friends and expenses
+        const updatedUser = { ...user, friends: updatedFriends, expenses: updatedExpenses };
+
+        try {
+          // Call the service to update the user with the new data
+          await onUpdateFriendService(updatedUser);
+          console.log("Settle up updated successfully on the server.");
+        } catch (error) {
+          console.error("Failed to update settle-up on the server:", error);
+        }
+      } else {
+        console.error("User not found");
+      }
     }
   };
   // Handle user login (validate against shared storage)
   const handleLogin = (email, name) => {
     const users = getDataFromStorage("users");
-
-    const existingUser = users.find((user) => user.email === email);
-    if (!existingUser) {
-      alert("Invalid login. Please register.");
-      return;
-    }
-
     setLoggedInUser(email);
     setLoggedInUserName(name);
     localStorage.setItem("loggedInUser", JSON.stringify({ email, name }));
@@ -162,14 +355,12 @@ const App = () => {
       setExpenses([]);
     }
   };
-
   // Handle friend selection for adding expense
   const handleFriendSelection = (friendEmail, friendName) => {
     setSelectedFriend(friendName);
     setSelectedFriendEmail(friendEmail);
     setShowAddExpense(true);
   };
-
   // Handle settle-up input changes
   const handleSettleAmountChange = (e) => {
     setSettleUpAmounts({
@@ -178,19 +369,16 @@ const App = () => {
     });
   };
 
-  const handleRegister = (email, name) => {
-    const users = getDataFromStorage("users");
-    const existingUser = users.find((user) => user.email === email);
-
-    if (existingUser) {
-      alert("User already exists. Please log in.");
-      return;
-    }
-
+  const handleRegister = async (email, name) => {
+    //const users = getDataFromStorage("users");
+    //const users = await fetchUsers(email);
+    //console.log("Registered user", users);
+    // const existingUser = users.find((user) => user.email === email);
+    //console.log("Registered existingUser", existingUser);
     const newUser = { email, name, friends: [], expenses: [] };
-    users.push(newUser);
-    saveDataToStorage("users", users);
-
+    // users.push(newUser);
+    // console.log("Registered user", users);
+    await onAddFriendService(newUser);
     setShowRegister(false);
     alert("✅ Registered successfully. Please log in.");
   };
@@ -225,8 +413,13 @@ const App = () => {
       {/* Navigation with Add Friend and Logout */}
       <nav className="navbar navbar-light titlesplitequally">
         <div className="container-fluid">
+          <div>
+            <a className="navbar-brand text-white" href="/adminapphome">
+              <img src={home.src} alt="Logo" className="" width="30" />
+            </a>
+          </div>
           <a className="navbar-brand text-white" href="#">
-            <img src={subaa.src} alt="Logo" width="50" /> Split Equally
+            <h5 className="mb-0 text-white">Split Equally</h5>
           </a>
           <div>
             <button className="btn btn-primary btn-warning border" onClick={() => setShowAddFriend(true)}>
@@ -235,7 +428,7 @@ const App = () => {
           </div>
           <div>
             <a className="navbar-brand text-white" href="#" onClick={handleLogout}>
-              <img src={logout.src} alt="Logo" width="30" />
+              <img src={logout.src} alt="Logo" width="25" />
             </a>
           </div>
         </div>
@@ -243,17 +436,31 @@ const App = () => {
 
       <div className="container mt-1">
         <div align="right">
-          <p className="mb-0">Welcome, {loggedInUserName}!</p>
+          <p className="mb-0">
+            <small>Welcome, {loggedInUserName}!</small>
+          </p>
         </div>
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
         {/* Display friend list with balance and option to select a friend */}
-        <h6 className="mb-0">Friend List</h6>
+
+        {/* Add row with toggle button */}
+        <div className="d-flex justify-content-between align-items-center mb-1">
+          <div>
+            {" "}
+            <h6 className="mb-0">Friend List</h6>
+          </div>
+          <div>
+            <button className="btn btn-sm btn-danger p-1 d-none" onClick={toggleDeleteButtons}>
+              <small>{deleteEnabled ? "Disable Delete" : "Enable Delete"}</small>
+            </button>
+          </div>
+        </div>
         <ul className="list-group mb-4">
           {friends.length != 0
             ? friends.map((friend, index) => (
                 <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                   <small>
-                    {friend.name.toUpperCase()}: {friend.balance == 0 ? "No Balance" : friend.balance < 0 ? <span className="text-danger">You owe ${Math.abs(friend.balance)}</span> : <span className="text-success">Owes you ${Math.abs(friend.balance)}</span>}
+                    {friend && friend.name && friend.name.toUpperCase()}: {friend.balance == 0 ? "No Balance" : friend.balance < 0 ? <span className="text-danger">You owe ${Math.abs(friend.balance)}</span> : <span className="text-success">Owes you ${Math.abs(friend.balance)}</span>}
                   </small>
                   <div>
                     {/* Add Expense Button */}
@@ -261,7 +468,16 @@ const App = () => {
                       Add
                     </button>{" "}
                     {/* Settle Up Button */}
-                    {friend.balance == 0 ? (
+                    {friend.balance == 0 && deleteEnabled ? (
+                      <img
+                        onClick={() => removeFriend(friend.email)}
+                        src={bin.src}
+                        width="40"
+                        className="px-2"
+                        //className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
+                        style={{ cursor: deleteEnabled ? "pointer" : "not-allowed" }} // Change cursor based on state
+                      />
+                    ) : friend.balance == 0 ? (
                       ""
                     ) : (
                       <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.email, friend.name)}>
@@ -281,15 +497,14 @@ const App = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Add a New Friend</h5>
+                  <a onClick={() => setShowAddFriend(false)}>
+                    <img src={close.src} alt="Logo" className="" width="30" />
+                  </a>
                 </div>
                 <div className="modal-body">
                   <AddFriend onAddFriend={addFriend} />
                 </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowAddFriend(false)}>
-                    Close
-                  </button>
-                </div>
+                <div className="modal-footer"></div>
               </div>
             </div>
           </div>
@@ -301,16 +516,18 @@ const App = () => {
             <div className="modal-container">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h6 className="modal-title">Add Expense for {selectedFriend}</h6>
+                  <small className="mb-0 text-dark">
+                    {/* Add Expense for <b>{selectedFriend + "-" + selectedFriendEmail}</b> */}
+                    Add Expense for <b>{selectedFriendEmail}</b>
+                  </small>{" "}
+                  <a onClick={() => setShowAddExpense(false)}>
+                    <img src={close.src} alt="Logo" className="" width="30" />
+                  </a>
                 </div>
                 <div className="modal-body">
-                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} selectedFriendEmail={selectedFriendEmail} />
+                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} selectedFriendEmail={selectedFriendEmail} loading={loading} />
                 </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowAddExpense(false)}>
-                    Close
-                  </button>
-                </div>
+                <div className="modal-footer"></div>
               </div>
             </div>
           </div>
@@ -320,11 +537,16 @@ const App = () => {
         {showSettleUp && (
           <div className="modal-overlay">
             <div className="modal-container">
-              <div className="modal-content grid">
+              <div className="modal-content grid1">
                 <div className="modal-header">
-                  <h6 className="modal-title">Settle Up with {friendToSettle}</h6>
+                  <small className="mb-0 text-dark">
+                    Settle Up with <b>{friendToSettleName}</b>
+                  </small>{" "}
+                  <a onClick={() => setShowSettleUp(false)}>
+                    <img src={close.src} alt="Logo" className="" width="30" />
+                  </a>
                 </div>
-                <div className="modal-body">
+                <div className="modal-body mb-2">
                   <input type="number" className="form-control" placeholder="Enter amount" value={settleUpAmounts[friendToSettle] || ""} onChange={handleSettleAmountChange} step="any" min="0" inputMode="decimal" />
                 </div>
                 <div className="modal-footer">
@@ -332,9 +554,6 @@ const App = () => {
                     Confirm Settle Up
                   </button>
                 </div>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowSettleUp(false)}>
-                  Close
-                </button>
               </div>
             </div>
           </div>
