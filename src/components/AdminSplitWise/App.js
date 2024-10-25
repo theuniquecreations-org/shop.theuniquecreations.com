@@ -154,6 +154,7 @@ const App = () => {
   const addExpense = async (expense, friendName, loggedInUserName) => {
     try {
       // Update the local expenses list
+      var loggedInUserName;
       const updatedExpenses = [...expenses, expense];
       setExpenses(updatedExpenses);
 
@@ -183,7 +184,8 @@ const App = () => {
       // Fetch the current logged-in user's data (Bala) from the server
       const users = await getDataFromServer(loggedInUser);
       const user = users.find((user) => user.email === loggedInUser);
-      console.log("bala", user.name);
+      loggedInUserName = user.name;
+      console.log("bala", loggedInUserName);
       if (!user) {
         console.error("User not found");
         return;
@@ -210,6 +212,7 @@ const App = () => {
         // Ensure Subha's balance is the inverse of Bala's balance
         const updatedFriendUser = {
           ...friendUser,
+          name: friendName, // Ensure Subha's name is set
           friends: friendUser.friends.map((f) => {
             if (f.email === loggedInUser) {
               // Invert the balance for Subha (Bala's negative becomes Subha's positive)
@@ -224,7 +227,7 @@ const App = () => {
               const invertedBalance = loggedInUserFriend.balance * -1;
               const updatedTag = f.tag === "owe" ? "owes" : "owe"; // Reverse the tag
 
-              return { ...f, balance: invertedBalance, tag: updatedTag }; // Update Subha's balance and tag
+              return { ...f, balance: invertedBalance, tag: updatedTag, name: loggedInUserName }; // Add Bala's name and balance to Subha's friend list
             }
             return f;
           }),
@@ -234,8 +237,8 @@ const App = () => {
         // If the logged-in user is not already in Subha's friends list, add them
         if (!updatedFriendUser.friends.some((f) => f.email === loggedInUser)) {
           updatedFriendUser.friends.push({
-            email: user.email,
-            name: user.name,
+            email: loggedInUser,
+            name: loggedInUserName, // Add Bala's name
             balance: updatedFriends.find((uf) => uf.email === expense.friendEmail).balance * -1, // Invert Bala's balance for Subha
             tag: "owe",
           });
@@ -255,7 +258,7 @@ const App = () => {
           friends: [
             {
               email: user.email,
-              name: user.name, // Add Bala's name as the friend
+              name: loggedInUserName, // Add Bala's name as the friend
               balance: updatedFriends.find((uf) => uf.email === expense.friendEmail).balance * -1, // Invert Bala's balance for Subha
               tag: "owe", // Bala owes Subha
             },
