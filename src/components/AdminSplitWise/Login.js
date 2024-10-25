@@ -33,8 +33,8 @@ const Login = ({ onLogin, onToggleToRegister }) => {
         <h5 className="mb-0">Login</h5>
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form onSubmit={handleLogin} className="grid">
-          <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} required />
-          <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input type="email" placeholder="Email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value.toLowerCase())} required />
+          <input type="password" placeholder="Password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <button type="submit">{loading ? "Please Wait..." : "Login"}</button>
           <p>
             Don't have an account?{" "}
