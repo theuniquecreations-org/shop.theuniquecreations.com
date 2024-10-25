@@ -9,13 +9,13 @@ import subaa from "@/images/subaa.png";
 import logout from "@/images/logout.png";
 import home from "@/images/home.png";
 import bin from "@/images/bin.png";
-
+import close from "@/images/delete.png";
 import { getDataFromServer, fetchUsers, onAddFriendService, onUpdateFriendService } from "./APIService";
 
 const App = () => {
   const [friends, setFriends] = useState([]);
   const [expenses, setExpenses] = useState([]);
-  const [deleteEnabled, setDeleteEnabled] = useState(false);
+  const [deleteEnabled, setDeleteEnabled] = useState(true);
   const [loggedInUser, setLoggedInUser] = useState(null); // Track the logged-in user's email
   const [loggedInUserName, setLoggedInUserName] = useState(""); // Store the user's name
   const [showAddFriend, setShowAddFriend] = useState(false); // Toggle visibility of Add Friend
@@ -154,6 +154,7 @@ const App = () => {
   const addExpense = async (expense, friendName, loggedInUserName) => {
     try {
       // Update the local expenses list
+      setLoading(true);
       var loggedInUserName;
       const updatedExpenses = [...expenses, expense];
       setExpenses(updatedExpenses);
@@ -273,6 +274,7 @@ const App = () => {
       setLoading(false);
       setShowAddExpense(false); // Close the expense modal
       console.log("Expense and balances updated successfully for both users.");
+      setLoading(false);
     } catch (error) {
       console.error("Error while updating expense and balances:", error);
       setLoading(false);
@@ -448,7 +450,7 @@ const App = () => {
             <h6 className="mb-0">Friend List</h6>
           </div>
           <div>
-            <button className="btn btn-sm btn-danger p-1" onClick={toggleDeleteButtons}>
+            <button className="btn btn-sm btn-danger p-1 d-none" onClick={toggleDeleteButtons}>
               <small>{deleteEnabled ? "Disable Delete" : "Enable Delete"}</small>
             </button>
           </div>
@@ -470,8 +472,9 @@ const App = () => {
                       <img
                         onClick={() => removeFriend(friend.email)}
                         src={bin.src}
-                        width="20"
-                        className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
+                        width="40"
+                        className="px-2"
+                        //className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
                         style={{ cursor: deleteEnabled ? "pointer" : "not-allowed" }} // Change cursor based on state
                       />
                     ) : friend.balance == 0 ? (
@@ -494,15 +497,14 @@ const App = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">Add a New Friend</h5>
+                  <a onClick={() => setShowAddFriend(false)}>
+                    <img src={close.src} alt="Logo" className="" width="30" />
+                  </a>
                 </div>
                 <div className="modal-body">
                   <AddFriend onAddFriend={addFriend} />
                 </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowAddFriend(false)}>
-                    Close
-                  </button>
-                </div>
+                <div className="modal-footer"></div>
               </div>
             </div>
           </div>
@@ -514,16 +516,18 @@ const App = () => {
             <div className="modal-container">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h6 className="modal-title">Add Expense for {selectedFriend}</h6>
+                  <small className="mb-0 text-dark">
+                    {/* Add Expense for <b>{selectedFriend + "-" + selectedFriendEmail}</b> */}
+                    Add Expense for <b>{selectedFriendEmail}</b>
+                  </small>{" "}
+                  <a onClick={() => setShowAddExpense(false)}>
+                    <img src={close.src} alt="Logo" className="" width="30" />
+                  </a>
                 </div>
                 <div className="modal-body">
-                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} selectedFriendEmail={selectedFriendEmail} />
+                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} selectedFriendEmail={selectedFriendEmail} loading={loading} />
                 </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowAddExpense(false)}>
-                    Close
-                  </button>
-                </div>
+                <div className="modal-footer"></div>
               </div>
             </div>
           </div>
@@ -533,11 +537,16 @@ const App = () => {
         {showSettleUp && (
           <div className="modal-overlay">
             <div className="modal-container">
-              <div className="modal-content grid">
+              <div className="modal-content grid1">
                 <div className="modal-header">
-                  <h6 className="modal-title">Settle Up with {friendToSettle}</h6>
+                  <small className="mb-0 text-dark">
+                    Settle Up with <b>{friendToSettleName}</b>
+                  </small>{" "}
+                  <a onClick={() => setShowSettleUp(false)}>
+                    <img src={close.src} alt="Logo" className="" width="30" />
+                  </a>
                 </div>
-                <div className="modal-body">
+                <div className="modal-body mb-2">
                   <input type="number" className="form-control" placeholder="Enter amount" value={settleUpAmounts[friendToSettle] || ""} onChange={handleSettleAmountChange} step="any" min="0" inputMode="decimal" />
                 </div>
                 <div className="modal-footer">
@@ -545,9 +554,6 @@ const App = () => {
                     Confirm Settle Up
                   </button>
                 </div>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowSettleUp(false)}>
-                  Close
-                </button>
               </div>
             </div>
           </div>
