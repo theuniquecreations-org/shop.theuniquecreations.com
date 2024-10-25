@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-const AddExpense = ({ onAddExpense, friends, selectedFriend, selectedFriendEmail }) => {
+const AddExpense = ({ onAddExpense, friends, selectedFriend, selectedFriendEmail, loading }) => {
   const [friend, setFriend] = useState(selectedFriend || ""); // Initialize with selected friend
   const [friendEmail, setFriendEmail] = useState(selectedFriendEmail || ""); // Initialize with selected friend email
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [expenseType, setExpenseType] = useState("split");
   const [date, setDate] = useState(""); // New state for date
-  const [loading, setLoading] = useState(false);
+  //const [loading, setLoading] = useState(false);
   // Function to get today's date in YYYY-MM-DD format
   const getTodayDate = () => {
     const today = new Date();

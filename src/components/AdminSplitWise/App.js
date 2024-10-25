@@ -154,6 +154,7 @@ const App = () => {
   const addExpense = async (expense, friendName, loggedInUserName) => {
     try {
       // Update the local expenses list
+      setLoading(true);
       var loggedInUserName;
       const updatedExpenses = [...expenses, expense];
       setExpenses(updatedExpenses);
@@ -273,6 +274,7 @@ const App = () => {
       setLoading(false);
       setShowAddExpense(false); // Close the expense modal
       console.log("Expense and balances updated successfully for both users.");
+      setLoading(false);
     } catch (error) {
       console.error("Error while updating expense and balances:", error);
       setLoading(false);
@@ -523,7 +525,7 @@ const App = () => {
                   </a>
                 </div>
                 <div className="modal-body">
-                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} selectedFriendEmail={selectedFriendEmail} />
+                  <AddExpense onAddExpense={addExpense} friends={friends} selectedFriend={selectedFriend} selectedFriendEmail={selectedFriendEmail} loading={loading} />
                 </div>
                 <div className="modal-footer"></div>
               </div>
