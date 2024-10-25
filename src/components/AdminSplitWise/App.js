@@ -8,11 +8,14 @@ import Login from "./Login"; // Import the login component
 import subaa from "@/images/subaa.png";
 import logout from "@/images/logout.png";
 import home from "@/images/home.png";
+import bin from "@/images/bin.png";
+
 import { getDataFromServer, fetchUsers, onAddFriendService, onUpdateFriendService } from "./APIService";
 
 const App = () => {
   const [friends, setFriends] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [deleteEnabled, setDeleteEnabled] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null); // Track the logged-in user's email
   const [loggedInUserName, setLoggedInUserName] = useState(""); // Store the user's name
   const [showAddFriend, setShowAddFriend] = useState(false); // Toggle visibility of Add Friend
@@ -62,7 +65,7 @@ const App = () => {
       //const updatedUsers = users && users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
       const user = users.find((user) => user.email === loggedInUser);
       const updatedUsers = { ...user, friends, expenses };
-      console.log("local users", updatedUsers);
+      console.log("local users", user);
       if (user) {
         setFriends(user.friends || []);
         setExpenses(user.expenses || []);
@@ -110,7 +113,9 @@ const App = () => {
       console.error("User not found");
     }
   };
-
+  const toggleDeleteButtons = () => {
+    setDeleteEnabled(!deleteEnabled); // Toggle between true and false
+  };
   const removeFriend = async (friendEmail) => {
     // Show a confirmation dialog
     const confirmRemoval = window.confirm("Are you sure you want to remove this friend?");
@@ -143,71 +148,136 @@ const App = () => {
     } else {
       console.error("User not found");
     }
+    setDeleteEnabled(false);
   };
 
-  const addExpense = async (expense) => {
-    // Update the local expenses list
-    const updatedExpenses = [...expenses, expense];
-    setExpenses(updatedExpenses);
+  const addExpense = async (expense, friendName, loggedInUserName) => {
+    try {
+      // Update the local expenses list
+      var loggedInUserName;
+      const updatedExpenses = [...expenses, expense];
+      setExpenses(updatedExpenses);
 
-    // Update the friend's balances based on the expense type
-    const updatedFriends = friends.map((friend) => {
-      if (friend.email === expense.friendEmail) {
-        if (expense.type === "split") {
-          friend.balance += expense.amount / 2; // The friend owes half
-        } else if (expense.type === "you-paid-full") {
-          friend.balance += expense.amount; // The friend owes the full amount
-        } else if (expense.type === "friend-paid-full") {
-          friend.balance -= expense.amount; // You owe the full amount
-        } else if (expense.type === "friend-paid-split") {
-          friend.balance -= expense.amount / 2; // You owe half
+      // Update the friend's balances for the logged-in user (e.g., Bala)
+      const updatedFriends = friends.map((friend) => {
+        if (friend.email === expense.friendEmail) {
+          // Determine the balance change based on the type of expense
+          if (expense.type === "split") {
+            friend.balance -= expense.amount / 2;
+            friend.tag = "owe"; // Bala owes Subha
+          } else if (expense.type === "you-paid-full") {
+            friend.balance += expense.amount;
+            friend.tag = "owes"; // Subha owes Bala
+          } else if (expense.type === "friend-paid-full") {
+            friend.balance -= expense.amount;
+            friend.tag = "owe"; // Bala owes Subha
+          } else if (expense.type === "friend-paid-split") {
+            friend.balance -= expense.amount / 2;
+            friend.tag = "owe"; // Bala owes Subha
+          }
         }
-      }
-      return friend;
-    });
+        return friend;
+      });
 
-    // Update the logged-in user's balance
-    const updatedFriendsForUser = updatedFriends.map((friend) => {
-      if (friend.email === loggedInUser) {
-        if (expense.type === "split") {
-          friend.balance -= expense.amount / 2; // The user owes half
-        } else if (expense.type === "you-paid-full") {
-          friend.balance -= expense.amount; // The user owes the full amount
-        } else if (expense.type === "friend-paid-full") {
-          friend.balance += expense.amount; // The friend owes the full amount
-        } else if (expense.type === "friend-paid-split") {
-          friend.balance += expense.amount / 2; // The friend owes half
+      setFriends(updatedFriends); // Update Bala's local state
+
+      // Fetch the current logged-in user's data (Bala) from the server
+      const users = await getDataFromServer(loggedInUser);
+      const user = users.find((user) => user.email === loggedInUser);
+      loggedInUserName = user.name;
+      console.log("bala", loggedInUserName);
+      if (!user) {
+        console.error("User not found");
+        return;
+      }
+
+      // Create an updated user object for Bala (logged-in user)
+      const updatedUser = {
+        ...user,
+        friends: updatedFriends, // Bala's updated friends list
+        expenses: updatedExpenses, // Bala's updated expenses
+      };
+
+      // Update Bala's data first
+      setLoading(true);
+      await onUpdateFriendService(updatedUser); // Update Bala's data on the server
+
+      // Fetch the friend (Subha) to update their balance as well
+      const friendUsers = await getDataFromServer(expense.friendEmail);
+      let friendUser = friendUsers.find((friend) => friend.email === expense.friendEmail);
+
+      if (friendUser) {
+        console.log("Friend user fetched successfully:", friendUser);
+
+        // Ensure Subha's balance is the inverse of Bala's balance
+        const updatedFriendUser = {
+          ...friendUser,
+          name: expense.friend, // Ensure Subha's name is set
+          friends: friendUser.friends.map((f) => {
+            if (f.email === loggedInUser) {
+              // Invert the balance for Subha (Bala's negative becomes Subha's positive)
+              const loggedInUserFriend = updatedFriends.find((uf) => uf.email === expense.friendEmail);
+              console.log("loggedInUserFriend", loggedInUserFriend);
+
+              if (!loggedInUserFriend) {
+                console.error("Logged-in user not found in updated friends list.");
+                return f;
+              }
+
+              const invertedBalance = loggedInUserFriend.balance * -1;
+              const updatedTag = f.tag === "owe" ? "owes" : "owe"; // Reverse the tag
+
+              return { ...f, balance: invertedBalance, tag: updatedTag, name: loggedInUserName }; // Add Bala's name and balance to Subha's friend list
+            }
+            return f;
+          }),
+          expenses: [...(friendUser.expenses || []), expense], // Add the expense to Subha's expense list
+        };
+
+        // If the logged-in user is not already in Subha's friends list, add them
+        if (!updatedFriendUser.friends.some((f) => f.email === loggedInUser)) {
+          updatedFriendUser.friends.push({
+            email: loggedInUser,
+            name: loggedInUserName, // Add Bala's name
+            balance: updatedFriends.find((uf) => uf.email === expense.friendEmail).balance * -1, // Invert Bala's balance for Subha
+            tag: "owe",
+          });
         }
+
+        console.log("Updated Friend User Object: ", updatedFriendUser);
+
+        // Update Subha's data after Bala's update completes
+        await onUpdateFriendService(updatedFriendUser); // Update Subha's data on the server
+      } else {
+        console.log("Friend not found, creating a new friend profile for Subha.");
+
+        // If the friend (Subha) does not exist, create a new profile for Subha
+        const newFriendUser = {
+          email: expense.friendEmail,
+          name: friendName, // Add Subha's name
+          friends: [
+            {
+              email: user.email,
+              name: loggedInUserName, // Add Bala's name as the friend
+              balance: updatedFriends.find((uf) => uf.email === expense.friendEmail).balance * -1, // Invert Bala's balance for Subha
+              tag: "owe", // Bala owes Subha
+            },
+          ],
+          expenses: [expense], // Add the expense to Subha's expense list
+        };
+
+        await onAddFriendService(newFriendUser); // Create Subha's profile
+        console.log("New friend (Subha) created successfully.");
       }
-      return friend;
-    });
 
-    setFriends(updatedFriendsForUser);
-
-    // Fetch the current logged-in user's data from the server
-    const users = await getDataFromServer(loggedInUser);
-    const user = users.find((user) => user.email === loggedInUser);
-
-    if (user) {
-      // Create an updated user object with the new friends and updated expenses
-      const updatedUser = { ...user, friends: updatedFriendsForUser, expenses: updatedExpenses };
-
-      try {
-        // Send the updated user data (friends and expenses) to the server
-        console.log(updatedUser);
-        setLoading(true);
-        await onUpdateFriendService(updatedUser);
-        setLoading(false);
-        setShowAddExpense(false); // Close the expense modal
-        console.log("Expense updated successfully on the server.");
-      } catch (error) {
-        console.error("Failed to update expense on the server:", error);
-      }
-    } else {
-      console.error("User not found");
+      setLoading(false);
+      setShowAddExpense(false); // Close the expense modal
+      console.log("Expense and balances updated successfully for both users.");
+    } catch (error) {
+      console.error("Error while updating expense and balances:", error);
+      setLoading(false);
     }
   };
-
   const handleSettleUp = async () => {
     const settleAmount = parseFloat(settleUpAmounts[friendToSettle] || 0);
 
@@ -370,13 +440,25 @@ const App = () => {
         </div>
         <BalanceSummary friends={friends} onSettleUp={handleSettleUp} />
         {/* Display friend list with balance and option to select a friend */}
-        <h6 className="mb-0">Friend List</h6>
+
+        {/* Add row with toggle button */}
+        <div className="d-flex justify-content-between align-items-center mb-1">
+          <div>
+            {" "}
+            <h6 className="mb-0">Friend List</h6>
+          </div>
+          <div>
+            <button className="btn btn-sm btn-danger p-1" onClick={toggleDeleteButtons}>
+              <small>{deleteEnabled ? "Disable Delete" : "Enable Delete"}</small>
+            </button>
+          </div>
+        </div>
         <ul className="list-group mb-4">
           {friends.length != 0
             ? friends.map((friend, index) => (
                 <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
                   <small>
-                    {friend.name.toUpperCase()}: {friend.balance == 0 ? "No Balance" : friend.balance < 0 ? <span className="text-danger">You owe ${Math.abs(friend.balance)}</span> : <span className="text-success">Owes you ${Math.abs(friend.balance)}</span>}
+                    {friend && friend.name && friend.name.toUpperCase()}: {friend.balance == 0 ? "No Balance" : friend.balance < 0 ? <span className="text-danger">You owe ${Math.abs(friend.balance)}</span> : <span className="text-success">Owes you ${Math.abs(friend.balance)}</span>}
                   </small>
                   <div>
                     {/* Add Expense Button */}
@@ -384,10 +466,16 @@ const App = () => {
                       Add
                     </button>{" "}
                     {/* Settle Up Button */}
-                    {friend.balance == 0 ? (
-                      <button className="btn btn-sm btn-danger ml-2" onClick={() => removeFriend(friend.email)}>
-                        Remove
-                      </button>
+                    {friend.balance == 0 && deleteEnabled ? (
+                      <img
+                        onClick={() => removeFriend(friend.email)}
+                        src={bin.src}
+                        width="20"
+                        className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
+                        style={{ cursor: deleteEnabled ? "pointer" : "not-allowed" }} // Change cursor based on state
+                      />
+                    ) : friend.balance == 0 ? (
+                      ""
                     ) : (
                       <button className="btn btn-sm btn-success ml-2" onClick={() => openSettleUpModal(friend.email, friend.name)}>
                         Settle

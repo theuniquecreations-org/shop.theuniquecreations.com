@@ -11,7 +11,7 @@ const Login = ({ onLogin, onToggleToRegister }) => {
     e.preventDefault();
     setLoading(true);
     const storedUser = await fetchUsers(email);
-    console.log("storedUser", storedUser.password);
+    console.log("storedUser", storedUser);
     if (storedUser && storedUser.password === password) {
       setLoading(false);
       console.log("log in user");

@@ -65,12 +65,13 @@ export const getDataFromServer = async (email) => {
     const response = await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "items/email/" + email);
     ///items/{column}/{value}
     const data = await response.json();
+    const filteredData = data.filter((item) => item.type === "usersfriend");
     // Filter the user by email
     // Return the matched user or null if not found
-    return data;
+    return filteredData;
   } catch (err) {
     console.log("Error getting users: ", err);
-    throw err; // Re-throw the error to handle it outside
+    return []; // Re-throw the error to handle it outside
   }
 };
 
