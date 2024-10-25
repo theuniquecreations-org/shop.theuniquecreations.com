@@ -15,11 +15,13 @@ const ExpenseTracker = () => {
   const [showGroupByCategory, setShowGroupByCategory] = useState(false); // Toggle group by category view
   ///pagination
   const [currentPage, setCurrentPage] = useState(1); // Current page state
-  const expensesPerPage = 20; // Number of expenses to display per page
+  const expensesPerPage = 15; // Number of expenses to display per page
   const pageNumbersToShow = 4;
   const indexOfLastExpense = currentPage * expensesPerPage;
   const indexOfFirstExpense = indexOfLastExpense - expensesPerPage;
-  const currentExpenses = expenses.slice(indexOfFirstExpense, indexOfLastExpense);
+
+  const sortedExpenses = expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+  const currentExpenses = sortedExpenses.slice(indexOfFirstExpense, indexOfLastExpense);
   const totalPages = Math.ceil(expenses.length / expensesPerPage);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const startPage = Math.max(1, currentPage - Math.floor(pageNumbersToShow / 2));
@@ -69,7 +71,7 @@ const ExpenseTracker = () => {
     };
     fetchExpenses();
   }, []);
-  const sortedExpenses = expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
   // Handling form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -282,7 +284,7 @@ const ExpenseTracker = () => {
 
         {/* Expense List */}
 
-        {sortedExpenses.map((expense, index) => (
+        {currentExpenses.map((expense, index) => (
           <div key={index} className="d-flex flex-wrap align-items-center justify-content-between expense-row py-2 border-bottom">
             <div className="flex-grow-1 me-2">
               <small>
