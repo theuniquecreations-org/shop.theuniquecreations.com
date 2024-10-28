@@ -59,7 +59,7 @@ export const onUpdateFriendService = async (user) => {
   }
 };
 
-export const getDataFromServer = async (email) => {
+export const getDataFromServer_old = async (email) => {
   try {
     console.log(email);
     const response = await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "items/email/" + email);
@@ -74,8 +74,36 @@ export const getDataFromServer = async (email) => {
     return []; // Re-throw the error to handle it outside
   }
 };
+export const getDataFromServer = async (email) => {
+  try {
+    console.log("Fetching data for email:", email);
 
-export const fetchUsers = async (email) => {
+    // Prepare the request body
+    const requestBody = {
+      column1: "email",
+      value1: email,
+      column2: "type",
+      value2: "usersfriend",
+    };
+
+    // Make a POST request to the Lambda endpoint
+    const response = await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "items/filter2column", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    // Parse and return the filtered data
+    const data = await response.json();
+    return data || []; // Return items or an empty array if no items found
+  } catch (err) {
+    console.log("Error getting users:", err);
+    return []; // Return an empty array on error
+  }
+};
+export const fetchUsers_old = async (email) => {
   try {
     console.log(email);
     const response = await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "itemsbytype/appusers");
@@ -91,77 +119,30 @@ export const fetchUsers = async (email) => {
   }
 };
 
-// Add a new friend
-export const addUser = async (user) => {
+export const fetchUsers = async (email) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/friends`, { name: friendName });
-    return response.data;
-  } catch (error) {
-    console.error("Error adding friend:", error);
-    throw error;
-  }
-};
+    console.log("Fetching user for email:", email);
+    // Prepare the request body with filtering conditions
+    const requestBody = {
+      column1: "email",
+      value1: email,
+      column2: "type",
+      value2: "appusers",
+    };
 
-// Get all friends
-export const getFriends = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/friends`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching friends:", error);
-    throw error;
-  }
-};
-
-// Add a new friend
-export const addFriend = async (friendName) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/friends`, { name: friendName });
-    return response.data;
-  } catch (error) {
-    console.error("Error adding friend:", error);
-    throw error;
-  }
-};
-
-// Delete a friend
-export const deleteFriend = async (friendId) => {
-  try {
-    await axios.delete(`${API_BASE_URL}/friends/${friendId}`);
-  } catch (error) {
-    console.error("Error deleting friend:", error);
-    throw error;
-  }
-};
-
-// Get all expenses
-export const getExpenses = async () => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/expenses`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching expenses:", error);
-    throw error;
-  }
-};
-
-// Add a new expense
-export const addExpense = async (expense) => {
-  try {
-    const response = await axios.post(`${API_BASE_URL}/expenses`, expense);
-    return response.data;
-  } catch (error) {
-    console.error("Error adding expense:", error);
-    throw error;
-  }
-};
-
-// Delete an expense
-export const deleteExpense = async (expenseId) => {
-  try {
-    await axios.delete(`${API_BASE_URL}/expenses/${expenseId}`);
-  } catch (error) {
-    console.error("Error deleting expense:", error);
-    throw error;
+    // Make a POST request to the Lambda endpoint
+    const response = await fetch(process.env.NEXT_PUBLIC_SERVICE_URL + "items/filter2column", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+    // Parse the JSON response
+    const data = await response.json();
+    return data[0];
+  } catch (err) {
+    console.log("Error getting users:", err);
+    throw err; // Re-throw the error for handling outside
   }
 };

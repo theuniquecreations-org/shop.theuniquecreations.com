@@ -29,53 +29,38 @@ const App = () => {
   const [showRegister, setShowRegister] = useState(false);
   const [friendToSettleName, setFriendToSettleName] = useState(""); // Store friend's name
   const [loading, setLoading] = useState(false);
-  // Function to retrieve data from localStorage
-  const getDataFromStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
-  // Function to save data to localStorage
-  const saveDataToStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+  const [sessionInitialized, setSessionInitialized] = useState(false);
 
-  // Load session data and friends/expenses from shared storage on login
-  useEffect(async () => {
-    const sessionUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (sessionUser) {
-      setLoggedInUser(sessionUser.email);
-      setLoggedInUserName(sessionUser.name);
-
-      // Retrieve the common users data
-      //const users = getDataFromStorage("users");
-      //const users = await getDataFromServer("users");
-      // Find the logged-in user's data
-      //const user = users.find((user) => user.email === sessionUser.email);
-      // console.log("friends", user);
-      // if (user) {
-      //   setFriends(user.friends || []);
-      //   setExpenses(user.expenses || []);
-      // }
-    }
-  }, [loggedInUser]);
-
-  // Save user data (friends and expenses) to common storage whenever they change
-  useEffect(async () => {
-    if (loggedInUser) {
-      // Get the common users data
-      //const users = getDataFromStorage("users");
-      const users = await getDataFromServer(loggedInUser);
-
-      // Update the logged-in user's friends and expenses in the common data
-      //const updatedUsers = users && users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
-      const user = users.find((user) => user.email === loggedInUser);
-      const updatedUsers = { ...user, friends, expenses };
-      console.log("local users", user);
-      if (user) {
-        setFriends(user.friends || []);
-        setExpenses(user.expenses || []);
+  useEffect(() => {
+    const initializeUserSession = async () => {
+      const sessionUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (sessionUser) {
+        setLoggedInUser(sessionUser.email);
+        setLoggedInUserName(sessionUser.name);
+        setSessionInitialized(true); // Set session as initialized after setting user
       }
-      //console.log("updatedUsers", updatedUsers);
-      //return;
-      // Save the updated users data to localStorage
-      //if (!showAddFriend) await onUpdateFriendService(updatedUsers);
+    };
+    initializeUserSession();
+  }, []);
+
+  useEffect(() => {
+    if (sessionInitialized && loggedInUser) {
+      const fetchUserData = async () => {
+        try {
+          const users = await getDataFromServer(loggedInUser);
+          const user = users.find((user) => user.email === loggedInUser);
+          if (user) {
+            setFriends(user.friends || []);
+            setExpenses(user.expenses || []);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+
+      fetchUserData();
     }
-  }, [loggedInUser]);
+  }, [sessionInitialized, loggedInUser]);
 
   const addFriend = async (friend) => {
     // Check if the friend is already added by email
@@ -284,17 +269,16 @@ const App = () => {
     const settleAmount = parseFloat(settleUpAmounts[friendToSettle] || 0);
 
     if (!isNaN(settleAmount) && settleAmount > 0) {
-      // Update the balances for the friend being settled up with
+      // Update the balance for the friend being settled up with in the logged-in user's data
       const updatedFriends = friends.map((friend) => {
         if (friend.email === friendToSettle) {
-          if (friend.balance > 0) {
-            friend.balance -= settleAmount;
-          } else if (friend.balance < 0) {
-            friend.balance += settleAmount;
-          }
+          friend.balance = friend.balance > 0 ? friend.balance - settleAmount : friend.balance + settleAmount;
         }
         return friend;
       });
+
+      // Get the updated balance for this friend from the logged-in user's perspective
+      const friendBalanceAfterSettle = updatedFriends.find((friend) => friend.email === friendToSettle)?.balance || 0;
 
       // Get the current date for the expense
       const currentDate = new Date().toLocaleDateString();
@@ -328,7 +312,41 @@ const App = () => {
         try {
           // Call the service to update the user with the new data
           await onUpdateFriendService(updatedUser);
-          console.log("Settle up updated successfully on the server.");
+          console.log("Settle up updated successfully on the server for the logged-in user.");
+
+          // Fetch the friend's data to update their balance as well (e.g., Subha)
+          const friendUsers = await getDataFromServer(friendToSettle);
+          const friendUser = friendUsers.find((f) => f.email === friendToSettle);
+
+          if (friendUser) {
+            // Invert the balance adjustment for the friend's perspective
+            const updatedFriendData = {
+              ...friendUser,
+              friends: friendUser.friends.map((f) => {
+                if (f.email === loggedInUser) {
+                  // Pass the inverted balance to the friend, making sure it matches the logged-in user's balance
+                  return { ...f, balance: -friendBalanceAfterSettle }; // Invert the balance
+                }
+                return f;
+              }),
+              expenses: [
+                ...(friendUser.expenses || []),
+                {
+                  friend: loggedInUserName,
+                  description: `Settle Up with ${loggedInUserName}`,
+                  amount: settleAmount,
+                  type: "settle",
+                  date: currentDate,
+                },
+              ],
+            };
+
+            // Update the friend’s data on the server
+            await onUpdateFriendService(updatedFriendData);
+            console.log("Settle up updated successfully on the server for the friend.");
+          } else {
+            console.error("Friend user not found on the server.");
+          }
         } catch (error) {
           console.error("Failed to update settle-up on the server:", error);
         }
@@ -339,10 +357,10 @@ const App = () => {
   };
   // Handle user login (validate against shared storage)
   const handleLogin = (email, name) => {
-    const users = getDataFromStorage("users");
     setLoggedInUser(email);
     setLoggedInUserName(name);
     localStorage.setItem("loggedInUser", JSON.stringify({ email, name }));
+    console.log(loggedInUser, email);
   };
 
   // Handle user logout with confirmation
@@ -370,14 +388,7 @@ const App = () => {
   };
 
   const handleRegister = async (email, name) => {
-    //const users = getDataFromStorage("users");
-    //const users = await fetchUsers(email);
-    //console.log("Registered user", users);
-    // const existingUser = users.find((user) => user.email === email);
-    //console.log("Registered existingUser", existingUser);
     const newUser = { email, name, friends: [], expenses: [] };
-    // users.push(newUser);
-    // console.log("Registered user", users);
     await onAddFriendService(newUser);
     setShowRegister(false);
     alert("✅ Registered successfully. Please log in.");
@@ -473,7 +484,7 @@ const App = () => {
                         onClick={() => removeFriend(friend.email)}
                         src={bin.src}
                         width="40"
-                        className="px-2"
+                        className="px-2 border rounded p-1"
                         //className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
                         style={{ cursor: deleteEnabled ? "pointer" : "not-allowed" }} // Change cursor based on state
                       />
