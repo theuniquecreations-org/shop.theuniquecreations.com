@@ -269,17 +269,16 @@ const App = () => {
     const settleAmount = parseFloat(settleUpAmounts[friendToSettle] || 0);
 
     if (!isNaN(settleAmount) && settleAmount > 0) {
-      // Update the balances for the friend being settled up with
+      // Update the balance for the friend being settled up with in the logged-in user's data
       const updatedFriends = friends.map((friend) => {
         if (friend.email === friendToSettle) {
-          if (friend.balance > 0) {
-            friend.balance -= settleAmount;
-          } else if (friend.balance < 0) {
-            friend.balance += settleAmount;
-          }
+          friend.balance = friend.balance > 0 ? friend.balance - settleAmount : friend.balance + settleAmount;
         }
         return friend;
       });
+
+      // Get the updated balance for this friend from the logged-in user's perspective
+      const friendBalanceAfterSettle = updatedFriends.find((friend) => friend.email === friendToSettle)?.balance || 0;
 
       // Get the current date for the expense
       const currentDate = new Date().toLocaleDateString();
@@ -313,7 +312,41 @@ const App = () => {
         try {
           // Call the service to update the user with the new data
           await onUpdateFriendService(updatedUser);
-          console.log("Settle up updated successfully on the server.");
+          console.log("Settle up updated successfully on the server for the logged-in user.");
+
+          // Fetch the friend's data to update their balance as well (e.g., Subha)
+          const friendUsers = await getDataFromServer(friendToSettle);
+          const friendUser = friendUsers.find((f) => f.email === friendToSettle);
+
+          if (friendUser) {
+            // Invert the balance adjustment for the friend's perspective
+            const updatedFriendData = {
+              ...friendUser,
+              friends: friendUser.friends.map((f) => {
+                if (f.email === loggedInUser) {
+                  // Pass the inverted balance to the friend, making sure it matches the logged-in user's balance
+                  return { ...f, balance: -friendBalanceAfterSettle }; // Invert the balance
+                }
+                return f;
+              }),
+              expenses: [
+                ...(friendUser.expenses || []),
+                {
+                  friend: loggedInUserName,
+                  description: `Settle Up with ${loggedInUserName}`,
+                  amount: settleAmount,
+                  type: "settle",
+                  date: currentDate,
+                },
+              ],
+            };
+
+            // Update the friend’s data on the server
+            await onUpdateFriendService(updatedFriendData);
+            console.log("Settle up updated successfully on the server for the friend.");
+          } else {
+            console.error("Friend user not found on the server.");
+          }
         } catch (error) {
           console.error("Failed to update settle-up on the server:", error);
         }
@@ -451,7 +484,7 @@ const App = () => {
                         onClick={() => removeFriend(friend.email)}
                         src={bin.src}
                         width="40"
-                        className="px-2"
+                        className="px-2 border rounded p-1"
                         //className={!deleteEnabled || loading ? "d-none" : ""} // Disable if deleteEnabled is false
                         style={{ cursor: deleteEnabled ? "pointer" : "not-allowed" }} // Change cursor based on state
                       />
