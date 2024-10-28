@@ -29,10 +29,6 @@ const App = () => {
   const [showRegister, setShowRegister] = useState(false);
   const [friendToSettleName, setFriendToSettleName] = useState(""); // Store friend's name
   const [loading, setLoading] = useState(false);
-  // Function to retrieve data from localStorage
-  const getDataFromStorage = (key) => JSON.parse(localStorage.getItem(key)) || [];
-  // Function to save data to localStorage
-  const saveDataToStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
   // Load session data and friends/expenses from shared storage on login
   useEffect(async () => {
@@ -40,29 +36,13 @@ const App = () => {
     if (sessionUser) {
       setLoggedInUser(sessionUser.email);
       setLoggedInUserName(sessionUser.name);
-
-      // Retrieve the common users data
-      //const users = getDataFromStorage("users");
-      //const users = await getDataFromServer("users");
-      // Find the logged-in user's data
-      //const user = users.find((user) => user.email === sessionUser.email);
-      // console.log("friends", user);
-      // if (user) {
-      //   setFriends(user.friends || []);
-      //   setExpenses(user.expenses || []);
-      // }
     }
   }, [loggedInUser]);
 
   // Save user data (friends and expenses) to common storage whenever they change
   useEffect(async () => {
     if (loggedInUser) {
-      // Get the common users data
-      //const users = getDataFromStorage("users");
       const users = await getDataFromServer(loggedInUser);
-
-      // Update the logged-in user's friends and expenses in the common data
-      //const updatedUsers = users && users.map((user) => (user.email === loggedInUser ? { ...user, friends, expenses } : user));
       const user = users.find((user) => user.email === loggedInUser);
       const updatedUsers = { ...user, friends, expenses };
       console.log("local users", user);
@@ -70,10 +50,6 @@ const App = () => {
         setFriends(user.friends || []);
         setExpenses(user.expenses || []);
       }
-      //console.log("updatedUsers", updatedUsers);
-      //return;
-      // Save the updated users data to localStorage
-      //if (!showAddFriend) await onUpdateFriendService(updatedUsers);
     }
   }, [loggedInUser]);
 
@@ -339,10 +315,10 @@ const App = () => {
   };
   // Handle user login (validate against shared storage)
   const handleLogin = (email, name) => {
-    const users = getDataFromStorage("users");
     setLoggedInUser(email);
     setLoggedInUserName(name);
     localStorage.setItem("loggedInUser", JSON.stringify({ email, name }));
+    console.log(loggedInUser, email);
   };
 
   // Handle user logout with confirmation
@@ -370,14 +346,7 @@ const App = () => {
   };
 
   const handleRegister = async (email, name) => {
-    //const users = getDataFromStorage("users");
-    //const users = await fetchUsers(email);
-    //console.log("Registered user", users);
-    // const existingUser = users.find((user) => user.email === email);
-    //console.log("Registered existingUser", existingUser);
     const newUser = { email, name, friends: [], expenses: [] };
-    // users.push(newUser);
-    // console.log("Registered user", users);
     await onAddFriendService(newUser);
     setShowRegister(false);
     alert("✅ Registered successfully. Please log in.");
