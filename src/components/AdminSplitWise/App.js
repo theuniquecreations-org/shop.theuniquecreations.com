@@ -29,29 +29,38 @@ const App = () => {
   const [showRegister, setShowRegister] = useState(false);
   const [friendToSettleName, setFriendToSettleName] = useState(""); // Store friend's name
   const [loading, setLoading] = useState(false);
+  const [sessionInitialized, setSessionInitialized] = useState(false);
 
-  // Load session data and friends/expenses from shared storage on login
-  useEffect(async () => {
-    const sessionUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (sessionUser) {
-      setLoggedInUser(sessionUser.email);
-      setLoggedInUserName(sessionUser.name);
-    }
-  }, [loggedInUser]);
-
-  // Save user data (friends and expenses) to common storage whenever they change
-  useEffect(async () => {
-    if (loggedInUser) {
-      const users = await getDataFromServer(loggedInUser);
-      const user = users.find((user) => user.email === loggedInUser);
-      const updatedUsers = { ...user, friends, expenses };
-      console.log("local users", user);
-      if (user) {
-        setFriends(user.friends || []);
-        setExpenses(user.expenses || []);
+  useEffect(() => {
+    const initializeUserSession = async () => {
+      const sessionUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (sessionUser) {
+        setLoggedInUser(sessionUser.email);
+        setLoggedInUserName(sessionUser.name);
+        setSessionInitialized(true); // Set session as initialized after setting user
       }
+    };
+    initializeUserSession();
+  }, []);
+
+  useEffect(() => {
+    if (sessionInitialized && loggedInUser) {
+      const fetchUserData = async () => {
+        try {
+          const users = await getDataFromServer(loggedInUser);
+          const user = users.find((user) => user.email === loggedInUser);
+          if (user) {
+            setFriends(user.friends || []);
+            setExpenses(user.expenses || []);
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+
+      fetchUserData();
     }
-  }, [loggedInUser]);
+  }, [sessionInitialized, loggedInUser]);
 
   const addFriend = async (friend) => {
     // Check if the friend is already added by email
